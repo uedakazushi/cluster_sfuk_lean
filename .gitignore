@@ -1,1 +1,8 @@
 /.lake
+/blueprint/print/
+*.css
+*.js
+lean_decls
+*.paux
+*.html
+/blueprint/web/
