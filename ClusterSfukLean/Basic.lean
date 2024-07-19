@@ -12,7 +12,7 @@ def set1 : Set Nat := {n : Nat | n < 10}
 
 #check Set.finite_le_nat
 
-example (k:Nat) : Set.Finite {n : Nat | n ≤ k } := by
+lemma finite_test (k:Nat) : Set.Finite {n : Nat | n ≤ k } := by
   exact Set.finite_le_nat k
 
 def I (e f i : Nat) : Set Nat :=
@@ -21,7 +21,7 @@ def I (e f i : Nat) : Set Nat :=
   ∧ n % f ≠ f - 1
   ∧ n / e + n / f = i }
 
-example (e f n i: Nat) :
+theorem bdd_test (e f n i: Nat) :
   n / e + n / f = i → n ≤ e * i + e := by
   intro h
   have h1 : n / e ≤ i := Nat.le.intro h
@@ -29,3 +29,4 @@ example (e f n i: Nat) :
   have h3 : e * (n / e) + n % e = n := by
     rw [Nat.div_add_mod]
   have h4 := Nat.le.intro h3
+  sorry
