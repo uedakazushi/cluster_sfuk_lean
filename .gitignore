@@ -6,3 +6,10 @@ lean_decls
 *.paux
 *.html
 /blueprint/web/
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
+*.synctex.gz

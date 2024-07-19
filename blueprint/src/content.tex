@@ -6,20 +6,101 @@
 % the current file can be a simple sequence of \input. Otherwise It
 % can start with a \section or \chapter for instance.
 
-\section{Introduction}
+% \section{Introduction}
+
+% For integers $n$ and $e$,
+% we write $n \% e$ for the remainder of the division of $n$ by $e$,
+% and $n \div e$ for the integer quotient of $n$ by $e$.
+
+\section{}
+
+Let $e$ and $f$ be positive integers
+and $i$ be a nonnegative integer.
+
+\begin{definition}
+\label{def:setI}
+\lean{setI}
+\leanok
+$
+\rI_{e,f}^i
+\coloneqq
+\{
+n \in \bN
+\mid
+(n \not \equiv - 1 \mod e)
+\wedge
+(n \not \equiv - 1 \mod f)
+\wedge
+(\lfloor n / e \rfloor + \lfloor n / f \rfloor = i)
+\}
+$
+\end{definition}
+
+\begin{definition}
+\label{def:setII}
+\lean{setII}
+$
+\rII_{e,f}^i
+\coloneqq
+\{
+n \in \bN
+\mid
+(n \equiv - 1 \mod e)
+\wedge
+(n \equiv - 1 \mod f)
+\wedge
+(\lfloor n / e \rfloor + \lfloor n / f \rfloor + 1 = i)
+\}
+$
+\end{definition}
 
 \begin{lemma}
-  \label{lem:finite_test}
-  \lean{finite_test}
-  \leanok
-  $\{ n \in \mathbb{N} \mid n < 10 \}$ is finite.
+\label{lem:setI_finite}
+\lean{setI_finite}
+The set $\rI_{e,f}^i$ is finite.
 \end{lemma}
-  
-\begin{proof}
-  \leanok
-  This is obvious.
-\end{proof}
 
 \begin{lemma}
-
+\label{lem:setII_finite}
+\lean{setII_finite}
+The set $\rII_{e,f}^i$ is finite.
 \end{lemma}
+
+\begin{definition}
+\label{def:h}
+\lean{h}
+\leanok
+$
+h_{e,f}^i
+\coloneqq
+|\rI_{e,f}^i| + |\rII_{e,f}^i|
+$
+\end{definition}
+
+\begin{lemma}
+For any $e,f,i \in \bN$ with $e \ne 0$ and $f \ne 0$,
+there exists $n_{\max}$ and $n_{\min}$ such that
+$I_{e,f}^i = \{n \in \bN \mid n_{\min} \le n \le n_{\max}\}$.
+\end{lemma}
+
+\section{}
+
+Let $e$, $f$, and $\ell$ be positive integers
+and $i$ be a nonnegative integer.
+Assume that $e$ and $f$ are coprime.
+
+\begin{proposition}[{\cite[Proposition 5.1]{2406.15915}}]
+\label{prop:main}
+\lean{main}
+$
+h_{e \ell, f \ell}^i = \ell h_{e,f}^i + \ell - 1
+$
+\end{proposition}
+
+\begin{thebibliography}{LU}
+\bibitem[LU]{2406.15915}
+Yank{\i} Lekili, Kazushi Ueda,
+\emph{Homological mirror symmetry for Rabinowitz Fukaya categories
+of Milnor fibers of Brieskorn-Pham singularities},
+arXiv:2406.15915.
+\end{thebibliography}
