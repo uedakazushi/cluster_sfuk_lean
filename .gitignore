@@ -13,3 +13,4 @@ lean_decls
 *.out
 *.pdf
 *.synctex.gz
+*.synctex*
