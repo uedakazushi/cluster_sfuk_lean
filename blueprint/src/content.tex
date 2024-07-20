@@ -12,6 +12,8 @@
 % we write $n \% e$ for the remainder of the division of $n$ by $e$,
 % and $n \div e$ for the integer quotient of $n$ by $e$.
 
+\chapter{}
+
 \section{}
 
 Let $e$ and $f$ be positive integers
@@ -36,23 +38,23 @@ n \in \bN
 $
 \end{definition}
 
-\begin{definition}
-\label{def:setII}
-\lean{setII}
-$
-\rII_{e,f}^i
-\coloneqq
-\{
-n \in \bN
-\mid
-(n \equiv - 1 \mod e)
-\wedge
-(n \equiv - 1 \mod f)
-\wedge
-(\lfloor n / e \rfloor + \lfloor n / f \rfloor + 1 = i)
-\}
-$
-\end{definition}
+% \begin{definition}
+% \label{def:setII}
+% \lean{setII}
+% $
+% \rII_{e,f}^i
+% \coloneqq
+% \{
+% n \in \bN
+% \mid
+% (n \equiv - 1 \mod e)
+% \wedge
+% (n \equiv - 1 \mod f)
+% \wedge
+% (\lfloor n / e \rfloor + \lfloor n / f \rfloor + 1 = i)
+% \}
+% $
+% \end{definition}
 
 \begin{lemma}
 \label{lem:setI_finite}
@@ -60,11 +62,16 @@ $
 The set $\rI_{e,f}^i$ is finite.
 \end{lemma}
 
-\begin{lemma}
-\label{lem:setII_finite}
-\lean{setII_finite}
-The set $\rII_{e,f}^i$ is finite.
-\end{lemma}
+% \begin{lemma}
+% \label{lem:setII_finite}
+% \lean{setII_finite}
+% The set $\rII_{e,f}^i$ is finite.
+% \end{lemma}
+
+\Cref{def:h} is a variation
+of the definition of $h_{e,f}^i$ in \cite{2406.15915},
+which coincides with that of \cite{2406.15915}
+if $i \not \equiv -1 \mod e+f$.
 
 \begin{definition}
 \label{def:h}
@@ -73,8 +80,9 @@ The set $\rII_{e,f}^i$ is finite.
 $
 h_{e,f}^i
 \coloneqq
-|\rI_{e,f}^i| + |\rII_{e,f}^i|
-$
+|\rI_{e,f}^i|
+% + |\rII_{e,f}^i|
+$.
 \end{definition}
 
 \begin{lemma}
