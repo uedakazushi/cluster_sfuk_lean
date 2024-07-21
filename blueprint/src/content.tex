@@ -12,9 +12,34 @@
 % we write $n \% e$ for the remainder of the division of $n$ by $e$,
 % and $n \div e$ for the integer quotient of $n$ by $e$.
 
-\chapter{}
+\chapter{Preparation}
 
-\section{}
+\begin{lemma}
+\label{lem:finite_of_bounded_of_Nat}
+\lean{finite_of_bounded_of_Nat}
+\leanok
+A bounded set of natural numbers is finite.
+\end{lemma}
+
+\begin{lemma}
+\label{lem:nat_mod_pnat_le}
+\lean{nat_mod_pnat_le}
+\leanok
+If $n \in \bN$ and $m \in \bN^+$,
+then $n \% m \le m$.
+\end{lemma}
+
+\begin{remark}
+Note that $n \% 0 = n$ for all $n \in \bN$
+(in fact, for all $n \in \bZ$).
+One also has $n \% (-m) = n \% m$
+for all
+$n \in \bZ$
+and
+$m \in \bN^+$.
+\end{remark}
+
+\chapter{Main definitions}
 
 Let $e$ and $f$ be positive integers
 and $i$ be a nonnegative integer.
@@ -59,6 +84,8 @@ $
 \begin{lemma}
 \label{lem:setI_finite}
 \lean{setI_finite}
+\uses{def:setI,lem:finite_of_bounded_of_Nat,lem:nat_mod_pnat_le}
+\leanok
 The set $\rI_{e,f}^i$ is finite.
 \end{lemma}
 
@@ -77,6 +104,7 @@ if $i \not \equiv -1 \mod e+f$.
 \label{def:h}
 \lean{h}
 \leanok
+\uses{lem:setI_finite}
 $
 h_{e,f}^i
 \coloneqq
@@ -85,12 +113,7 @@ h_{e,f}^i
 $.
 \end{definition}
 
-\begin{lemma}
-There exists $n_{\max}$ and $n_{\min}$ such that
-$\rI_{e,f}^i = \{n \in \bN \mid n_{\min} \le n \le n_{\max}\}$.
-\end{lemma}
-
-\section{}
+\chapter{Main result}
 
 Let $e$, $f$, and $\ell$ be positive integers
 and $i$ be a nonnegative integer.
@@ -99,10 +122,17 @@ Assume that $e$ and $f$ are coprime.
 \begin{proposition}[{\cite[Proposition 5.1]{2406.15915}}]
 \label{prop:main}
 \lean{main}
+\uses{def:h,
+lem:I_is_interval}
 $
 h_{e \ell, f \ell}^i = \ell h_{e,f}^i + \ell - 1
 $
 \end{proposition}
+
+\begin{lemma} \label{lem:I_is_interval}
+There exists $n_{\max}$ and $n_{\min}$ such that
+$\rI_{e,f}^i = \{n \in \bN \mid n_{\min} \le n \le n_{\max}\}$.
+\end{lemma}
 
 \begin{thebibliography}{LU}
 \bibitem[LU]{2406.15915}

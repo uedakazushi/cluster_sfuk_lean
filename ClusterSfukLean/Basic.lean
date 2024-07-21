@@ -13,6 +13,14 @@ lemma finite_of_bounded_of_Nat (s: Set ℕ) :
       apply Set.Finite.subset (Set.finite_le_nat k)
       assumption
 
+#eval (3 : ℕ) % (3 : ℕ+)
+#eval (3 : ℕ+) % (3 : ℕ)
+#eval (3 : ℕ+) % (0 : ℕ)
+#eval (-1) % 3
+#eval (-3) % 3
+#eval (-3) % 0
+#eval (5) % (-3)
+
 lemma nat_mod_pnat_le (n : ℕ) (m : ℕ+) : n % m ≤ m := by
   cases n with
   | zero => simp
