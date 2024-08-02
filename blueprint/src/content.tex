@@ -18,7 +18,8 @@
 \label{lem:finite_of_bounded_of_Nat}
 \lean{finite_of_bounded_of_Nat}
 \leanok
-A bounded set of natural numbers is finite.
+% A bounded set of natural numbers is finite.
+有界な自然数の集合は有限である。
 \end{lemma}
 
 \begin{lemma}
@@ -27,12 +28,19 @@ A bounded set of natural numbers is finite.
 \leanok
 If $n \in \bN$ and $m \in \bN^+$,
 then $n \% m \le m$.
+$n \in \bN$かつ$m \in \bN^+$ならば、$n \% m \le m$である。
 \end{lemma}
 
 \begin{remark}
+$m=0$の時、$n \% m = n$であることと、
+\texttt{PNat}における$\%$は
+\texttt{PNat}に値を取ることに注意せよ。
+\end{remark}
+
+\begin{remark}
 Note that $n \% 0 = n$ for all $n \in \bN$
-(in fact, for all $n \in \bZ$).
-One also has $n \% (-m) = n \% m$
+(in fact, for all $n \in \bZ$)
+and $n \% (-m) = n \% m$
 for all
 $n \in \bZ$
 and
@@ -133,6 +141,8 @@ $
 There exists $n_{\max}$ and $n_{\min}$ such that
 $\rI_{e,f}^i = \{n \in \bN \mid n_{\min} \le n \le n_{\max}\}$.
 \end{lemma}
+
+\chapter{Bibliography}
 
 \begin{thebibliography}{LU}
 \bibitem[LU]{2406.15915}
