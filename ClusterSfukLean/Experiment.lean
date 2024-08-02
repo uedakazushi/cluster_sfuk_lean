@@ -2,9 +2,51 @@ import Mathlib
 
 section
 
+#check WellFounded.min
+def h1 := Nat.lt.isWellOrder
+#check h1.3
+
+def nat_lt_iswellfounded := Nat.lt.isWellOrder.3.wf
+
+#check WellFounded.min Nat.lt.isWellOrder.3.wf
+
+end
+
+#check quot_rem
+
+
+        #check add_sub
+
+        simp [d_pos] at h3
+      have h3 := Nat.div_eq r d
+      have d_pos : d > (0:Nat) := d.2
+      simp [d_pos] at h3
+      simp [h2] at h3
+have h4 : ¬ ((0:Nat) < ↑d ∧ ↑d ≤ r) := by
+        push_neg
+        intro h'
+        assumption
+      apply Eq.symm
+      have h5 : (if (0:Nat) < ↑d ∧ ↑d ≤ r then (r - (d:Nat)) % (d:Nat) else r) = 0 := by
+        simp [h2]
+
+rw [h4] at h3
+    · rw [h.1]
+    ·
+have h1 : n = 0 := by
+      simp at h
+
+lemma h6 : ∀ m: Nat, ∀ e : ℕ+ , m % e ≠ 0 → m / e = (m - 1) / e := by
+  intro m e h
+  sorry
+
+
 variable (e f l : ℕ+)
 variable (e_coprime_f : Nat.Coprime e f)
 variable (n i : ℕ)
+
+
+
 
 def s: Set Nat := {n : Nat | n ≥ 1 ∧ n ≤ 3}
 
