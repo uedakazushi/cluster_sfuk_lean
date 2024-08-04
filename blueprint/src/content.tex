@@ -18,33 +18,48 @@
 \label{lem:finite_of_bounded_of_Nat}
 \lean{finite_of_bounded_of_Nat}
 \leanok
-% A bounded set of natural numbers is finite.
-有界な自然数の集合は有限である。
+\en{
+A bounded set of natural numbers is finite.
+}
+\ja{
+自然数からなる有界な集合は有限である。
+}
 \end{lemma}
 
 \begin{lemma}
 \label{lem:nat_mod_pnat_le}
-\lean{nat_mod_pnat_le}
-\leanok
+\en{
 If $n \in \bN$ and $m \in \bN^+$,
 then $n \% m \le m$.
-$n \in \bN$かつ$m \in \bN^+$ならば、$n \% m \le m$である。
+}
+\ja{
+もし$n \in \bN$かつ$m \in \bN^+$ならば、
+$n \% m \le m$である。
+}
 \end{lemma}
 
 \begin{remark}
-$m=0$の時、$n \% m = n$であることと、
-\texttt{PNat}における$\%$は
-\texttt{PNat}に値を取ることに注意せよ。
-\end{remark}
-
-\begin{remark}
-Note that $n \% 0 = n$ for all $n \in \bN$
-(in fact, for all $n \in \bZ$)
-and $n \% (-m) = n \% m$
+\en{
+Note that one has $n \% m = n$ when $m = 0$,
+and that the operator $\%$ in \texttt{PNat}
+takes values in \texttt{PNat}
+(so that
+$n \% (-m) = n \% m$
 for all
 $n \in \bZ$
 and
-$m \in \bN^+$.
+$m \in \bN^+$).
+}
+\ja{
+$m=0$の時、$n \% m = n$であることと、
+\texttt{PNat}における$\%$は
+\texttt{PNat}に値を取る
+（従って、任意の$n \in \bZ$と$m \in \bN^+$に対して
+$n \% (-m) = n \% m$
+である
+）
+ことに注意せよ。
+}
 \end{remark}
 
 \chapter{Main definitions}
