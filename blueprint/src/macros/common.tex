@@ -5,38 +5,58 @@
 \usepackage{mathtools}
 \usepackage{cleveref}
 
-% Bilingual
-\newcommand{\en}[1]{#1 \\}
-\newcommand{\ja}[1]{#1}
+% % Bilingual
+% \newcommand{\en}[1]{#1 \\}
+% \newcommand{\ja}[1]{#1}
 
 % % English only
 % \newcommand{\en}[1]{#1}
 % \newcommand{\ja}[1]{}
 
-% % Japanese only
-% \newcommand{\en}[1]{}
-% \newcommand{\ja}[1]{#1}
+% \theoremstyle{plain}
+% % \newtheorem{theorem}{Theorem}[section]
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{definition-lemma}[theorem]{Definition-Lemma}
+% \newtheorem{claim}[theorem]{Claim}
+% \newtheorem{sublemma}[theorem]{Sublemma}
+% \newtheorem{proposition}[theorem]{Proposition}
+% \newtheorem{conjecture}[theorem]{Conjecture}
+% \newtheorem{assumption}[theorem]{Assumption}
+% \newtheorem{step}{Step}
 
-\theoremstyle{plain}
-% \newtheorem{theorem}{Theorem}[section]
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{definition-lemma}[theorem]{Definition-Lemma}
-\newtheorem{claim}[theorem]{Claim}
-\newtheorem{sublemma}[theorem]{Sublemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{assumption}[theorem]{Assumption}
-\newtheorem{step}{Step}
+% \theoremstyle{definition}
+% \newtheorem{definition}[theorem]{Definition}
+% \newtheorem{remark}[theorem]{Remark}
+% \newtheorem{question}[theorem]{Question}
+% \newtheorem{problem}[theorem]{Problem}
+% \newtheorem{condition}[theorem]{Condition}
+% \newtheorem{example}[theorem]{Example}
 
+% ----- Japanese only -----
+
+\newcommand{\en}[1]{}
+\newcommand{\ja}[1]{#1}
+
+% \theoremstyle{plain}
 \theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{question}[theorem]{Question}
-\newtheorem{problem}[theorem]{Problem}
-\newtheorem{condition}[theorem]{Condition}
-\newtheorem{example}[theorem]{Example}
+% \newtheorem{theorem}{Theorem}[section]
+\newtheorem{theorem}{定理}
+\newtheorem{corollary}[theorem]{系}
+\newtheorem{lemma}[theorem]{補題}
+\newtheorem{proposition}[theorem]{命題}
+\newtheorem{conjecture}[theorem]{予想}
+\newtheorem{assumption}[theorem]{仮定}
+\newtheorem{step}{ステップ}
+
+\newtheorem{definition}[theorem]{定義}
+\newtheorem{remark}[theorem]{注意}
+\newtheorem{problem}[theorem]{問題}
+\newtheorem{condition}[theorem]{条件}
+\newtheorem{example}[theorem]{例}
+
+% ----- Common -----
 
 \newcommand{\bN}{\mathbb{N}}
 \newcommand{\bZ}{\mathbb{Z}}
