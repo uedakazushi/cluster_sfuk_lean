@@ -201,12 +201,6 @@ def setI : Set ℕ :=
   ∧ b % f ≠ f - 1
   ∧ b / e + b / f = i }
 
--- def setI' : Set ℕ :=
---   {b : ℕ |
---   b % e ≠ e - 1
---   ∧ b % f ≠ f - 1
---   ∧ b / e + b / f ≤ i }
-
 def setI' : Set ℕ :=
   {b : ℕ |
   b % e ≠ e - 1
@@ -258,6 +252,16 @@ noncomputable def min_setI' : ℕ :=
     (setI' e f i)
     (setI'_non_empty e f i e_ge_2 f_ge_2)
 
+def setI'' : Set ℕ :=
+  {b : ℕ |
+  b % e ≠ e - 1
+  ∧ b % f ≠ f - 1
+  ∧ b / e + b / f ≤ i }
+
+lemma ge_2_1_le (n : ℕ) : n ≥ 2 → 1 ≤ n := by
+  intro h
+  linarith
+
 def setII : Set ℕ :=
   {n : ℕ |
   n % e = e - 1
@@ -285,12 +289,83 @@ lemma setI_finite : (setI e f i).Finite := by
   apply finite_of_bounded_of_Nat
   assumption
 
+lemma setI''_finite : (setI'' e f i).Finite := by
+  have setII'_bdd : ∃ k : ℕ, ∀ n ∈ setI'' e f i, n ≤ k := by
+    exists e*f*i+e
+    intro n
+    dsimp [setI'']
+    intro h
+    cases h with
+    | intro h1 h2 => cases h2 with
+    | intro h2 h3 =>
+    have h4 : n/e ≤ i := by
+      have h5 : n / e ≤ n/e+n/f := by
+        apply Nat_le_add_right
+      linarith
+    have h6 := nat_div_pnat_le n i e
+    have h7 := h6 h4
+    have h8 : e * i ≤ e * f * i := by
+      have h9 : e * f * i = f * e * i := by
+        simp
+        apply Or.inl
+        apply Nat.mul_comm e f
+      rw [h9]
+      rw [Nat.mul_assoc]
+      apply Nat.le_mul_of_pos_left
+      exact f.2
+    linarith
+  apply finite_of_bounded_of_Nat
+  assumption
+
 noncomputable def finsetI : Finset ℕ :=
   (setI_finite e f i).toFinset
+
+noncomputable def finsetI'' : Finset ℕ :=
+  (setI''_finite e f i).toFinset
 
 noncomputable def cardI : ℕ := (finsetI e f i).card
 
 noncomputable def h : ℕ := (cardI e f i)
+
+lemma setI''_non_empty : (setI'' e f i).Nonempty := by
+  exists 0
+  simp [setI'']
+  apply And.intro
+  intro h
+  have h1 := Iff.mp (Nat.sub_eq_iff_eq_add (ge_2_1_le (e:ℕ) e_ge_2)) (Eq.symm h)
+  simp at h1
+  rw [h1] at e_ge_2
+  linarith
+  intro h
+  have h1 := Iff.mp (Nat.sub_eq_iff_eq_add (ge_2_1_le (f:ℕ) f_ge_2)) (Eq.symm h)
+  simp at h1
+  rw [h1] at f_ge_2
+  linarith
+
+lemma finsetI''_non_empty : (finsetI'' e f i).Nonempty := by
+  exists 0
+  simp [finsetI'']
+  apply And.intro
+  intro h
+  have h1 := Iff.mp (Nat.sub_eq_iff_eq_add (ge_2_1_le (e:ℕ) e_ge_2)) (Eq.symm h)
+  simp at h1
+  rw [h1] at e_ge_2
+  linarith
+  apply And.intro
+  intro h
+  have h1 := Iff.mp (Nat.sub_eq_iff_eq_add (ge_2_1_le (f:ℕ) f_ge_2)) (Eq.symm h)
+  simp at h1
+  rw [h1] at f_ge_2
+  linarith
+  have h2 : 0 / (e:Nat) = 0 := by
+    simp
+  rw [h2]
+  have h3 : 0 / (f:Nat) = 0 := by
+    simp
+  rw [h3]
+  linarith
+
+noncomputable def b_max : ℕ := (finsetI'' e f i).max' (finsetI''_non_empty e f i e_ge_2 f_ge_2)
 
 end main_def
 
