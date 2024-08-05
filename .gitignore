@@ -14,3 +14,4 @@ lean_decls
 *.pdf
 *.synctex.gz
 *.synctex*
+*.brf
