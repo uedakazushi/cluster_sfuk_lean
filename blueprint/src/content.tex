@@ -14,8 +14,8 @@ Floerコホモロジーの一種であり、
 シンプレクティックトポロジーにおける基本的な不変量であるだけでなく、
 ミラー対称性においても重要な役割を果たす。
 
-シンプレクティックコホモロジーの持つ重要な性質の一つは、
-深谷圏のHochschildコホモロジーと同型であることである。
+シンプレクティックコホモロジーの持つ重要な性質として、
+深谷圏のHochschildコホモロジーと同型であることが挙げられる。
 ホモロジー的ミラー対称性によって
 あるシンプレクティック多様体の深谷圏が
 適当なスタックの安定導来圏と同型になる時、
@@ -24,20 +24,289 @@ Floerコホモロジーの一種であり、
 
 超曲面特異点の
 安定導来圏のHochschildコホモロジーは
-Jacobi環の言葉で具体的に記述されるが、
-Fermat型の超曲面特異点の場合には
-最終的に組み合わせ論的な公式を得ることができる。
+Jacobi環の言葉で記述される事が知られている
+（例えば\cite[Theorem 3.1]{MR4442683}とその参考文献を見よ）。
+これを例えばFermat型の超曲面特異点の場合に具体的に書き下すと、
+組み合わせ論的な公式を得ることができる。
+そのような具体的な記述は、
+一般次元の単純特異点
+\begin{align} \label{eq:simple}
+\begin{split}
+ A_\ell &\colon x_1^{\ell+1} + x_2^2 + \cdots + x_{n+1}^2 = 0, \quad \ell = 1, 2, \ldots \\
+%  \label{eq:Aell} \\
+ D_\ell &\colon x_1^{\ell-1} + x_1 x_2^2 + x_3^2+ \cdots + x_{n+1}^2 = 0, \quad \ell = 4, 5, \ldots \\
+%  \label{eq:Dell} \\
+ E_6 &\colon x_1^4 + x_2^3 + x_3^2 + \cdots + x_{n+1}^2 = 0, \\
+%  \label{eq:E6} \\
+ E_7 &\colon x_1^3 + x_1 x_2^3 + x_3^2 + \cdots + x_{n+1}^2 = 0, \\
+%  \label{eq:E7} \\
+ E_8 &\colon x_1^5 + x_2^3 + x_3^2 + \cdots + x_{n+1}^2 = 0.
+%  \label{eq:E8}
+\end{split}
+\end{align}
+の場合に\cite{MR4371540}、
+いくつかの3次元cDV特異点の場合に\cite{MR4648096}、
+そして可逆多項式で定義される3次元cDV特異点の場合に\cite{2404.17301v1}
+において行われた。
+更に、\cite{MR4648096}では、
+この計算を元に、
+次のような予想が提案された：
 
-We formalize Proposition 5.1 in \cite{2406.15915}.
+\begin{conjecture}[{\cite[Conjecture 1.4]{MR4648096}}] \label{cj:Evans-Lekili}
+\en{A compound Du Val singularity
+admits a small resolution
+if and only if the dimension of the symplectic cohomology of its Milnor fiber
+is constant in every negative cohomological degree.
+Furthermore,
+if this is the case,
+then this dimension is equal to the number of irreducible components
+of the exceptional locus of a small resolution.}
+\ja{
+cDV特異点は、
+そのミルナーファイバーのシンプレクティックコホモロジーの次元が
+負の全ての次数で一定である場合に限り、
+小さな特異点解消を持つ。
+さらに、この場合、
+この次元は小さな特異点解消の例外集合の既約成分の数に等しい。
+}
+\end{conjecture}
 
-% For integers $n$ and $e$,
-% we write $n \% e$ for the remainder of the division of $n$ by $e$,
-% and $n \div e$ for the integer quotient of $n$ by $e$.
+\en{
+The following refinement of \ref{cj:Evans-Lekili}
+was also proposed by the authors of \cite{MR4648096}
+based on unpublished calculations:
+}
+\ja{
+また、\Cref{cj:Evans-Lekili}の次のような精密化が、
+\cite{MR4648096}の著者らによって、
+未公表の計算に基づいて提案された：
+}
+\begin{conjecture} \label{cj:refined_Evans-Lekili}
+\en{
+Let $Y \to X$ be a small $\bQ$-factorialization
+of a compound Du Val singularity
+$P \in X$.
+Let further $\ell$ be the number of irreducible components
+of the exceptional locus,
+$\Uv$ be the Milnor fiber of $P \in X$,
+and
+$\Uv_1,\ldots,\Uv_r$ be the Milnor fibers
+of the resulting $\bQ$-factorial singularities
+$Q_1,\ldots, Q_r \in Y$.
+Then one has
+\begin{align}
+\dim \SH^i \left( \Uv \right)
+= \sum_{j=1}^r \dim \SH^i \left( \Uv_j \right) + \ell
+\end{align}
+for any $i < 0$.}
+\ja{
+$Y \to X$をcDV特異点$P \in X$の小さな$\bQ$分解化とする。
+さらに、$\ell$を例外集合の既約成分の数、
+$\Uv$を$P \in X$のミルナーファイバー、
+$\Uv_1,\ldots,\Uv_r$を
+$\bQ$分解化の結果として得られた$\bQ$分解的特異点
+$Q_1,\ldots, Q_r \in Y$のミルナーファイバーとする。
+この時、任意の$i < 0$に対して、
+\begin{align}
+\dim \SH^i \left( \Uv \right)
+= \sum_{j=1}^r \dim \SH^i \left( \Uv_j \right) + \ell
+\end{align}
+が成り立つ。
+}
+\end{conjecture}
+
+\cite{2406.15915}では、
+2以上の整数$e$と$f$に対して
+\begin{align} \label{eq:cDV_ef}
+x^2 + y^2 + z^{e} + w^{f} = 0
+\end{align}
+で定義されるcDV特異点に対して
+\Cref{cj:refined_Evans-Lekili}が成り立つ事を示した。
+このcDV特異点のMilnorファイバーを
+$\Uv_{e,f}$と置くと、
+そのシンプレクティックコホモロジーは
+ホモロジー的ミラー対称性によって
+ある（群作用付きの）超曲面の
+安定導来圏のHochschildコホモロジーと同型であり、
+後者は組合せ論的な記述を持つ。
+この組合せ論的な記述をもとに、
+自然数$i$に対して
+$h_{e,f}^i$を以下のように定義する：
+
+\begin{definition}
+\label{df:setI}
+\lean{setI}
+\leanok
+$
+\rI_{e,f}^i
+\coloneqq
+\{
+n \in \bN
+\mid
+n \not \equiv - 1 \mod e
+\ 
+\text{かつ}
+\ 
+n \not \equiv - 1 \mod f
+\ 
+\text{かつ}
+\ 
+\lfloor n / e \rfloor + \lfloor n / f \rfloor = i
+\}
+$
+\end{definition}
+
+\begin{definition}
+\label{df:setII}
+\lean{setII}
+\leanok
+$
+\rII_{e,f}^i
+\coloneqq
+\{
+n \in \bN
+\mid
+n \equiv - 1 \mod e
+\ 
+\text{かつ}
+\ 
+n \equiv - 1 \mod f
+\ 
+\text{かつ}
+\ 
+\lfloor n / e \rfloor + \lfloor n / f \rfloor + 1 = i
+\}
+$
+\end{definition}
+
+\begin{definition}
+\label{df:setIII}
+\lean{setIII}
+\leanok
+$
+\rIII_{e,f}^i
+\coloneqq
+\{
+\xi \in \bC
+\mid
+\xi \ne 1
+\ 
+\text{かつ}
+\ 
+\xi^e = \xi^f = 1
+\}
+$
+\end{definition}
+
+\begin{definition}
+\label{df:h}
+\lean{h}
+\leanok
+\uses{lm:setI_finite,lm:setII_finite,lm:setIII_finite}
+$
+h_{e,f}^i
+\coloneqq
+\left| \rI_{e,f}^i \right|
++ \left| \rII_{e,f}^i \times \rIII_{e,f}^i \right|
+$.
+\end{definition}
+
+この時、次が成り立つ：
+
+\begin{theorem} \label{th:a combinatorial formula for dim SH}
+任意の2以上の整数$e,f$と自然数$i$に対して
+\begin{align}
+h_{e,f}^i
+= \dim \SH^{-2i} \left( \Uv_{e,f} \right)
+= \dim \SH^{-2i+1} \left( \Uv_{e,f} \right)
+\end{align}
+が成り立つ。
+\end{theorem}
+
+\Cref{th:a combinatorial formula for dim SH}を踏まえると、
+\Cref{cj:refined_Evans-Lekili}は
+次の\Cref{pr:main}に帰着される：
+
+\begin{proposition}[{\cite[Proposition 5.1]{2406.15915}}]
+\label{pr:main}
+\en{
+For integers $e$ and $f$ greater than two
+and a non-positive integer $i$,
+one has
+\begin{align}
+h_{e \ell, f \ell}^i = \ell h_{e,f}^i + \ell - 1.
+\end{align}
+}
+\ja{任意の2以上の整数$e$と$f$および正でない整数$i$に対して、
+\begin{align}
+h_{e \ell, f \ell}^i = \ell h_{e,f}^i + \ell - 1
+\end{align}
+が成り立つ。}
+\end{proposition}
+
+\cite[Theorem C]{2404.17301v1}では
+$h_{e,f}^i$に対する次のような公式が与えられた：
+
+\begin{theorem}[{\cite[Theorem C]{2404.17301v2}}]
+\label{th:APZ Theorem C v1}
+任意の自然数$i$に対して、
+$e (1+i)$を$e+f$で割った余りを
+$0 \le q < e+f$と置くと、
+\begin{align}
+h_{e,f}^{i} =
+\begin{cases}
+\gcd(e,f)-1 & q = 0 \ \text{または}\ q=e+f-1, \\
+q - 1 & 1 \le q \le \min \{e, f\}, \\
+\min \{e, f\} - 1 & \min \{e, f\} < q < e+f-1, \end{cases}
+\end{align}
+が成り立つ。
+\end{theorem}
+
+この公式が正しければ、
+\Cref{pr:main}が
+系として従う。
+しかし、
+\href{https://github.com/uedakazushi/cluster_sfuk_lean/blob/master/dim_SH.ipynb}{SageMathを用いた計算}
+は、
+この公式が正しくないことを示唆している。
+このため、我々は\cite{2406.15915}で
+この公式に依存しない証明を与えた。
+なお、
+修正された公式が\cite[Theorem C]{2404.17301v2}において与えられている：
+
+\begin{theorem}[{\cite[Theorem C]{2404.17301v2}}]
+\label{th:APZ Theorem C v2}
+任意の自然数$i$に対して、
+$\min \{ e, f \} (1+i)$を$e+f$で割った余りを
+$0 \le q < e+f$と置くと、
+\begin{align}
+h_{e,f}^{i} =
+\begin{cases}
+\gcd(e,f)-1 & q = 0, \\
+q - 1 & 1 \le q \le \min \{e, f\}, \\
+\min \{e, f\} - 1 & \min \{e, f\} < q \le \max \{e, f\}, \\
+e + f - q - 1 & \max \{e, f\} < q \le e + f - 1,
+\end{cases}
+\end{align}
+が成り立つ。
+\end{theorem}
+
+\Cref{th:APZ Theorem C v1}は極めて初等的な主張なので、
+もし\Cref{th:APZ Theorem C v1}を我々が計算機で検証しなければ、
+証明を詳細に検討せずに信じて、
+\Cref{pr:main}に対する誤った証明を与えていたかもしれない。
+また、計算機で検証する際に、
+彼らの主張ではなくそれを検証するために書いた我々のコードが
+間違っていた可能性もあったし、
+彼らの主張が正しくなかったと分かった今でも、
+我々のコードが正しいという保証はない。
+このプロジェクトの目標は、
+\cref{pr:main}を形式化することである。
 
 \chapter{Preparation}
 
 \begin{definition}
-\label{def:nat_interval}
+\label{df:nat_interval}
 \lean{nat_interval}
 \leanok
 自然数$a$, $b$に対して、
@@ -50,9 +319,9 @@ $
 \end{definition}
 
 \begin{lemma}
-\label{lem:nat_interval_card}
+\label{lm:nat_interval_card}
 \lean{nat_interval_card}
-\uses{def:nat_interval}
+\uses{df:nat_interval}
 \leanok
 $
 |[a,b]| = b - a + 1
@@ -60,7 +329,7 @@ $.
 \end{lemma}
 
 \begin{lemma}
-\label{lem:finite_of_bounded_of_Nat}
+\label{lm:finite_of_bounded_of_Nat}
 \lean{finite_of_bounded_of_Nat}
 \leanok
 \en{
@@ -71,8 +340,12 @@ A bounded set of natural numbers is finite.
 }
 \end{lemma}
 
+自然数$n,m$に対して、
+$n / m \in \bN$は$n$を$m$で割った商を表し、
+$n \% m \in \bN$は$n$を$m$で割った余りを表す。
+
 \begin{lemma}
-\label{lem:nat_mod_pnat_le}
+\label{lm:nat_mod_pnat_le}
 \en{
 If $n \in \bN$ and $m \in \bN^+$,
 then $n \% m \le m$.
@@ -107,122 +380,53 @@ $n \% (-m) = n \% m$
 }
 \end{remark}
 
-\chapter{Main definitions}
+% \chapter{Main definitions}
 
-Let $e$ and $f$ be positive integers
-and $i$ be a nonnegative integer.
-
-\begin{definition}
-\label{def:setI}
-\lean{setI}
-\leanok
-$
-\rI_{e,f}^i
-\coloneqq
-\{
-n \in \bN
-\mid
-(n \not \equiv - 1 \mod e)
-\wedge
-(n \not \equiv - 1 \mod f)
-\wedge
-(\lfloor n / e \rfloor + \lfloor n / f \rfloor = i)
-\}
-$
-\end{definition}
-
-% \begin{definition}
-% \label{def:setII}
-% \lean{setII}
-% $
-% \rII_{e,f}^i
-% \coloneqq
-% \{
-% n \in \bN
-% \mid
-% (n \equiv - 1 \mod e)
-% \wedge
-% (n \equiv - 1 \mod f)
-% \wedge
-% (\lfloor n / e \rfloor + \lfloor n / f \rfloor + 1 = i)
-% \}
-% $
-% \end{definition}
+\Cref{df:h}が意味をなすためには、
+次の補題が必要である。
 
 \begin{lemma}
-\label{lem:setI_finite}
+\label{lm:setI_finite}
 \lean{setI_finite}
-\uses{def:setI,lem:finite_of_bounded_of_Nat,lem:nat_mod_pnat_le}
+\uses{df:setI,lm:finite_of_bounded_of_Nat,lm:nat_mod_pnat_le}
 \leanok
-The set $\rI_{e,f}^i$ is finite.
+\en{The set $\rI_{e,f}^i$ is finite.}
+\ja{$\rI_{e,f}^i$は有限集合である。}
 \end{lemma}
 
-% \begin{lemma}
-% \label{lem:setII_finite}
+\begin{lemma}
+\label{lm:setII_finite}
 % \lean{setII_finite}
-% The set $\rII_{e,f}^i$ is finite.
-% \end{lemma}
+$\rII_{e,f}^i$は有限集合である。
+\end{lemma}
 
-\Cref{def:h} is a variation
-of the definition of $h_{e,f}^i$ in \cite{2406.15915},
-which coincides with that of \cite{2406.15915}
-if $i \not \equiv -1 \mod e+f$.
-
-\begin{definition}
-\label{def:h}
-\lean{h}
-\leanok
-\uses{lem:setI_finite}
-$
-h_{e,f}^i
-\coloneqq
-|\rI_{e,f}^i|
-% + |\rII_{e,f}^i|
-$.
-\end{definition}
-
+\begin{lemma}
+\label{lm:setIII_finite}
+% \lean{setII_finite}
+$\rIII_{e,f}^i$は有限集合である。
+\end{lemma}
 \chapter{Main result}
 
+\en{
 Let $e$, $f$, and $\ell$ be positive integers
 and $i$ be a nonnegative integer.
 Assume that $e$ and $f$ are coprime.
+}
+\ja{
+$e$, $f$, $\ell$を正の整数、$i$を非負整数とする。
+$e$と$f$が互いに素であると仮定する。
+}
 
-\begin{proposition}[{\cite[Proposition 5.1]{2406.15915}}]
-\label{prop:main}
-\lean{main}
-\uses{def:h,
-lem:I_is_interval}
-$
-h_{e \ell, f \ell}^i = \ell h_{e,f}^i + \ell - 1
-$
-\end{proposition}
-
-\begin{lemma} \label{lem:I_is_interval}
+\begin{lemma} \label{lm:I_is_interval}
+\en{
 There exists $n_{\max}$ and $n_{\min}$ such that
 $\rI_{e,f}^i = \{n \in \bN \mid n_{\min} \le n \le n_{\max}\}$.
+}
+\ja{
+$n_{\max}$と$n_{\min}$が存在して、
+$\rI_{e,f}^i = \{n \in \bN \mid n_{\min} \le n \le n_{\max}\}$
+が成り立つ。
+}
 \end{lemma}
 
-\chapter{Bibliography}
-
-\def\cprime{$'$} \def\cprime{$'$}
-\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
-\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
-% \MRhref is called by the amsart/book/proc definition of \MR.
-\providecommand{\MRhref}[2]{%
-  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
-}
-\providecommand{\href}[2]{#2}
-
-\begin{thebibliography}{LU22}
-\bibitem[APZ]{2404.17301}
-Nikolas Adaloglou, Federica Pasquotto, and Aline Zanardini, \emph{Symplectic cohomology of {$cA_n$} singularities}, arXiv:2404.17301.
-\bibitem[LU21]{MR4371540}
-Yank{\i} Lekili and Kazushi Ueda, \emph{Homological mirror symmetry for {M}ilnor fibers of simple singularities}, Algebr. Geom. \textbf{8} (2021), no.~5, 562--586. \MR{4371540}
-\bibitem[LU22]{MR4442683}
-Yank\i Lekili and Kazushi Ueda, \emph{Homological mirror symmetry for {M}ilnor fibers via moduli of {$A_\infty$}-structures}, J. Topol. \textbf{15} (2022), no.~3, 1058--1106. \MR{4442683}
-\bibitem[LU]{2406.15915}
-Yank{\i} Lekili, Kazushi Ueda,
-\emph{Homological mirror symmetry for Rabinowitz Fukaya categories
-of Milnor fibers of Brieskorn-Pham singularities},
-arXiv:2406.15915.
-\end{thebibliography}
+\input{bibliography.tex}

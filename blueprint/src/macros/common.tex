@@ -43,12 +43,19 @@
 \theoremstyle{definition}
 % \newtheorem{theorem}{Theorem}[section]
 \newtheorem{theorem}{定理}
+\crefname{theorem}{定理}{定理}
 \newtheorem{corollary}[theorem]{系}
+\crefname{corollary}{系}{系}
 \newtheorem{lemma}[theorem]{補題}
+\crefname{lemma}{補題}{補題}
 \newtheorem{proposition}[theorem]{命題}
+\crefname{proposition}{命題}{命題}
 \newtheorem{conjecture}[theorem]{予想}
+\crefname{conjecture}{予想}{予想}
 \newtheorem{assumption}[theorem]{仮定}
+\crefname{assumption}{仮定}{仮定}
 \newtheorem{step}{ステップ}
+\crefname{step}{ステップ}{ステップ}
 
 \newtheorem{definition}[theorem]{定義}
 \newtheorem{remark}[theorem]{注意}
@@ -58,7 +65,12 @@
 
 % ----- Common -----
 
+\newcommand{\bC}{\mathbb{C}}
 \newcommand{\bN}{\mathbb{N}}
+\newcommand{\bQ}{\mathbb{Q}}
 \newcommand{\bZ}{\mathbb{Z}}
 \newcommand{\rI}{\mathrm{I}}
 \newcommand{\rII}{\mathrm{I\!I}}
+\newcommand{\rIII}{\mathrm{I\!I\!I}}
+\newcommand{\Uv}{\check{U}}
+\DeclareMathOperator{\SH}{SH}

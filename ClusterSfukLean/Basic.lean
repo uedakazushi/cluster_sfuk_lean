@@ -268,6 +268,12 @@ def setII : Set ℕ :=
   ∧ n % f = f - 1
   ∧ n / e + n / f + 1 = i }
 
+def setIII : Set ℂ :=
+  {ξ : ℂ |
+  ξ ≠ 1
+  ∧ ξ^(e:ℕ) = 1
+  ∧ ξ^(f:ℕ) = 1 }
+
 lemma Nat_le_add_right (a b : ℕ) : a ≤ a + b := by
   linarith
 
@@ -317,15 +323,31 @@ lemma setI''_finite : (setI'' e f i).Finite := by
   apply finite_of_bounded_of_Nat
   assumption
 
+lemma setII_finite : (setII e f i).Finite := by
+  sorry
+
+lemma setIII_finite : (setIII e f).Finite := by
+  sorry
+
 noncomputable def finsetI : Finset ℕ :=
   (setI_finite e f i).toFinset
 
 noncomputable def finsetI'' : Finset ℕ :=
   (setI''_finite e f i).toFinset
 
+noncomputable def finsetII : Finset ℕ :=
+  (setII_finite e f i).toFinset
+
+noncomputable def finsetIII : Finset ℂ :=
+  (setIII_finite e f).toFinset
+
 noncomputable def cardI : ℕ := (finsetI e f i).card
 
-noncomputable def h : ℕ := (cardI e f i)
+noncomputable def cardII : ℕ := (finsetII e f i).card
+
+noncomputable def cardIII : ℕ := (finsetIII e f).card
+
+noncomputable def h : ℕ := (cardI e f i + (cardII e f i) * (cardIII e f))
 
 lemma setI''_non_empty : (setI'' e f i).Nonempty := by
   exists 0
