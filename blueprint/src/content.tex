@@ -237,7 +237,8 @@ one has
 h_{e \ell, f \ell}^i = \ell h_{e,f}^i + \ell - 1.
 \end{align}
 }
-\ja{任意の2以上の整数$e$と$f$および正でない整数$i$に対して、
+\ja{任意の2以上の互いに素な整数$e$と$f$、正の整数$\ell$
+および自然数$i$に対して、
 \begin{align}
 h_{e \ell, f \ell}^i = \ell h_{e,f}^i + \ell - 1
 \end{align}
@@ -272,6 +273,7 @@ q - 1 & 1 \le q \le \min \{e, f\}, \\
 このため、我々は\cite{2406.15915}で
 この公式に依存しない証明を与えた。
 なお、
+我々が誤りを指摘した後に、
 修正された公式が\cite[Theorem C]{2404.17301v2}において与えられている：
 
 \begin{theorem}[{\cite[Theorem C]{2404.17301v2}}]
@@ -301,7 +303,9 @@ e + f - q - 1 & \max \{e, f\} < q \le e + f - 1,
 彼らの主張が正しくなかったと分かった今でも、
 我々のコードが正しいという保証はない。
 このプロジェクトの目標は、
-\cref{pr:main}を形式化することである。
+\cref{pr:main}を形式化することと、
+$h_{e,f}^i$を計算するための
+形式的に検証されたコードを提供することである。
 
 \chapter{Preparation}
 
