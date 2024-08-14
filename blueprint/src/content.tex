@@ -229,6 +229,7 @@ h_{e,f}^i
 
 \begin{proposition}[{\cite[Proposition 5.1]{2406.15915}}]
 \label{pr:main}
+\uses{df:h,lm:nat_interval_card,pr:I_is_interval,}
 \en{
 For integers $e$ and $f$ greater than two
 and a non-positive integer $i$,
@@ -323,6 +324,86 @@ $
 \end{definition}
 
 \begin{lemma}
+\label{lm:nat_interval_mem}
+\lean{nat_interval_mem}
+\uses{df:nat_interval}
+\leanok
+任意の$a,b,c \in \bN$に対して、
+$
+b \in [a, c]
+$
+であるための必要十分条件は
+$
+a \le b \le c
+$
+である。
+\end{lemma}
+
+\begin{definition}
+\label{df:IsInterval}
+\lean{IsInterval}
+\uses{df:nat_interval}
+\leanok
+$
+S \subset \bN
+$
+が区間であるとは、
+任意の
+$
+a, b, c \in \bN
+$
+に対して、
+$
+a, c \in S
+$
+かつ
+$
+a \le b \le c
+$
+であれば
+$
+b \in S
+$
+であることをいう。
+\end{definition}
+
+\begin{lemma}
+\label{lm:nonempty_interval_range}
+\lean{nonempty_interval_range}
+\uses{df:IsInterval}
+\leanok
+任意の空でない有限集合
+$
+S \subset \bN
+$
+が区間であれば、
+$
+S = [\min S, \max S]
+$
+である。
+\end{lemma}
+
+\begin{lemma}
+\label{lm:preimage_of_monotone_isInterval}
+\lean{preimage_of_monotone_isInterval}
+\uses{df:IsInterval}
+\leanok
+$
+f \colon \bN \to \bN
+$
+を単調増加関数とすると、
+任意の
+$
+i \in \bN
+$
+に対して、
+$
+f^{-1}(i) \subset \bN
+$
+は区間である。
+\end{lemma}
+
+\begin{lemma}
 \label{lm:nat_interval_card}
 \lean{nat_interval_card}
 \uses{df:nat_interval}
@@ -349,40 +430,37 @@ $n / m \in \bN$は$n$を$m$で割った商を表し、
 $n \% m \in \bN$は$n$を$m$で割った余りを表す。
 
 \begin{lemma}
-\label{lm:nat_mod_pnat_le}
-\en{
-If $n \in \bN$ and $m \in \bN^+$,
-then $n \% m \le m$.
-}
-\ja{
-もし$n \in \bN$かつ$m \in \bN^+$ならば、
-$n \% m \le m$である。
-}
+\label{lm:nat_div_pnat_le}
+\lean{nat_div_pnat_le}
+\leanok
+自然数$n,q$と
+正の自然数$d$に対して、
+$n / d \le q$ならば$n \le q \cdot d + d$が成り立つ。
 \end{lemma}
 
-\begin{remark}
-\en{
-Note that one has $n \% m = n$ when $m = 0$,
-and that the operator $\%$ in \texttt{PNat}
-takes values in \texttt{PNat}
-(so that
-$n \% (-m) = n \% m$
-for all
-$n \in \bZ$
-and
-$m \in \bN^+$).
-}
-\ja{
-$m=0$の時、$n \% m = n$であることと、
-\texttt{PNat}における$\%$は
-\texttt{PNat}に値を取る
-（従って、任意の$n \in \bZ$と$m \in \bN^+$に対して
-$n \% (-m) = n \% m$
-である
-）
-ことに注意せよ。
-}
-\end{remark}
+% \begin{remark}
+% \en{
+% Note that one has $n \% m = n$ when $m = 0$,
+% and that the operator $\%$ in \texttt{PNat}
+% takes values in \texttt{PNat}
+% (so that
+% $n \% (-m) = n \% m$
+% for all
+% $n \in \bZ$
+% and
+% $m \in \bN^+$).
+% }
+% \ja{
+% $m=0$の時、$n \% m = n$であることと、
+% \texttt{PNat}における$\%$は
+% \texttt{PNat}に値を取る
+% （従って、任意の$n \in \bZ$と$m \in \bN^+$に対して
+% $n \% (-m) = n \% m$
+% である
+% ）
+% ことに注意せよ。
+% }
+% \end{remark}
 
 % \chapter{Main definitions}
 
@@ -392,7 +470,7 @@ $n \% (-m) = n \% m$
 \begin{lemma}
 \label{lm:setI_finite}
 \lean{setI_finite}
-\uses{df:setI,lm:finite_of_bounded_of_Nat,lm:nat_mod_pnat_le}
+\uses{df:setI,lm:finite_of_bounded_of_Nat,lm:nat_div_pnat_le}
 \leanok
 \en{The set $\rI_{e,f}^i$ is finite.}
 \ja{$\rI_{e,f}^i$は有限集合である。}
@@ -400,37 +478,132 @@ $n \% (-m) = n \% m$
 
 \begin{lemma}
 \label{lm:setII_finite}
-% \lean{setII_finite}
+\lean{setII_finite}
+\uses{df:setII}
 $\rII_{e,f}^i$は有限集合である。
 \end{lemma}
 
 \begin{lemma}
 \label{lm:setIII_finite}
-% \lean{setII_finite}
+\lean{setIII_finite}
+\uses{df:setIII}
 $\rIII_{e,f}^i$は有限集合である。
 \end{lemma}
-\chapter{Main result}
 
-\en{
-Let $e$, $f$, and $\ell$ be positive integers
-and $i$ be a nonnegative integer.
-Assume that $e$ and $f$ are coprime.
-}
-\ja{
-$e$, $f$, $\ell$を正の整数、$i$を非負整数とする。
-$e$と$f$が互いに素であると仮定する。
-}
+\chapter{Main argument}
 
-\begin{lemma} \label{lm:I_is_interval}
-\en{
-There exists $n_{\max}$ and $n_{\min}$ such that
-$\rI_{e,f}^i = \{n \in \bN \mid n_{\min} \le n \le n_{\max}\}$.
-}
-\ja{
-$n_{\max}$と$n_{\min}$が存在して、
-$\rI_{e,f}^i = \{n \in \bN \mid n_{\min} \le n \le n_{\max}\}$
-が成り立つ。
-}
+$e$と$f$を2以上の自然数、
+$i$を自然数とする。
+$\rI_{e,f}^i$の変種として
+次の${\rI'}_{e,f}^i$を考える：
+
+\begin{definition}
+\label{df:setI'}
+\lean{setI'}
+\leanok
+$
+{\rI'}_{e,f}^i
+\coloneqq
+\{
+n \in \bN
+\mid
+n \not \equiv - 1 \mod e
+\ 
+\text{かつ}
+\ 
+n \not \equiv - 1 \mod f
+\ 
+\text{かつ}
+\ 
+\lfloor n / e \rfloor + \lfloor n / f \rfloor \ge i
+\}
+$
+\end{definition}
+
+$\rI_{e,f}^i$は空集合かも知れないが、
+${\rI'}_{e,f}^i$は決して空にはならない：
+
+\begin{lemma}
+\label{lm:setI'_non_empty}
+\lean{setI'_non_empty}
+\uses{df:setI'}
+\leanok
+${\rI'}_{e,f}^i$は空でない。
 \end{lemma}
+
+\begin{definition}
+\label{df:b_min}
+\lean{b_min}
+\uses{lm:setI'_non_empty}
+$\bN$が整列集合で、
+${\rI'}_{e,f}^i$が空でないので、
+${\rI'}_{e,f}^i$は最小限を持つが、
+これを$\bmin$と置く。
+\end{definition}
+
+\begin{definition}
+\label{df:setI''}
+\lean{setI''}
+\leanok
+$
+{\rI''}_{e,f}^i
+\coloneqq
+\{
+n \in \bN
+\mid
+n \not \equiv - 1 \mod e
+\ 
+\text{かつ}
+\ 
+n \not \equiv - 1 \mod f
+\ 
+\text{かつ}
+\ 
+\lfloor n / e \rfloor + \lfloor n / f \rfloor \le i
+\}
+$
+\end{definition}
+
+${\rI''}_{e,f}^i$は有界なので
+有限集合である：
+
+\begin{lemma}
+\label{lm:setI''_finite}
+\lean{setI''_finite}
+\uses{df:setI'',lm:finite_of_bounded_of_Nat}
+\leanok
+${\rI''}_{e,f}^i$は有限集合である。
+\end{lemma}
+
+$0 \in {\rI''}_{e,f}^i$なので、
+${\rI''}_{e,f}^i$も決して空にはならない：
+
+\begin{lemma}
+\label{lm:setI''_non_empty}
+\lean{setI''_non_empty}
+\uses{df:setI''}
+\leanok
+${\rI''}_{e,f}^i$は空でない。
+\end{lemma}
+
+\begin{definition}
+\label{df:b_max}
+\lean{b_max}
+\uses{lm:setI''_finite,lm:setI''_non_empty}
+\leanok
+$\bmax \coloneqq \max {\rI''}_{e,f}^i$.
+\end{definition}
+
+
+
+\begin{proposition}
+\label{pr:I_is_interval}
+\uses{df:b_min,df:b_max}
+$\rI_{e,f}^i = [\bmin,\bmax]$
+\end{proposition}
+
+\begin{proof}
+$\rI_{e,f}^i \ne \emptyset$は$\bmin$と$\bmax$を含む
+\end{proof}
 
 \input{bibliography.tex}

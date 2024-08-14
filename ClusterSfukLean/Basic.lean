@@ -23,6 +23,96 @@ theorem nat_interval_card : (nat_interval a b).card =
     rw [Finset.card_empty]
     rw [if_neg h]
 
+lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b ≤ c := by
+  rw [nat_interval]
+  by_cases h : a ≤ c
+  { rw [if_pos h]
+    rw [Finset.mem_sdiff]
+    rw [Finset.mem_range]
+    apply Iff.intro
+    { intro h1
+      have h11 := h1.1
+      have h12 := h1.2
+      rw [Finset.mem_range] at h12
+      have h12' := Nat.le_of_not_gt h12
+      apply And.intro
+      { exact h12' }
+      { linarith }
+    }
+    { intro h1
+      have h11 := h1.1
+      have h12 := h1.2
+      apply And.intro
+      { linarith }
+      { rw [Finset.mem_range]
+        apply Nat.not_lt_of_ge
+        linarith }
+    }
+  }
+  { rw [if_neg h]
+    have h' := Nat.gt_of_not_le h
+    apply Iff.intro
+    { intro h1
+      exfalso
+      simp at h1
+    }
+    { intro h1
+      have h11 := h1.1
+      have h12 := h1.2
+      exfalso
+      linarith
+    }
+  }
+
+def IsInterval (S : Set ℕ) : Prop := ∀ a b c : ℕ, a ∈ S → c ∈ S → a ≤ b → b ≤ c → b ∈ S
+
+lemma nonempty_interval_range (S : Finset ℕ) (nonempty : S.Nonempty) (h : IsInterval S) : S = nat_interval (S.min' nonempty) (S.max' nonempty) := by
+  apply Finset.ext
+  intro a
+  apply Iff.intro
+  { intro a_in_S
+    have h1 : (S.min' nonempty) ∈ S := by
+      apply Finset.min'_mem
+    have h2 : (S.max' nonempty) ∈ S := by
+      apply Finset.max'_mem
+    have h3 : (S.min' nonempty) ≤ a := by
+      apply Finset.min'_le
+      assumption
+    have h4 : a ≤ (S.max' nonempty) := by
+      apply Finset.le_max'
+      assumption
+    rw [nat_interval_mem]
+    apply And.intro
+    { exact h3 }
+    { exact h4 }
+  }
+  { intro a_in_interval
+    rw [nat_interval_mem] at a_in_interval
+    have h1 := a_in_interval.1
+    have h2 := a_in_interval.2
+    rw [IsInterval] at h
+    have h3 := h (S.min' nonempty) a (S.max' nonempty) (Finset.min'_mem S nonempty) (Finset.max'_mem S nonempty) h1 h2
+    exact h3
+  }
+
+lemma preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : ℕ) : IsInterval (Set.preimage (f : ℕ → ℕ) { n : ℕ | n = i}) := by
+  intro a b c a_in_f_inv c_in_f_inv a_le_b b_le_c
+  have f_a_i : f a = i := by
+    exact a_in_f_inv
+  have f_c_i : f c = i := by
+    exact c_in_f_inv
+  have f_a_le_f_b : f a ≤ f b := by
+    apply h
+    assumption
+  have f_b_le_f_c : f b ≤ f c := by
+    apply h
+    assumption
+  have f_b_i : f b = i := by
+    apply Nat.le_antisymm
+    linarith
+    linarith
+  exact f_b_i
+
 lemma finite_of_bounded_of_Nat (s: Set ℕ) :
   (∃ k : ℕ, ∀ x ∈ s, x ≤ k) → s.Finite := by
   intro h
@@ -35,6 +125,20 @@ lemma finite_of_bounded_of_Nat (s: Set ℕ) :
         exact h x h2
       apply Set.Finite.subset (Set.finite_le_nat k)
       assumption
+
+lemma Nat_div_monotone (d : ℕ) : Monotone (fun n ↦ n / d) := by
+  intro n m h
+  apply Nat.div_le_div_right
+  assumption
+
+lemma Nat_add_div_monotone (e f : ℕ)
+ : Monotone (fun n ↦ n / e + n / f) := by
+  intro n m h
+  apply Nat.add_le_add
+  apply Nat.div_le_div_right
+  assumption
+  apply Nat.div_le_div_right
+  assumption
 
 lemma nat_div_pnat_le (n q : ℕ) (d : ℕ+) : n / d ≤ q → n ≤ d * q + d := by
   intro h1
@@ -246,7 +350,7 @@ lemma setI'_non_empty : (setI' e f i).Nonempty := by
   exact le_trans h1 h2
   exact e.property
 
-noncomputable def min_setI' : ℕ :=
+noncomputable def b_min : ℕ :=
   WellFounded.min
     Nat.lt.isWellOrder.3.wf
     (setI' e f i)
