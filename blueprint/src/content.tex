@@ -409,9 +409,15 @@ $
 \uses{df:nat_interval}
 \leanok
 $
-|[a,b]| = b - a + 1
+|[a,b]| = (b+1) - a
 $.
 \end{lemma}
+
+\begin{remark}
+自然数の減法\textsf{Nat.sub}は、
+定義から
+$n \le m$に対して$n-m=0$を満たす。
+\end{remark}
 
 \begin{lemma}
 \label{lm:finite_of_bounded_of_Nat}
@@ -462,7 +468,49 @@ $n / d \le q$ならば$n \le q \cdot d + d$が成り立つ。
 % }
 % \end{remark}
 
-% \chapter{Main definitions}
+\begin{definition}
+\label{df:φ}
+\lean{φ}
+\leanok
+$
+\varphi_{e,f} \colon \bN \to \bN
+$
+を
+$
+n \mapsto \lfloor n / e \rfloor + \lfloor n / f \rfloor
+$
+で定義する。
+\end{definition}
+
+\begin{lemma}
+\label{lm:φ_monotone}
+\lean{φ_monotone}
+\uses{df:φ}
+\leanok
+$\varphi$は単調増加関数である。
+\end{lemma}
+
+\begin{lemma}
+\label{lm:I_as_a_subset_of_preimage_φ}
+\lean{I_as_a_subset_of_preimage_φ}
+\uses{df:setI,df:φ}
+\leanok
+任意の$e,f,i \in \bN$に対して、
+$
+\rI_{e,f}^i
+=
+\left\{
+n \in \varphi_{e,f}^{-1}( i )
+\relmid
+n \not \equiv -1 \mod e
+\ 
+\text{かつ}
+\ 
+n \not \equiv - 1 \mod f
+\right\}
+$
+が成り立つ。
+\end{lemma}
 
 \Cref{df:h}が意味をなすためには、
 次の補題が必要である。
@@ -539,7 +587,7 @@ ${\rI'}_{e,f}^i$は空でない。
 $\bN$が整列集合で、
 ${\rI'}_{e,f}^i$が空でないので、
 ${\rI'}_{e,f}^i$は最小限を持つが、
-これを$\bmin$と置く。
+これを$\bmin(e,f,i)$と置く。
 \end{definition}
 
 \begin{definition}
@@ -592,19 +640,200 @@ ${\rI''}_{e,f}^i$は空でない。
 \lean{b_max}
 \uses{lm:setI''_finite,lm:setI''_non_empty}
 \leanok
-$\bmax \coloneqq \max {\rI''}_{e,f}^i$.
+$\bmax(e,f,i) \coloneqq \max {\rI''}_{e,f}^i$.
 \end{definition}
 
-
-
-\begin{proposition}
-\label{pr:I_is_interval}
-\uses{df:b_min,df:b_max}
-$\rI_{e,f}^i = [\bmin,\bmax]$
-\end{proposition}
+\begin{lemma}
+\label{lm:I_is_interval}
+\uses{df:b_min,df:b_max,df:φ}
+$\rI_{e,f}^i = [\bmin(e,f,i),\bmax(e,f,i)]$
+\end{lemma}
 
 \begin{proof}
-$\rI_{e,f}^i \ne \emptyset$は$\bmin$と$\bmax$を含む
+$\rI_{e,f}^i \ne \emptyset$の時、
+$\bmin(e,f,i) = \min \rI_{e,f}^i$かつ
+$\bmax(e,f,i) = \max \rI_{e,f}^i$であり、
+従って
+$\rI_{e,f}^i = [\bmin(e,f,i),\bmax(e,f,i)]$である。
+
+$\rI_{e,f}^i = \emptyset$の時、
+$\bmin(e,f,i) = \bmin(e,f,i+1)$かつ
+$\bmax(e,f,i) = \bmax(e,f,i-1)$なので、
+$\varphi(\bmin(e,f,i)) \ge i+1$
+かつ
+$\varphi(\bmax(e,f,i)) \le i-1$であり、
+従って
+$\varphi(\bmin(e,f,i)) > \varphi(\bmax(e,f,i))$である。
+$\varphi$は単調増加関数なので、
+$\bmin(e,f,i) > \bmax(e,f,i)$であり、
+従って
+$[\bmin(e,f,i),\bmax(e,f,i)] = \emptyset$である。
+\end{proof}
+
+\begin{lemma} \label{lm:φ_increases_by_2_at_most}
+$\varphi_{e,f}(n+1) \le \varphi_{e,f}(n) + 2$.
+\end{lemma}
+
+\begin{lemma}
+任意の自然数$i$に対し、
+$\varphi_{e,f}^{-1}(i) = \emptyset$
+ならば
+$\varphi_{e,f}^{-1}(i+1) \ne \emptyset$.
+\end{lemma}
+
+\begin{proof}
+ある自然数$i$に対して
+$\varphi_{e,f}^{-1}(i) = \emptyset$かつ
+$\varphi_{e,f}^{-1}(i+1) = \emptyset$ならば、
+$\varphi_{e,f}^{-1}(n) < i$を満たす
+最大の自然数$n$に対し、
+$\varphi_{e,f}(n) \le i-1$かつ
+$\varphi_{e,f}(n+1) \ge i+2$が成り立つが、
+これは\Cref{lm:φ_increases_by_2_at_most}に矛盾する。
+\end{proof}
+
+\begin{lemma}
+任意の自然数$i$に対し、
+$\varphi_{e,f}^{-1}(i) \ne \emptyset$
+ならば
+$I_{e,f}^i \ne \emptyset$.
+\end{lemma}
+
+\begin{proof}
+$\varphi_{e,f}^{-1}(i) \ne \emptyset$かつ
+$I_{e,f}^i \ne \emptyset$であれば、
+任意の自然数$n$に対して、
+$\varphi_{e,f}(n) = i$であれば
+$n \equiv e - 1 \mod e$かつ
+$n \equiv f - 1 \mod f$が成り立つ。
+しかし、
+$e, f \ge 2$から、
+この時
+$n-1 \equiv e - 2 \not \equiv e - 1 \mod e$かつ
+$n-1 \not \equiv f - 1 \mod f$かつ
+$\lfloor (n-1) / e \rfloor + \lfloor (n-1) / f \rfloor = i$が成り立ち、
+これは矛盾である。
+\end{proof}
+
+\begin{lemma}
+$\varphi_{e \ell, f \ell}(n \ell) = \varphi_{e,f}(n)$.
+\end{lemma}
+
+\begin{lemma}
+任意の$n \in \varphi_{e,f}^{-1}(i)$
+に対して
+$n \ell \in \varphi_{e \ell,f \ell}^{-1}(i)$.
+\end{lemma}
+
+\begin{lemma}
+\label{lm:add_one_div_le_div_add_one}
+任意の自然数$n$と正の自然数$d$に対して、
+$(n+1)/e \le (n/e) + 1$が成り立つ。
+\end{lemma}
+
+\begin{proof}
+$
+(n+1)/e \le (n+e)/e = n/e+1
+$.
+\end{proof}
+
+\begin{lemma}
+\label{lm:e_not_dvd_n_n_div_e_eq_n_sub_1_div_e}
+$e \not | n$ならば
+$\lfloor n / e \rfloor = \lfloor (n-1) / e \rfloor$
+\end{lemma}
+
+\begin{lemma}
+$n = \min \varphi_{e,f}^{-1}(i)$
+であれば、
+$e | n$または$f | n$が成り立つ。
+\end{lemma}
+
+\begin{proof}
+$e \not | n$であれば、
+$\lfloor n / e \rfloor = \lfloor (n-1) / e \rfloor$である。
+同様に、
+$f \not | n$であれば、
+$\lfloor n / f \rfloor = \lfloor (n-1) / f \rfloor$である。
+従って、
+$e \not | n$かつ$f \not | n$であれば、
+$
+\lfloor (n-1) / e \rfloor + \lfloor (n-1) / f \rfloor
+= \lfloor n / e \rfloor + \lfloor n / f \rfloor
+= i
+$
+となり、
+$n$が最小値であることに矛盾する。
+\end{proof}
+
+\begin{lemma}
+$n \in \varphi_{e,f}^{-1}(i)$
+が
+$n | e$または$n | f$を満たせば、
+$n$は
+$\varphi_{e,f}^{-1}(i)$
+の最小元である。
+\end{lemma}
+
+\begin{proof}
+$n \in \varphi_{e,f}^{-1}(i)$
+が
+$n | e$を満たせば、
+$
+\lfloor (n-1) / e \rfloor < \lfloor n / e \rfloor
+$
+なので、
+$
+\lfloor (n-1) / f \rfloor \le \lfloor n / f \rfloor
+$
+と併せて、
+$\lfloor (n-1) / e \rfloor + \lfloor (n-1) / f \rfloor < i$
+となり、$n$は
+$\varphi_{e,f}^{-1}(i)$
+の最小元である。
+同様に、
+$n \in \varphi_{e,f}^{-1}(i)$
+が
+$n | f$を満たせば、
+$n$は
+$\varphi_{e,f}^{-1}(i)$
+の最小元である。
+\end{proof}
+
+\begin{lemma}
+$n \in \varphi_{e,f}^{-1}(i)$
+が
+$\varphi_{e,f}^{-1}(i)$
+の最小元であるための
+必要十分条件は、
+$e | n$または$f | n$である。
+\end{lemma}
+
+\begin{lemma}
+$n$が$\varphi_{e \ell, f \ell}^{-1}(i)$の最小元の時、
+$\ell | n$である。
+\end{lemma}
+
+\begin{proof}
+$e \ell| n$または$f \ell| n$であるが、
+どちらの場合も$\ell | n$である。
+\end{proof}
+
+$\varphi_{e,f}^{-1}(i)$の最小元を$\bmin(e,f,i)$と置くと、
+$\bmin(e,f,i) \in \varphi_{e,f}^{-1}(i)$である。
+従って、
+$\bmin(e,f,i) \not \equiv -1 \mod e$かつ
+$\bmin(e,f,i) \not \equiv -1 \mod f$かつ
+$\lfloor \bmin(e,f,i) / e \rfloor + \lfloor \bmin(e,f,i) / f \rfloor = i$が成り立つ。
+
+\begin{lemma}
+\label{lm:b_min_mul_l}
+\uses{df:b_min}
+$\bmin(e \ell, f \ell, i) = \ell \bmin(e,f,i)$.
+\end{lemma}
+
+\begin{proof}
+$\lfloor (n+1) / e \rfloor$
 \end{proof}
 
 \input{bibliography.tex}

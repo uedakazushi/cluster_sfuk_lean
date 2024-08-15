@@ -95,7 +95,7 @@ lemma nonempty_interval_range (S : Finset ℕ) (nonempty : S.Nonempty) (h : IsIn
     exact h3
   }
 
-lemma preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : ℕ) : IsInterval (Set.preimage (f : ℕ → ℕ) { n : ℕ | n = i}) := by
+lemma preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : ℕ) : IsInterval ((f : ℕ → ℕ) ⁻¹' { n : ℕ | n = i}) := by
   intro a b c a_in_f_inv c_in_f_inv a_le_b b_le_c
   have f_a_i : f a = i := by
     exact a_in_f_inv
@@ -139,6 +139,19 @@ lemma Nat_add_div_monotone (e f : ℕ)
   assumption
   apply Nat.div_le_div_right
   assumption
+
+def φ (e f : ℕ) : ℕ → ℕ :=
+  λ n ↦ n / e + n / f
+
+lemma φ_monotone (e f : ℕ+) : Monotone (φ e f) := by
+  intro n m h
+  apply Nat_add_div_monotone
+  assumption
+
+lemma preimage_φ_isInterval (e f : ℕ+) (i : ℕ) : IsInterval ((φ e f) ⁻¹' { n : ℕ | n = i }) := by
+  apply preimage_of_monotone_isInterval
+  apply φ_monotone
+
 
 lemma nat_div_pnat_le (n q : ℕ) (d : ℕ+) : n / d ≤ q → n ≤ d * q + d := by
   intro h1
@@ -304,6 +317,33 @@ def setI : Set ℕ :=
   b % e ≠ e - 1
   ∧ b % f ≠ f - 1
   ∧ b / e + b / f = i }
+
+lemma I_as_a_subset_of_preimage_φ : setI e f i = { n ∈ (φ e f) ⁻¹' { m : ℕ | m = i } | n % e ≠ e - 1 ∧ n % f ≠ f - 1} := by
+  apply Set.eq_of_subset_of_subset
+  { intro x
+    intro h
+    cases h with
+    | intro h1 h2 => cases h2 with
+    | intro h2 h3 =>
+    apply And.intro
+    { apply h3 }
+    { apply And.intro
+      { apply h1 }
+      { apply h2 }
+    }
+  }
+  { intro x
+    intro h
+    cases h with
+    | intro h1 h2 => cases h2 with
+    | intro h2 h3 =>
+    apply And.intro
+    { assumption }
+    { apply And.intro
+      { assumption }
+      { assumption }
+    }
+  }
 
 def setI' : Set ℕ :=
   {b : ℕ |
@@ -509,7 +549,6 @@ lemma Imin_l (non_emp : (finsetI (e * l) (f * l) i).Nonempty) :
     have h2 : b_min ∈ (finsetI e f i) := by
       apply Finset.min'_mem
     have h3 : ¬ (b_min % e = 0 ∨ b_min % f = 0) → False := by
-      #check finsetI
       have h4 : ∃ b ∈ (finsetI e f i), b < b_min := by
         sorry
       -- match h4 with
