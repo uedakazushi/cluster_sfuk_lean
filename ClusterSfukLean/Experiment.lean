@@ -1,4 +1,6 @@
-import Mathlib
+import ClusterSfukLean.Basic
+
+#print nat_interval
 
 lemma add_one_div_le_div_add_one (n : ℕ) (d : ℕ+) : (n+1) / d ≤ (n / d) + 1 := by
   have h1 : n + 1 ≤ n + d := by

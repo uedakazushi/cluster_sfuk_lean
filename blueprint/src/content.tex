@@ -316,11 +316,10 @@ $h_{e,f}^i$を計算するための
 \leanok
 自然数$a$, $b$に対して、
 \textsf{nat\_interval a b}
-で
-$
-[a, b] \coloneqq \{n \in \bN \mid a \le n \le b\}
-$
-を表す。
+を
+\textsf{Finset.range (b + 1) \ Finset.range a}
+と定義し、
+この青写真では$[a,b]$で表す。
 \end{definition}
 
 \begin{lemma}
@@ -335,6 +334,11 @@ $
 であるための必要十分条件は
 $
 a \le b \le c
+$
+である。
+すなわち、
+$
+[a, b] \coloneqq \{n \in \bN \mid a \le n \le b\}
 $
 である。
 \end{lemma}
@@ -491,6 +495,20 @@ $\varphi$は単調増加関数である。
 \end{lemma}
 
 \begin{lemma}
+\label{lm:φ_mul}
+\lean{φ_mul}
+\uses{df:φ}
+\leanok
+自然数$e,f,n$と
+正の自然数$\ell \in$に対して
+$
+\varphi_{e \ell,f \ell}(n \ell)
+=
+\varphi_{e,f}(n)
+$.
+\end{lemma}
+
+\begin{lemma}
 \label{lm:I_as_a_subset_of_preimage_φ}
 \lean{I_as_a_subset_of_preimage_φ}
 \uses{df:setI,df:φ}
@@ -539,6 +557,8 @@ $\rIII_{e,f}^i$は有限集合である。
 \end{lemma}
 
 \chapter{Main argument}
+
+\section{}
 
 $e$と$f$を2以上の自然数、
 $i$を自然数とする。
@@ -835,5 +855,135 @@ $\bmin(e \ell, f \ell, i) = \ell \bmin(e,f,i)$.
 \begin{proof}
 $\lfloor (n+1) / e \rfloor$
 \end{proof}
+
+\section{}
+
+$e, f$を互いに素な2以上の自然数、
+$i$を自然数、
+$\ell$を自然数とする。
+
+\begin{lemma}
+$
+\varphi_{e \ell, f \ell}^{-1}(i) = \emptyset
+$
+ならば
+$
+i \equiv e + f - 1 \mod e + f
+$
+\end{lemma}
+
+\begin{proof}
+$
+\varphi_{e \ell, f \ell}^{-1}(i) = \emptyset
+$
+の時、
+$
+n = \min \varphi_{e \ell, f \ell}^{-1}(i+1)
+$
+は
+$
+e \ell | n
+$
+かつ
+$
+f \ell | n
+$
+を満たす。
+この時、
+$
+n = e f \ell k
+$
+と置くと、
+\begin{align}
+\varphi_{e \ell, f \ell}(n)
+&= \lfloor n / e \ell \rfloor + \lfloor n / f \ell \rfloor \\
+&= f k + e k \\
+&= (e + f) k
+\end{align}
+かつ
+\begin{align}
+\varphi_{e \ell, f \ell}(n-1)
+&= (e + f) k - 2
+\end{align}
+より
+\begin{align}
+i = (e + f) k - 1
+\end{align}
+すなわち
+\begin{align}
+i \equiv e + f - 1 \mod e + f
+\end{align}
+である。
+\end{proof}
+
+\begin{lemma}
+$
+i \equiv e + f - 1 \mod e + f
+$
+ならば
+$
+\varphi_{e \ell, f \ell}^{-1}(i) = \emptyset
+$
+\end{lemma}
+
+\begin{proof}
+$
+i \equiv e + f - 1 \mod e + f
+$
+の時、
+$
+k = (i + 1) / (e + f)
+$,
+$
+n = e f \ell k
+$
+と置くと、
+\begin{align}
+\varphi_{e \ell, f \ell}(n)
+&= \lfloor n / e \ell \rfloor + \lfloor n / f \ell \rfloor \\
+&= f k + e k \\
+&= (e + f) k \\
+&= i + 1
+\end{align}
+かつ
+\begin{align}
+\varphi_{e \ell, f \ell}(n-1)
+&= i - 1
+\end{align}
+なので、
+$
+\varphi_{e \ell, f \ell}^{-1}(i) = \emptyset
+$
+となる。
+\end{proof}
+
+\begin{definition}
+$
+i \not \equiv e + f - 1 \mod e + f
+$
+の時、
+$
+\bmin(e \ell, f \ell, i) \coloneqq \min \varphi_{e \ell, f \ell}^{-1}(i)
+$,
+$
+\bmax(e \ell, f \ell, i) \coloneqq \max \varphi_{e \ell, f \ell}^{-1}(i)
+$
+と置く。
+\end{definition}
+
+\begin{lemma}
+$
+\rI_{e \ell, f \ell}^i \not = \emptyset
+$
+の時、
+$
+\varphi_{e \ell, f \ell}^{-1}(i) \not = \emptyset
+$
+
+$
+\varphi_{e \ell, f \ell}^{-1}(i)
+= \emptyset
+$
+\end{lemma}
 
 \input{bibliography.tex}

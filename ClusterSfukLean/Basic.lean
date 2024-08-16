@@ -1,130 +1,8 @@
 import Mathlib
+import ClusterSfukLean.NatInterval
+import ClusterSfukLean.QuotRem
 
 section preliminaries
-
-def nat_interval (a b : ℕ) : Finset ℕ :=
-  if b ≥ a then Finset.range (b + 1) \ Finset.range a else ∅
-
-theorem nat_interval_card : (nat_interval a b).card =
-  if b ≥ a then b + 1 - a else 0 := by
-  cases Decidable.em (b ≥ a) with
-  |inl h =>
-    simp [nat_interval]
-    rw [if_pos h]
-    rw [Finset.card_sdiff]
-    rw [Finset.card_range]
-    rw [Finset.card_range]
-    rw [if_pos h]
-    simp
-    linarith
-  | inr h =>
-    simp [nat_interval]
-    rw [if_neg h]
-    rw [Finset.card_empty]
-    rw [if_neg h]
-
-lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b ≤ c := by
-  rw [nat_interval]
-  by_cases h : a ≤ c
-  { rw [if_pos h]
-    rw [Finset.mem_sdiff]
-    rw [Finset.mem_range]
-    apply Iff.intro
-    { intro h1
-      have h11 := h1.1
-      have h12 := h1.2
-      rw [Finset.mem_range] at h12
-      have h12' := Nat.le_of_not_gt h12
-      apply And.intro
-      { exact h12' }
-      { linarith }
-    }
-    { intro h1
-      have h11 := h1.1
-      have h12 := h1.2
-      apply And.intro
-      { linarith }
-      { rw [Finset.mem_range]
-        apply Nat.not_lt_of_ge
-        linarith }
-    }
-  }
-  { rw [if_neg h]
-    have h' := Nat.gt_of_not_le h
-    apply Iff.intro
-    { intro h1
-      exfalso
-      simp at h1
-    }
-    { intro h1
-      have h11 := h1.1
-      have h12 := h1.2
-      exfalso
-      linarith
-    }
-  }
-
-def IsInterval (S : Set ℕ) : Prop := ∀ a b c : ℕ, a ∈ S → c ∈ S → a ≤ b → b ≤ c → b ∈ S
-
-lemma nonempty_interval_range (S : Finset ℕ) (nonempty : S.Nonempty) (h : IsInterval S) : S = nat_interval (S.min' nonempty) (S.max' nonempty) := by
-  apply Finset.ext
-  intro a
-  apply Iff.intro
-  { intro a_in_S
-    have h1 : (S.min' nonempty) ∈ S := by
-      apply Finset.min'_mem
-    have h2 : (S.max' nonempty) ∈ S := by
-      apply Finset.max'_mem
-    have h3 : (S.min' nonempty) ≤ a := by
-      apply Finset.min'_le
-      assumption
-    have h4 : a ≤ (S.max' nonempty) := by
-      apply Finset.le_max'
-      assumption
-    rw [nat_interval_mem]
-    apply And.intro
-    { exact h3 }
-    { exact h4 }
-  }
-  { intro a_in_interval
-    rw [nat_interval_mem] at a_in_interval
-    have h1 := a_in_interval.1
-    have h2 := a_in_interval.2
-    rw [IsInterval] at h
-    have h3 := h (S.min' nonempty) a (S.max' nonempty) (Finset.min'_mem S nonempty) (Finset.max'_mem S nonempty) h1 h2
-    exact h3
-  }
-
-lemma preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : ℕ) : IsInterval ((f : ℕ → ℕ) ⁻¹' { n : ℕ | n = i}) := by
-  intro a b c a_in_f_inv c_in_f_inv a_le_b b_le_c
-  have f_a_i : f a = i := by
-    exact a_in_f_inv
-  have f_c_i : f c = i := by
-    exact c_in_f_inv
-  have f_a_le_f_b : f a ≤ f b := by
-    apply h
-    assumption
-  have f_b_le_f_c : f b ≤ f c := by
-    apply h
-    assumption
-  have f_b_i : f b = i := by
-    apply Nat.le_antisymm
-    linarith
-    linarith
-  exact f_b_i
-
-lemma finite_of_bounded_of_Nat (s: Set ℕ) :
-  (∃ k : ℕ, ∀ x ∈ s, x ≤ k) → s.Finite := by
-  intro h
-  cases h with
-  | intro k h =>
-      have h1 : s ⊆ {n : ℕ | n ≤ k} := by
-        rw [Set.subset_def]
-        intro x
-        intro h2
-        exact h x h2
-      apply Set.Finite.subset (Set.finite_le_nat k)
-      assumption
 
 lemma Nat_div_monotone (d : ℕ) : Monotone (fun n ↦ n / d) := by
   intro n m h
@@ -143,15 +21,78 @@ lemma Nat_add_div_monotone (e f : ℕ)
 def φ (e f : ℕ) : ℕ → ℕ :=
   λ n ↦ n / e + n / f
 
+def φinv (e f i : ℕ) : Set ℕ :=
+  { n : ℕ | φ e f n = i }
+
+lemma φinv_is_preim_φ (e f i : ℕ) : φinv e f i = (φ e f) ⁻¹' (Set.singleton i) := by
+  apply Set.eq_of_subset_of_subset
+  { intro x
+    intro h
+    simp [φinv] at h
+    simp [φ, Set.singleton]
+    apply h
+  }
+  { intro x
+    intro h
+    simp [φinv]
+    simp [φ, Set.singleton] at h
+    apply h
+  }
+
 lemma φ_monotone (e f : ℕ+) : Monotone (φ e f) := by
   intro n m h
   apply Nat_add_div_monotone
   assumption
 
+lemma φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ e f n := by
+  simp [φ]
+  have h1 : (n * l) / (e * l) = n / e := by
+    rw [Nat.mul_div_mul_right]
+    exact l.2
+  have h2 := Nat.mul_div_mul_right n f l.2
+  aesop
+
+section φinv_empty
+
+variable (e f : ℕ+)
+variable (i : ℕ)
+variable (l : ℕ+)
+variable (h1 : Nat.Coprime e f)
+variable (e_ge_2 : (e:Nat) ≥ 2)
+variable (f_ge_2 : (f:Nat) ≥ 2)
+variable (h2 : i % (e + f) ≠ e + f - 1)
+
+lemma nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
+  rw [Nat.succ_div]
+  aesop
+  -- by_cases h : d ∣ n + 1
+  -- { rw [if_pos h]
+  -- }
+  -- { rw [if_neg h]
+  --   linarith
+  -- }
+
+lemma φ_n_add_one_le_φ_n_add_two (n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
+  dsimp [φ]
+  have h3 := nat_succ_div_le n e
+  have h4 := nat_succ_div_le n f
+  linarith
+
+lemma φinv_nonempty : (φinv e f i).Nonempty := by
+  dsimp [φinv]
+  apply Exists.intro
+  {
+    sorry
+  }
+  {
+    sorry
+  }
+
+end φinv_empty
+
 lemma preimage_φ_isInterval (e f : ℕ+) (i : ℕ) : IsInterval ((φ e f) ⁻¹' { n : ℕ | n = i }) := by
   apply preimage_of_monotone_isInterval
   apply φ_monotone
-
 
 lemma nat_div_pnat_le (n q : ℕ) (d : ℕ+) : n / d ≤ q → n ≤ d * q + d := by
   intro h1
@@ -186,124 +127,6 @@ lemma finset_min_min' (s : Finset ℕ) (h : s.Nonempty) : s.min = s.min' h := by
   assumption
 
 end preliminaries
-
-section quotient_and_remainder
-
-lemma quot_rem : ∀ q n r: ℕ, ∀ d : ℕ+, (n = q * d + r ∧ 0 ≤ r ∧ r < d)
- → (q = n / d ∧ r = n % d) := by
-  intro q
-  induction q with
-  |zero =>
-    intro n r d h
-    simp at h
-    apply And.intro
-    · rw [h.1]
-      have h2 : (¬ ↑d ≤ r) := by
-        intro h'
-        have h'' := le_antisymm h'
-        have h''' : r ≤ ↑d := by
-          linarith
-        linarith
-      have h3 := Nat.div_eq r d
-      simp [h2] at h3
-      simp [h3]
-    · rw [h.1]
-      have h3 := Nat.mod_eq r d
-      have h2 : (¬ ↑d ≤ r) := by
-        intro h'
-        have h'' := le_antisymm h'
-        have h''' : r ≤ ↑d := by
-          linarith
-        linarith
-      have d_pos : d > (0:Nat) := d.2
-      simp [d_pos] at h3
-      simp [h2] at h3
-      exact Eq.symm h3
-  |succ q ih =>
-    intro n r d h
-    apply And.intro
-    · have h1 := h.1
-      have h2 := (h.2).1
-      have h3 := (h.2).2
-      have h4 := Nat.div_eq n d
-      have d_pos : d > (0:Nat) := d.2
-      have h5 : ↑ d ≤ n := by
-        have h1' : n = d + q * d + r := by
-          simp [h1]
-          rw [Nat.add_mul]
-          rw [add_comm]
-          simp
-        have h1'' : n ≥ d + q * d := by
-          linarith
-        have h1''' : d + q * d ≥ d := by
-          have h1'''' : q * d ≥ 0 := by
-            apply mul_nonneg
-            linarith
-            linarith
-          linarith
-        linarith
-      simp [d_pos] at h4
-      simp [h5] at h4
-      have ih1 := ih (n-d) r d
-      simp [h1] at ih1
-      have h1' : (q + 1) * ↑d + r - ↑d = q * ↑d + r := by
-        ring_nf
-        nth_rw 1 [←add_comm]
-        nth_rw 1 [←add_assoc]
-        simp
-        rw [add_comm]
-      have h6 := Nat.div_eq n d
-      simp [d_pos] at h6
-      simp [h5] at h6
-      have ih1' := ih1 h1'
-      have ih1'' := (ih1' h3).1
-      rw [h6]
-      have h1' : (q + 1) * ↑d + r - ↑d = n - ↑ d := by
-        rw [h1]
-      rw [h1'] at ih1''
-      rw [ih1'']
-    · have h1 := h.1
-      have h2 := (h.2).1
-      have h3 := (h.2).2
-      have h4 := Nat.mod_eq n d
-      have d_pos : d > (0:Nat) := d.2
-      have h5 : ↑ d ≤ n := by
-        have h1' : n = d + q * d + r := by
-          simp [h1]
-          rw [Nat.add_mul]
-          rw [add_comm]
-          simp
-        have h1'' : n ≥ d + q * d := by
-          linarith
-        have h1''' : d + q * d ≥ d := by
-          have h1'''' : q * d ≥ 0 := by
-            apply mul_nonneg
-            linarith
-            linarith
-          linarith
-        linarith
-      simp [d_pos] at h4
-      simp [h5] at h4
-      have ih1 := ih (n-d) r d
-      simp [h1] at ih1
-      have h1' : (q + 1) * ↑d + r - ↑d = q * ↑d + r := by
-        ring_nf
-        nth_rw 1 [←add_comm]
-        nth_rw 1 [←add_assoc]
-        simp
-        rw [add_comm]
-      have h6 := Nat.mod_eq n d
-      simp [d_pos] at h6
-      simp [h5] at h6
-      have ih1' := ih1 h1'
-      have ih1'' := (ih1' h3).2
-      rw [h6]
-      have h1' : (q + 1) * ↑d + r - ↑d = n - ↑ d := by
-        rw [h1]
-      rw [h1'] at ih1''
-      rw [ih1'']
-
-end quotient_and_remainder
 
 section main_def
 
