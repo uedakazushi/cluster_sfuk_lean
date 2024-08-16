@@ -533,19 +533,19 @@ $
 $\varphi_{e,f}$は単調増加関数である。
 \end{lemma}
 
-\begin{lemma}
-\label{lm:φ_mul}
-\lean{φ_mul}
-\uses{df:φ}
-\leanok
-自然数$e,f,n$と
-正の自然数$\ell \in$に対して
-$
-\varphi_{e \ell,f \ell}(n \ell)
-=
-\varphi_{e,f}(n)
-$.
-\end{lemma}
+% \begin{lemma}
+% \label{lm:φ_mul}
+% \lean{φ_mul}
+% \uses{df:φ}
+% \leanok
+% 自然数$e,f,n$と
+% 正の自然数$\ell \in$に対して
+% $
+% \varphi_{e \ell,f \ell}(n \ell)
+% =
+% \varphi_{e,f}(n)
+% $.
+% \end{lemma}
 
 \begin{lemma}
 \label{lm:I_as_a_subset_of_preimage_φ}
@@ -599,7 +599,24 @@ $\rIII_{e,f}^i$は有限集合である。
 
 \section{}
 
-\begin{lemma} \label{lm:φ_increases_by_2_at_most}
+\begin{lemma}
+\label{lm:nat_succ_div_le}
+\lean{nat_succ_div_le}
+\leanok
+任意の自然数$n$と正の自然数$d$に対して、
+$
+\lfloor (n+1)/d \rfloor
+\le
+\lfloor (n/d) \rfloor + 1
+$
+が成り立つ。
+\end{lemma}
+
+\begin{lemma}
+\label{lm:φ_n_add_one_le_φ_n_add_two}
+\lean{φ_n_add_one_le_φ_n_add_two}
+\uses{lm:nat_succ_div_le,df:φ}
+\leanok
 $\varphi_{e,f}(n+1) \le \varphi_{e,f}(n) + 2$.
 \end{lemma}
 
@@ -618,10 +635,14 @@ $\varphi_{e,f}^{-1}(n) < i$を満たす
 最大の自然数$n$に対し、
 $\varphi_{e,f}(n) \le i-1$かつ
 $\varphi_{e,f}(n+1) \ge i+2$が成り立つが、
-これは\Cref{lm:φ_increases_by_2_at_most}に矛盾する。
+これは\Cref{lm:φ_n_add_one_le_φ_n_add_two}に矛盾する。
 \end{proof}
 
 \begin{lemma}
+\label{lm:φ_mul}
+\lean{φ_mul}
+\uses{df:φ}
+\leanok
 $\varphi_{e \ell, f \ell}(n \ell) = \varphi_{e,f}(n)$.
 \end{lemma}
 
@@ -631,12 +652,6 @@ $\varphi_{e \ell, f \ell}(n \ell) = \varphi_{e,f}(n)$.
 $n \ell \in \varphi_{e \ell,f \ell}^{-1}(i)$.
 \end{lemma}
 
-\begin{lemma}
-\label{lm:add_one_div_le_div_add_one}
-任意の自然数$n$と正の自然数$d$に対して、
-$(n+1)/e \le (n/e) + 1$が成り立つ。
-\end{lemma}
-
 \begin{proof}
 $
 (n+1)/e \le (n+e)/e = n/e+1
@@ -644,8 +659,14 @@ $.
 \end{proof}
 
 \begin{lemma}
-\label{lm:e_not_dvd_n_n_div_e_eq_n_sub_1_div_e}
-$e \not | n$ならば
+\label{lm:not_dvd_mod_eq}
+\lean{not_dvd_mod_eq}
+\leanok
+自然数$e,n$が
+$n \ne 0$
+かつ
+$e \not | n$
+を満たす時、
 $\lfloor n / e \rfloor = \lfloor (n-1) / e \rfloor$
 \end{lemma}
 
@@ -725,22 +746,11 @@ $e \ell| n$または$f \ell| n$であるが、
 どちらの場合も$\ell | n$である。
 \end{proof}
 
-$\varphi_{e,f}^{-1}(i)$の最小元を$\bmin(e,f,i)$と置くと、
-$\bmin(e,f,i) \in \varphi_{e,f}^{-1}(i)$である。
+$\nmin(e,f,i) \in \varphi_{e,f}^{-1}(i)$である。
 従って、
-$\bmin(e,f,i) \not \equiv -1 \mod e$かつ
-$\bmin(e,f,i) \not \equiv -1 \mod f$かつ
-$\lfloor \bmin(e,f,i) / e \rfloor + \lfloor \bmin(e,f,i) / f \rfloor = i$が成り立つ。
-
-\begin{lemma}
-\label{lm:b_min_mul_l}
-\uses{df:b_min}
-$\bmin(e \ell, f \ell, i) = \ell \bmin(e,f,i)$.
-\end{lemma}
-
-\begin{proof}
-$\lfloor (n+1) / e \rfloor$
-\end{proof}
+$\nmin(e,f,i) \not \equiv -1 \mod e$かつ
+$\nmin(e,f,i) \not \equiv -1 \mod f$かつ
+$\lfloor \nmin(e,f,i) / e \rfloor + \lfloor \nmin(e,f,i) / f \rfloor = i$が成り立つ。
 
 \section{}
 

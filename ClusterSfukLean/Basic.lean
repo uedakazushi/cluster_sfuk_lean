@@ -52,18 +52,49 @@ lemma φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ
 
 lemma nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
   rw [Nat.succ_div]
-  aesop
-  -- by_cases h : d ∣ n + 1
-  -- { rw [if_pos h]
-  -- }
-  -- { rw [if_neg h]
-  --   linarith
-  -- }
+  -- aesop
+  by_cases h : d ∣ n + 1
+  {
+    rw [if_pos h]
+  }
+  { rw [if_neg h]
+    linarith
+  }
 
 lemma φ_n_add_one_le_φ_n_add_two (e f : ℕ+) (n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
   dsimp [φ]
   have h3 := nat_succ_div_le n e
   have h4 := nat_succ_div_le n f
+  linarith
+
+#check Nat.decidable_dvd 3 2
+#eval Nat.decidable_dvd 3 2
+#eval 3 ∣ 2
+
+open Classical
+noncomputable instance (priority := low) propDecidable (a : Prop) : Decidable a :=
+  choice <| match Classical.em a with
+    | Or.inl h => ⟨isTrue h⟩
+    | Or.inr h => ⟨isFalse h⟩
+
+lemma not_dvd_mod_eq
+  (e n: ℕ)
+  (n_ne_zero : n ≠ 0)
+  (h : ¬ e ∣ n)
+  :
+  n / e = (n-1)/e := by
+  set n' := n - 1 with h2
+  have h4 := Nat.sub_one_add_one n_ne_zero
+  rw [←h2] at h4
+  have h5 := Nat.succ_div n' e
+  rw [h4] at h5
+  rw [if_neg h] at h5
+  exact h5
+
+lemma pnat_ne_zero (n : ℕ+) : n.1 ≠ 0 := by
+  intro h
+  have h1 := n.2
+  rw [h] at h1
   linarith
 
 lemma preimage_φ_isInterval (e f : ℕ+) (i : ℕ) : IsInterval ((φ e f) ⁻¹' { n : ℕ | n = i }) := by
@@ -228,7 +259,7 @@ lemma Imin_l (non_emp : (finsetI (e * l) (f * l) i).Nonempty) :
       have h8 := not_le_of_lt h6
       linarith
     have h3' : b_min % e = 0 ∨ b_min % f = 0 := by
-      have h10 := em (b_min % e = 0 ∨ b_min % f = 0)
+      have h10 := Classical.em (b_min % e = 0 ∨ b_min % f = 0)
       cases h10 with
       |inl h11 =>
         exact h11
