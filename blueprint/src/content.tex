@@ -612,6 +612,16 @@ $
 が成り立つ。
 \end{lemma}
 
+\begin{proof}
+$
+\lfloor (n+1)/e \rfloor
+\le
+\lfloor (n+e)/e \rfloor
+=
+\lfloor n/e \rfloor + 1
+$.
+\end{proof}
+
 \begin{lemma}
 \label{lm:φ_n_add_one_le_φ_n_add_two}
 \lean{φ_n_add_one_le_φ_n_add_two}
@@ -621,6 +631,9 @@ $\varphi_{e,f}(n+1) \le \varphi_{e,f}(n) + 2$.
 \end{lemma}
 
 \begin{lemma}
+\label{lm:φinv_i_empty_implies_φinv_i_add_one_nonempty}
+\lean{φinv_i_empty_implies_φinv_i_add_one_nonempty}
+\uses{lm:φ_n_add_one_le_φ_n_add_two}
 任意の自然数$i$に対し、
 $\varphi_{e,f}^{-1}(i) = \emptyset$
 ならば
@@ -651,12 +664,6 @@ $\varphi_{e \ell, f \ell}(n \ell) = \varphi_{e,f}(n)$.
 に対して
 $n \ell \in \varphi_{e \ell,f \ell}^{-1}(i)$.
 \end{lemma}
-
-\begin{proof}
-$
-(n+1)/e \le (n+e)/e = n/e+1
-$.
-\end{proof}
 
 \begin{lemma}
 \label{lm:not_dvd_mod_eq}
@@ -732,6 +739,80 @@ $.
 \end{lemma}
 
 \begin{lemma}
+\label{lm:φ_n_minus_one_ne_φ_n_e}
+\lean{φ_n_minus_one_ne_φ_n_e}
+\uses{lm:not_dvd_mod_eq,df:φ}
+自然数
+$
+e, f, n
+$
+が
+$
+n \ne 0
+$
+かつ
+$
+e | n
+$
+を満たす時、
+$
+\varphi_{e,f}(n-1) = \varphi_{e,f}(n)
+$.
+\end{lemma}
+
+\begin{lemma}
+\label{lm:φ_n_minus_one_ne_φ_n_f}
+\lean{φ_n_minus_one_ne_φ_n_f}
+\uses{lm:not_dvd_mod_eq,df:φ}
+自然数
+$
+e, f, n
+$
+が
+$
+n \ne 0
+$
+かつ
+$
+f | n
+$
+を満たす時、
+$
+\varphi_{e,f}(n-1) = \varphi_{e,f}(n)
+$.
+\end{lemma}
+
+\begin{lemma}
+\label{eq:φ_n_minus_one_ne_φ_n}
+\lean{φ_n_minus_one_ne_φ_n}
+\uses{lm:φ_n_minus_one_ne_φ_n_e,
+lm:φ_n_minus_one_ne_φ_n_f}
+自然数
+$
+e, f, n
+$
+が
+$
+n \ne 0
+$
+と
+$
+e | n
+$
+または
+$
+f | n
+$
+を満たす時、
+$
+\varphi_{e,f}(n-1) = \varphi_{e,f}(n)
+$.
+\end{lemma}
+
+\begin{lemma}
+\label{lm:min_φinv_dvd}
+\lean{min_φinv_dvd}
+\leanok
 $n = \min \varphi_{e,f}^{-1}(i)$
 であれば、
 $e | n$または$f | n$が成り立つ。
@@ -755,6 +836,8 @@ $n$が最小値であることに矛盾する。
 \end{proof}
 
 \begin{lemma}
+\label{lm:dvd_min_φinv}
+\lean{dvd_min_φinv}
 $n \in \varphi_{e,f}^{-1}(i)$
 が
 $n | e$または$n | f$を満たせば、

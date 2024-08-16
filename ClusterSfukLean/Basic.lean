@@ -62,15 +62,18 @@ lemma nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
     linarith
   }
 
-lemma φ_n_add_one_le_φ_n_add_two (e f : ℕ+) (n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
+lemma φ_n_add_one_le_φ_n_add_two (e f n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
   dsimp [φ]
   have h3 := nat_succ_div_le n e
   have h4 := nat_succ_div_le n f
   linarith
 
-#check Nat.decidable_dvd 3 2
-#eval Nat.decidable_dvd 3 2
-#eval 3 ∣ 2
+lemma φinv_i_empty_implies_φinv_i_add_one_nonempty
+  (e f i : ℕ)
+  (h : φinv e f i = ∅)
+  :
+  φinv e f (i+1) ≠ ∅ := by
+    sorry
 
 open Classical
 noncomputable instance (priority := low) propDecidable (a : Prop) : Decidable a :=
@@ -120,7 +123,7 @@ lemma φ_n_minus_one_eq_φ_n
   rw [h1]
   rw [h2]
 
-lemma φ_n_minus_one_ne_φ_n
+lemma φ_n_minus_one_ne_φ_n_e
   (e f n : ℕ)
   (n_ne_zero : n ≠ 0)
   (e_dvd_n : e ∣ n)
@@ -137,6 +140,101 @@ lemma φ_n_minus_one_ne_φ_n
   rw [h1] at h4
   have h5 : n - 1 + 1 = n := Nat.succ_pred n_ne_zero
   rw [h5] at h4
+  linarith
+
+lemma φ_n_minus_one_ne_φ_n_f
+  (e f n : ℕ)
+  (n_ne_zero : n ≠ 0)
+  (f_dvd_n : f ∣ n)
+  :
+  φ e f (n-1) + 1 ≤ φ e f n
+  := by
+  simp [φ]
+  set n' := n - 1 with h1
+  have h2 := dvd_mod_ne f n n_ne_zero f_dvd_n
+  have h3 : n' ≤ n' + 1 := by
+    linarith
+  have h4 := @Nat.div_le_div_right n' (n'+1) e h3
+  rw [h1]
+  rw [h1] at h4
+  have h5 : n - 1 + 1 = n := Nat.succ_pred n_ne_zero
+  rw [h5] at h4
+  linarith
+
+lemma φ_n_minus_one_ne_φ_n
+  (e f n : ℕ)
+  (n_ne_zero : n ≠ 0)
+  (ef_dvd_n : e ∣ n ∨ f ∣ n)
+  :
+  φ e f (n-1) + 1 ≤ φ e f n
+  := by
+  cases ef_dvd_n with
+  | inl e_dvd_n =>
+    exact φ_n_minus_one_ne_φ_n_e e f n n_ne_zero e_dvd_n
+  | inr f_dvd_n =>
+    exact φ_n_minus_one_ne_φ_n_f e f n n_ne_zero f_dvd_n
+
+lemma min_φinv_dvd
+  (e f i n: ℕ)
+  (mem : n ∈ φinv e f i)
+  (min : ∀ m ∈ φinv e f i, n ≤ m)
+  :
+  e ∣ n ∨ f ∣ n := by
+  by_cases n_ne_zero : n ≠ 0
+
+  case pos =>
+    simp [φinv, φ] at mem
+    simp [φinv, φ] at min
+    by_contra h
+    push_neg at h
+    have h1 : (n - 1) / e = n / e := by
+      apply Eq.symm
+      apply not_dvd_mod_eq
+      exact n_ne_zero
+      exact h.1
+    have h2 : (n - 1) / f = n / f := by
+      apply Eq.symm
+      apply not_dvd_mod_eq
+      exact n_ne_zero
+      exact h.2
+    have h3 : (n - 1) / e + (n - 1) / f = i := by
+      rw [h1]
+      rw [h2]
+      exact mem
+    have h4 := min (n-1) h3
+    cases n with
+    | zero =>
+      contradiction
+    | succ n' =>
+      have h5 : n' + 1 - 1 = n' := by
+        aesop
+      rw [h5] at h4
+      linarith
+
+  case neg =>
+    aesop
+
+lemma dvd_min_φinv
+  (e f i n : ℕ)
+  (dvd : e ∣ n ∨ f ∣ n)
+  (mem : φ e f n = i)
+  :
+  ∀ m < n, φ e f m < i := by
+  intro m
+  intro h
+  have n_ne_zero : n ≠ 0 := by
+    linarith
+  have h1 := φ_n_minus_one_ne_φ_n e f n n_ne_zero dvd
+  rw [mem] at h1
+  have h2 : φ e f (n-1) < i := by
+    linarith
+  have succ_pred_n : n - 1 + 1 = n := Nat.succ_pred n_ne_zero
+  set n' := n - 1 with h3
+  have h4 : m ≤ n' := by
+    linarith
+  have h5 : φ e f m ≤ φ e f n' := by
+    apply φ_monotone
+    linarith
   linarith
 
 lemma pnat_ne_zero (n : ℕ+) : n.1 ≠ 0 := by
