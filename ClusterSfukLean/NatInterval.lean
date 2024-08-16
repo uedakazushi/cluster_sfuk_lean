@@ -120,8 +120,10 @@ lemma preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : �
     linarith
   exact f_b_i
 
+def isbounded (s : Set ℕ) := ∃ k : ℕ, ∀ x ∈ s, x ≤ k
+
 lemma finite_of_bounded_of_Nat (s: Set ℕ) :
-  (∃ k : ℕ, ∀ x ∈ s, x ≤ k) → s.Finite := by
+  isbounded s → s.Finite := by
   intro h
   cases h with
   | intro k h =>
@@ -132,3 +134,28 @@ lemma finite_of_bounded_of_Nat (s: Set ℕ) :
         exact h x h2
       apply Set.Finite.subset (Set.finite_le_nat k)
       assumption
+
+lemma monotone_bounded
+  (f : ℕ → ℕ)
+  (monotone : Monotone f)
+  (h : ∀ n : ℕ, ∃ i : ℕ, n ≤ f i)
+  :
+  ∀ j : ℕ, isbounded (f ⁻¹' Set.singleton j) := by
+    intro j
+    rw [isbounded]
+    match h (j+1) with
+    | ⟨ k, hk ⟩ =>
+      exists k
+      intro x
+      intro h1
+      rw [Set.mem_preimage] at h1
+      rw [Set.singleton] at h1
+      rw [Set.instMembership] at h1
+      have h2 : f x = j := by
+        exact h1
+      rw [←h2] at hk
+      rw [Monotone] at monotone
+      by_contra h3
+      have h4 := le_of_not_ge h3
+      have h5 := monotone h4
+      linarith

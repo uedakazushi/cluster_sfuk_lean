@@ -408,6 +408,22 @@ $
 \end{lemma}
 
 \begin{lemma}
+単調関数
+$
+f \colon \bN \to \bN
+$
+が、
+任意の自然数$n$に対して
+ある自然数$i$が存在して
+$
+f(i) \ge n
+$
+を満たせば、
+任意の自然数$j$に対して
+$f^{-1}(j)$は有界である。
+\end{lemma}
+
+\begin{lemma}
 \label{lm:nat_interval_card}
 \lean{nat_interval_card}
 \uses{df:nat_interval}
@@ -433,6 +449,28 @@ A bounded set of natural numbers is finite.
 \ja{
 自然数からなる有界な集合は有限である。
 }
+\end{lemma}
+
+\begin{lemma}
+\label{lm:monotone_bounded}
+\lean{monotone_bounded}
+\leanok
+任意の単調増加関数
+$
+f \colon \bN \to \bN
+$
+が、
+任意の自然数$n$に対して
+ある自然数$i$が存在して
+$
+n \le f(i)
+$
+を満たすならば、
+任意の自然数$j$に対して
+$
+f^{-1}(j) \subset \bN
+$
+は有界である。
 \end{lemma}
 
 自然数$n,m$に対して、
@@ -491,7 +529,8 @@ $
 \lean{φ_monotone}
 \uses{df:φ}
 \leanok
-$\varphi$は単調増加関数である。
+任意の自然数$e, f$に対して、
+$\varphi_{e,f}$は単調増加関数である。
 \end{lemma}
 
 \begin{lemma}
@@ -580,29 +619,6 @@ $\varphi_{e,f}^{-1}(n) < i$を満たす
 $\varphi_{e,f}(n) \le i-1$かつ
 $\varphi_{e,f}(n+1) \ge i+2$が成り立つが、
 これは\Cref{lm:φ_increases_by_2_at_most}に矛盾する。
-\end{proof}
-
-\begin{lemma}
-任意の自然数$i$に対し、
-$\varphi_{e,f}^{-1}(i) \ne \emptyset$
-ならば
-$I_{e,f}^i \ne \emptyset$.
-\end{lemma}
-
-\begin{proof}
-$\varphi_{e,f}^{-1}(i) \ne \emptyset$かつ
-$I_{e,f}^i \ne \emptyset$であれば、
-任意の自然数$n$に対して、
-$\varphi_{e,f}(n) = i$であれば
-$n \equiv e - 1 \mod e$かつ
-$n \equiv f - 1 \mod f$が成り立つ。
-しかし、
-$e, f \ge 2$から、
-この時
-$n-1 \equiv e - 2 \not \equiv e - 1 \mod e$かつ
-$n-1 \not \equiv f - 1 \mod f$かつ
-$\lfloor (n-1) / e \rfloor + \lfloor (n-1) / f \rfloor = i$が成り立ち、
-これは矛盾である。
 \end{proof}
 
 \begin{lemma}
@@ -827,32 +843,41 @@ $
 となる。
 \end{proof}
 
-\begin{definition}
+\subsection{}
 $
 i \not \equiv e + f - 1 \mod e + f
 $
-の時、
+と仮定する。
+
+\begin{definition}
 $
-\bmin(e \ell, f \ell, i) \coloneqq \min \varphi_{e \ell, f \ell}^{-1}(i)
-$,
+\nmin(e \ell, f \ell, i)
+\coloneqq
+\min \varphi_{e \ell, f \ell}^{-1}(i)
 $
-\bmax(e \ell, f \ell, i) \coloneqq \max \varphi_{e \ell, f \ell}^{-1}(i)
-$
-と置く。
 \end{definition}
 
 \begin{lemma}
 $
-\rI_{e \ell, f \ell}^i \not = \emptyset
+\nmin(e \ell, f \ell, i) = \ell \nmin(e, f, i)
 $
-の時、
-$
-\varphi_{e \ell, f \ell}^{-1}(i) \not = \emptyset
-$
+\end{lemma}
 
+\begin{definition}
 $
-\varphi_{e \ell, f \ell}^{-1}(i)
-= \emptyset
+i' \coloneqq
+\begin{cases}
+i + 1 & i + 1 \not \equiv e + f - 1 \mod e + f, \\
+i + 2 & i + 1 \equiv e + f - 1 \mod e + f
+\end{cases}
+$
+\end{definition}
+
+\begin{lemma}
+$
+\rI_{e \ell, f \ell}^i
+=
+[ \nmin(e \ell, f \ell, i), \nmin(e \ell, f \ell, i')-2 ]
 $
 \end{lemma}
 

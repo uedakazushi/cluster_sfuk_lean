@@ -2,8 +2,6 @@ import Mathlib
 import ClusterSfukLean.NatInterval
 import ClusterSfukLean.QuotRem
 
-section preliminaries
-
 lemma Nat_div_monotone (d : ℕ) : Monotone (fun n ↦ n / d) := by
   intro n m h
   apply Nat.div_le_div_right
@@ -39,7 +37,7 @@ lemma φinv_is_preim_φ (e f i : ℕ) : φinv e f i = (φ e f) ⁻¹' (Set.singl
     apply h
   }
 
-lemma φ_monotone (e f : ℕ+) : Monotone (φ e f) := by
+lemma φ_monotone (e f : ℕ) : Monotone (φ e f) := by
   intro n m h
   apply Nat_add_div_monotone
   assumption
@@ -52,16 +50,6 @@ lemma φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ
   have h2 := Nat.mul_div_mul_right n f l.2
   aesop
 
-section φinv_empty
-
-variable (e f : ℕ+)
-variable (i : ℕ)
-variable (l : ℕ+)
-variable (h1 : Nat.Coprime e f)
-variable (e_ge_2 : (e:Nat) ≥ 2)
-variable (f_ge_2 : (f:Nat) ≥ 2)
-variable (h2 : i % (e + f) ≠ e + f - 1)
-
 lemma nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
   rw [Nat.succ_div]
   aesop
@@ -72,23 +60,11 @@ lemma nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
   --   linarith
   -- }
 
-lemma φ_n_add_one_le_φ_n_add_two (n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
+lemma φ_n_add_one_le_φ_n_add_two (e f : ℕ+) (n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
   dsimp [φ]
   have h3 := nat_succ_div_le n e
   have h4 := nat_succ_div_le n f
   linarith
-
-lemma φinv_nonempty : (φinv e f i).Nonempty := by
-  dsimp [φinv]
-  apply Exists.intro
-  {
-    sorry
-  }
-  {
-    sorry
-  }
-
-end φinv_empty
 
 lemma preimage_φ_isInterval (e f : ℕ+) (i : ℕ) : IsInterval ((φ e f) ⁻¹' { n : ℕ | n = i }) := by
   apply preimage_of_monotone_isInterval
@@ -125,8 +101,6 @@ lemma finset_min_min' (s : Finset ℕ) (h : s.Nonempty) : s.min = s.min' h := by
   intro h1
   apply Finset.min'_le
   assumption
-
-end preliminaries
 
 section main_def
 
