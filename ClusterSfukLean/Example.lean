@@ -1,4 +1,5 @@
 import ClusterSfukLean.Basic
+set_option linter.unusedVariables false
 
 example : PNat.mod 3 3 = 3 := rfl
 

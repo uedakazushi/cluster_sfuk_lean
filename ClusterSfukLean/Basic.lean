@@ -1,6 +1,7 @@
 import Mathlib
 import ClusterSfukLean.NatInterval
 import ClusterSfukLean.QuotRem
+set_option linter.unusedVariables false
 
 lemma Nat_div_monotone (d : ℕ) : Monotone (fun n ↦ n / d) := by
   intro n m h
@@ -90,6 +91,53 @@ lemma not_dvd_mod_eq
   rw [h4] at h5
   rw [if_neg h] at h5
   exact h5
+
+lemma dvd_mod_ne
+  (e n: ℕ)
+  (n_ne_zero : n ≠ 0)
+  (h : e ∣ n)
+  :
+  (n-1) / e + 1 = n/e := by
+  set n' := n - 1 with h2
+  have h4 := Nat.sub_one_add_one n_ne_zero
+  rw [←h2] at h4
+  have h5 := Nat.succ_div n' e
+  rw [h4] at h5
+  rw [if_pos h] at h5
+  exact Eq.symm h5
+
+lemma φ_n_minus_one_eq_φ_n
+  (e f n : ℕ)
+  (n_ne_zero : n ≠ 0)
+  (e_not_dvd_n : ¬ e ∣ n)
+  (f_not_dvd_n : ¬ f ∣ n)
+  :
+  φ e f (n-1) = φ e f n
+  := by
+  simp [φ]
+  have h1 := not_dvd_mod_eq e n n_ne_zero e_not_dvd_n
+  have h2 := not_dvd_mod_eq f n n_ne_zero f_not_dvd_n
+  rw [h1]
+  rw [h2]
+
+lemma φ_n_minus_one_ne_φ_n
+  (e f n : ℕ)
+  (n_ne_zero : n ≠ 0)
+  (e_dvd_n : e ∣ n)
+  :
+  φ e f (n-1) + 1 ≤ φ e f n
+  := by
+  simp [φ]
+  set n' := n - 1 with h1
+  have h2 := dvd_mod_ne e n n_ne_zero e_dvd_n
+  have h3 : n' ≤ n' + 1 := by
+    linarith
+  have h4 := @Nat.div_le_div_right n' (n'+1) f h3
+  rw [h1]
+  rw [h1] at h4
+  have h5 : n - 1 + 1 = n := Nat.succ_pred n_ne_zero
+  rw [h5] at h4
+  linarith
 
 lemma pnat_ne_zero (n : ℕ+) : n.1 ≠ 0 := by
   intro h

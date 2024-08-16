@@ -671,6 +671,67 @@ $\lfloor n / e \rfloor = \lfloor (n-1) / e \rfloor$
 \end{lemma}
 
 \begin{lemma}
+\label{lm:φ_n_minus_one_eq_φ_n}
+\lean{φ_n_minus_one_eq_φ_n}
+\uses{lm:not_dvd_mod_eq,df:φ}
+\leanok
+自然数
+$
+e,f,n
+$
+が
+$
+n \ne 0
+$
+かつ
+$
+e | n
+$
+を満たす時、
+$
+\varphi_{e,f}(n-1) + 1 \le \varphi_{e,f}(n)
+$
+\end{lemma}
+
+\begin{lemma}
+\label{lm:dvd_mod_ne}
+\lean{dvd_mod_ne}
+\leanok
+自然数$e,n$が
+$n \ne 0$
+かつ
+$e | n$
+を満たす時、
+$\lfloor (n-1) / e \rfloor + 1 = \lfloor n / e \rfloor$.
+\end{lemma}
+
+\begin{lemma}
+\label{eq:φ_n_minus_one_eq_φ_n}
+\lean{φ_n_minus_one_eq_φ_n}
+\uses{lm:not_dvd_mod_eq,df:φ}
+自然数
+$
+e, f, n
+$
+が
+$
+n \ne 0
+$
+かつ
+$
+e \not | n
+$
+かつ
+$
+f \not | n
+$
+を満たす時、
+$
+\varphi_{e,f}(n-1) = \varphi_{e,f}(n)
+$.
+\end{lemma}
+
+\begin{lemma}
 $n = \min \varphi_{e,f}^{-1}(i)$
 であれば、
 $e | n$または$f | n$が成り立つ。

@@ -1,4 +1,5 @@
 import Mathlib
+set_option linter.unusedVariables false
 
 lemma quot_rem : ∀ q n r: ℕ, ∀ d : ℕ+, (n = q * d + r ∧ 0 ≤ r ∧ r < d)
  → (q = n / d ∧ r = n % d) := by

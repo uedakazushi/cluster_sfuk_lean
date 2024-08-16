@@ -1,4 +1,5 @@
 import Mathlib
+set_option linter.unusedVariables false
 
 def nat_interval (a b : ℕ) : Finset ℕ :=
   Finset.range (b + 1) \ Finset.range a
