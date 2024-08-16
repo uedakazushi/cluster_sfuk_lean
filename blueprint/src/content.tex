@@ -810,6 +810,20 @@ $.
 \end{lemma}
 
 \begin{lemma}
+\label{lm:nat_mul_dvd}
+\lean{nat_mul_dvd}
+\leanok
+任意の自然数$a,b,c$に対して、
+$
+ab | c
+$
+ならば
+$
+b | c
+$。
+\end{lemma}
+
+\begin{lemma}
 \label{lm:min_φinv_dvd}
 \lean{min_φinv_dvd}
 \leanok
@@ -881,6 +895,10 @@ $e | n$または$f | n$である。
 \end{lemma}
 
 \begin{lemma}
+\label{lm:gcd_div_min_φinv}
+\lean{gcd_div_min_φinv}
+\uses{lm:min_φinv_dvd,lm:nat_mul_dvd}
+\leanok
 $n$が$\varphi_{e \ell, f \ell}^{-1}(i)$の最小元の時、
 $\ell | n$である。
 \end{lemma}

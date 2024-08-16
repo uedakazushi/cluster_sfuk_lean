@@ -237,6 +237,27 @@ lemma dvd_min_φinv
     linarith
   linarith
 
+lemma nat_mul_dvd {a b c : ℕ} : a * b ∣ c → b ∣ c := by
+  intro h
+  dsimp [Nat.instDvd] at h
+  match h with
+  | ⟨ d, h1 ⟩ =>
+    exists a * d
+    have h2 : a * b * d = b * (a * d) := by ring
+    rw [←h2]
+    exact h1
+
+lemma gcd_div_min_φinv
+  (e f i l n : ℕ)
+  (mem : n ∈ φinv (e*l) (f*l) i)
+  (min : ∀ m ∈ φinv (e*l) (f*l) i, n ≤ m)
+  :
+  l ∣ n := by
+  have h1 := min_φinv_dvd (e*l) (f*l) i n mem min
+  cases h1 with
+  | inl h2 => apply nat_mul_dvd h2
+  | inr h3 => apply nat_mul_dvd h3
+
 lemma pnat_ne_zero (n : ℕ+) : n.1 ≠ 0 := by
   intro h
   have h1 := n.2
