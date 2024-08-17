@@ -404,52 +404,115 @@ end main_def
 
 section main_lemma
 
-variable (e f l: ℕ+)
-variable (i : ℕ)
-
-lemma Imin_l (non_emp : (finsetI (e * l) (f * l) i).Nonempty) :
-(finsetI (e * l) (f * l) i).min = (finsetI e f i).min * l := by
-  have h1 := Classical.em (finsetI e f i).Nonempty
-  cases h1 with
-  |inl h =>
-    let b_min := (finsetI e f i).min' h
-    have h2 : b_min ∈ (finsetI e f i) := by
-      apply Finset.min'_mem
-    have h3 : ¬ (b_min % e = 0 ∨ b_min % f = 0) → False := by
-      have h4 : ∃ b ∈ (finsetI e f i), b < b_min := by
-        sorry
-      -- match h4 with
-      -- |⟨ i, h5, h6 ⟩ =>
-      let ⟨ b, h5, h6 ⟩ := h4
-      exfalso
-      have h7 := Finset.min'_le (finsetI e f i) b h5
-      have h8 := not_le_of_lt h6
-      linarith
-    have h3' : b_min % e = 0 ∨ b_min % f = 0 := by
-      have h10 := Classical.em (b_min % e = 0 ∨ b_min % f = 0)
-      cases h10 with
-      |inl h11 =>
-        exact h11
-      |inr h12 =>
-        exfalso
-        exact h3 h12
-    have h13 : b_min * l ∈ (finsetI (e * l) (f * l) i) := by
-      sorry
-    have h14 : ∀ x ∈ (finsetI (e * l) (f * l) i), b_min * l ≤ x := by
-      sorry
-    have h15 := finset_min_eq (finsetI (e * l) (f * l) i) (b_min * l) h13 h14
-    rw [h15]
-    have h16 := finset_min_min' (finsetI e f i) h
-    rw [h16]
-    rfl
-  |inr h =>
-    have h2 : (finsetI e f i).min = 0 := by
-      sorry
-    have h3 : (finsetI (e * l) (f * l) i).min = 0 := by
-      sorry
-    rw [h2]
-    rw [h3]
+lemma φinv_i_empty_i_mod_e_add_f
+  (e f i l: ℕ)
+  (e_ge_2 : e ≥ 2)
+  (f_ge_2 : f ≥ 2)
+  (coprime : Nat.Coprime e f)
+  (l_pos : l > 0)
+  (h : φinv (e*l) (f*l) i = ∅)
+  :
+  i % (e+f) = e+f-1 := by
+  set s := φinv (e*l) (f*l) (i+1) with s_eq_φinv
+  have h2 : s ≠ ∅ := by
     sorry
+  have nonempty_s : s.Nonempty := by
+    by_contra h3
+    let h4 := Set.not_nonempty_iff_eq_empty.mp h3
+    exact h2 h4
+  clear h2
+  set n := WellFounded.min Nat.lt.isWellOrder.3.wf s nonempty_s with h3
+  have h4 : ∀ m ∈ s, n ≤ m := by
+    intro m
+    intro mem
+    have h4 := WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf s nonempty_s mem
+    linarith
+  have h5 := WellFounded.min_mem Nat.lt.isWellOrder.3.wf s nonempty_s
+  rw [←h3] at h5
+  -- have h6 : e*l ∣ n ∨ f*l ∣ n := by
+  --   exact min_φinv_dvd (e*l) (f*l) (i+1) n h5 h4
+  have h6 : e*l ∣ n := by
+    sorry
+  have h7 : f*l ∣ n := by
+    sorry
+  have h8 := Nat.lcm_dvd h6 h7
+  have h9 := Nat.gcd_mul_right e l f
+  rw [coprime] at h9
+  simp at h9
+  have h10 : (e*l:Nat).lcm (f*l) = e*f*l := by
+    rw [Nat.lcm]
+    rw [h9]
+    have h11 : e * l * (f * l) = (e * l * f) * l := by
+      ring
+    rw [h11]
+    have h12 := Nat.mul_div_cancel (e * l * f) l_pos
+    have h13 : e * l * f = e * f * l := by
+      ring
+    aesop
+  rw [h10] at h8
+  match h8 with
+  | ⟨ k, hk ⟩ =>
+  have h11 : φ (e*l) (f*l) n = (e+f)*k := by
+    rw [φ]
+    rw [hk]
+    have h12 : e * f * l * k = f * k * (e * l) := by ring
+    have h13 : f * k * (e * l) = e * k * (f * l) := by ring
+    have el_pos : 0 < e * l := by
+      apply mul_pos
+      linarith
+      exact l_pos
+    have fl_pos : 0 < f * l := by
+      apply mul_pos
+      linarith
+      exact l_pos
+    have h14 := Nat.mul_div_cancel (f * k) el_pos
+    have h15 := Nat.mul_div_cancel (e * k) fl_pos
+    rw [h12, h14, h13, h15]
+    ring
+  have h12 : φ (e*l) (f*l) n = i+1 := by
+    rw [φinv] at s_eq_φinv
+    rw [s_eq_φinv] at h5
+    exact h5
+  rw [h11] at h12
+  have h13 : k > 0 := by
+    by_contra h13
+    have h14 : k = 0 := by
+      linarith
+    rw [h14] at h12
+    have h15 : i+1 = 0 := by
+      linarith
+    have h16 : i+1 ≠ 0 := by
+      linarith
+    contradiction
+  cases k with
+  | zero =>
+  contradiction
+  | succ k' =>
+  rw [Nat.mul_comm] at h12
+  rw [Nat.add_mul] at h12
+  have h14 : 1 ≤ e + f := by
+    linarith
+  have h15 := Nat.sub_add_cancel h14
+  have h16 : k' * (e+f) + 1*(e+f) = k' * (e+f) + e+f := by
+    ring
+  rw [h16] at h12
+  set e_add_f := e + f with eaddf
+  have h18 : k' * e_add_f + e + f = ((e+f-1)+1)+k'*e_add_f := by
+    rw [eaddf] at h15
+    rw [h15]
+    ring
+  rw [h18] at h12
+  have h19 : e + f - 1 + 1 + k' * e_add_f = e + f - 1 + k' * e_add_f + 1 := by
+    ring
+  rw [h19] at h12
+  rw [Nat.succ_inj] at h12
+  rw [eaddf]
+  rw [eaddf] at h12
+  have h20 := Nat.add_mul_mod_self_right (e+f-1) k' (e+f)
+  rw [h12] at h20
+  rw [h20]
+  rw [Nat.mod_eq_of_lt]
+  linarith
 
 section main_theorem
 

@@ -1,6 +1,14 @@
 import Mathlib
 set_option linter.unusedVariables false
 
+noncomputable def nat_min'
+  (s : Set ℕ)
+  (h : s.Nonempty)
+  :
+  ℕ
+  :=
+  WellFounded.min Nat.lt.isWellOrder.3.wf s h
+
 def nat_interval (a b : ℕ) : Finset ℕ :=
   Finset.range (b + 1) \ Finset.range a
 
@@ -122,6 +130,17 @@ lemma preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : �
   exact f_b_i
 
 def isbounded (s : Set ℕ) := ∃ k : ℕ, ∀ x ∈ s, x ≤ k
+
+def isBoundedFun (f : ℕ → ℕ) := ∃ k : ℕ, ∀ x : ℕ, f x ≤ k
+
+def isUnboundedFun (f : ℕ → ℕ) := ∀ k : ℕ, ∃ x : ℕ, k < f x
+
+lemma not_bounded_unbounded (f : ℕ → ℕ) : isBoundedFun f → ¬ isUnboundedFun f := by
+  intro h1
+  rw [isBoundedFun] at h1
+  rw [isUnboundedFun]
+  push_neg
+  assumption
 
 lemma finite_of_bounded_of_Nat (s: Set ℕ) :
   isbounded s → s.Finite := by
