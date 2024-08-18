@@ -1,5 +1,5 @@
 import Mathlib
-set_option linter.unusedVariables false
+-- set_option linter.unusedVariables false
 
 lemma quot_rem : ∀ q n r: ℕ, ∀ d : ℕ+, (n = q * d + r ∧ 0 ≤ r ∧ r < d)
  → (q = n / d ∧ r = n % d) := by
@@ -12,9 +12,9 @@ lemma quot_rem : ∀ q n r: ℕ, ∀ d : ℕ+, (n = q * d + r ∧ 0 ≤ r ∧ r 
     · rw [h.1]
       have h2 : (¬ ↑d ≤ r) := by
         intro h'
-        have h'' := le_antisymm h'
-        have h''' : r ≤ ↑d := by
-          linarith
+        -- have h'' := le_antisymm h'
+        -- have h''' : r ≤ ↑d := by
+        --   linarith
         linarith
       have h3 := Nat.div_eq r d
       simp [h2] at h3
@@ -23,9 +23,9 @@ lemma quot_rem : ∀ q n r: ℕ, ∀ d : ℕ+, (n = q * d + r ∧ 0 ≤ r ∧ r 
       have h3 := Nat.mod_eq r d
       have h2 : (¬ ↑d ≤ r) := by
         intro h'
-        have h'' := le_antisymm h'
-        have h''' : r ≤ ↑d := by
-          linarith
+        -- have h'' := le_antisymm h'
+        -- have h''' : r ≤ ↑d := by
+        --   linarith
         linarith
       have d_pos : d > (0:Nat) := d.2
       simp [d_pos] at h3
@@ -35,18 +35,18 @@ lemma quot_rem : ∀ q n r: ℕ, ∀ d : ℕ+, (n = q * d + r ∧ 0 ≤ r ∧ r 
     intro n r d h
     apply And.intro
     · have h1 := h.1
-      have h2 := (h.2).1
+      -- have h2 := (h.2).1
       have h3 := (h.2).2
       have h4 := Nat.div_eq n d
       have d_pos : d > (0:Nat) := d.2
       have h5 : ↑ d ≤ n := by
-        have h1' : n = d + q * d + r := by
-          simp [h1]
-          rw [Nat.add_mul]
-          rw [add_comm]
-          simp
-        have h1'' : n ≥ d + q * d := by
-          linarith
+        -- have h1' : n = d + q * d + r := by
+        --   simp [h1]
+        --   rw [Nat.add_mul]
+        --   rw [add_comm]
+        --   simp
+        -- have h1'' : n ≥ d + q * d := by
+        --   linarith
         have h1''' : d + q * d ≥ d := by
           have h1'''' : q * d ≥ 0 := by
             apply mul_nonneg
@@ -75,18 +75,18 @@ lemma quot_rem : ∀ q n r: ℕ, ∀ d : ℕ+, (n = q * d + r ∧ 0 ≤ r ∧ r 
       rw [h1'] at ih1''
       rw [ih1'']
     · have h1 := h.1
-      have h2 := (h.2).1
+      -- have h2 := (h.2).1
       have h3 := (h.2).2
       have h4 := Nat.mod_eq n d
       have d_pos : d > (0:Nat) := d.2
       have h5 : ↑ d ≤ n := by
-        have h1' : n = d + q * d + r := by
-          simp [h1]
-          rw [Nat.add_mul]
-          rw [add_comm]
-          simp
-        have h1'' : n ≥ d + q * d := by
-          linarith
+        -- have h1' : n = d + q * d + r := by
+        --   simp [h1]
+        --   rw [Nat.add_mul]
+        --   rw [add_comm]
+        --   simp
+        -- have h1'' : n ≥ d + q * d := by
+        --   linarith
         have h1''' : d + q * d ≥ d := by
           have h1'''' : q * d ≥ 0 := by
             apply mul_nonneg

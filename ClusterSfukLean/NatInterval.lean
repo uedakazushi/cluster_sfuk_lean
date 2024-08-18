@@ -1,5 +1,5 @@
 import Mathlib
-set_option linter.unusedVariables false
+-- set_option linter.unusedVariables false
 
 noncomputable def nat_min'
   (s : Set ℕ)
@@ -26,16 +26,16 @@ theorem nat_interval_card : (nat_interval a b).card =
     simp [nat_interval]
     have h1 : b + 1 ≤ a := by
       linarith
-    have h2 : Finset.range (b+1) ⊆ Finset.range a := by
-      rw [Finset.subset_iff]
-      intro x
-      intro h3
-      rw [Finset.mem_range] at h3
-      rw [Finset.mem_range]
-      linarith
-    have h4 : Finset.range (b+1) \ Finset.range a = ∅ := by
-      rw [Finset.sdiff_eq_empty_iff_subset]
-      exact h2
+    -- have h2 : Finset.range (b+1) ⊆ Finset.range a := by
+    --   rw [Finset.subset_iff]
+    --   intro x
+    --   intro h3
+    --   rw [Finset.mem_range] at h3
+    --   rw [Finset.mem_range]
+    --   linarith
+    -- have h4 : Finset.range (b+1) \ Finset.range a = ∅ := by
+    --   rw [Finset.sdiff_eq_empty_iff_subset]
+    --   exact h2
     aesop
 
 lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b ≤ c := by
@@ -46,7 +46,7 @@ lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b 
     rw [Finset.mem_range]
     apply Iff.intro
     { intro h1
-      have h11 := h1.1
+      -- have h11 := h1.1
       have h12 := h1.2
       rw [Finset.mem_range] at h12
       have h12' := Nat.le_of_not_gt h12
@@ -55,8 +55,8 @@ lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b 
       { linarith }
     }
     { intro h1
-      have h11 := h1.1
-      have h12 := h1.2
+      -- have h11 := h1.1
+      -- have h12 := h1.2
       apply And.intro
       { linarith }
       { rw [Finset.mem_range]
@@ -65,7 +65,7 @@ lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b 
     }
   }
   {
-    have h' := Nat.gt_of_not_le h
+    -- have h' := Nat.gt_of_not_le h
     apply Iff.intro
     { intro h1
       exfalso
@@ -73,8 +73,8 @@ lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b 
       linarith
     }
     { intro h1
-      have h11 := h1.1
-      have h12 := h1.2
+      -- have h11 := h1.1
+      -- have h12 := h1.2
       exfalso
       linarith
     }
@@ -87,10 +87,10 @@ lemma nonempty_interval_range (S : Finset ℕ) (nonempty : S.Nonempty) (h : IsIn
   intro a
   apply Iff.intro
   { intro a_in_S
-    have h1 : (S.min' nonempty) ∈ S := by
-      apply Finset.min'_mem
-    have h2 : (S.max' nonempty) ∈ S := by
-      apply Finset.max'_mem
+    -- have h1 : (S.min' nonempty) ∈ S := by
+    --   apply Finset.min'_mem
+    -- have h2 : (S.max' nonempty) ∈ S := by
+    --   apply Finset.max'_mem
     have h3 : (S.min' nonempty) ≤ a := by
       apply Finset.min'_le
       assumption
@@ -129,21 +129,21 @@ lemma preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : �
     linarith
   exact f_b_i
 
-def isbounded (s : Set ℕ) := ∃ k : ℕ, ∀ x ∈ s, x ≤ k
+def IsBounded (s : Set ℕ) := ∃ k : ℕ, ∀ x ∈ s, x ≤ k
 
-def isBoundedFun (f : ℕ → ℕ) := ∃ k : ℕ, ∀ x : ℕ, f x ≤ k
+def IsBoundedFun (f : ℕ → ℕ) := ∃ k : ℕ, ∀ x : ℕ, f x ≤ k
 
-def isUnboundedFun (f : ℕ → ℕ) := ∀ k : ℕ, ∃ x : ℕ, k < f x
+def IsUnboundedFun (f : ℕ → ℕ) := ∀ k : ℕ, ∃ x : ℕ, k < f x
 
-lemma not_bounded_unbounded (f : ℕ → ℕ) : isBoundedFun f → ¬ isUnboundedFun f := by
+lemma not_bounded_unbounded (f : ℕ → ℕ) : IsBoundedFun f → ¬ IsUnboundedFun f := by
   intro h1
-  rw [isBoundedFun] at h1
-  rw [isUnboundedFun]
+  rw [IsBoundedFun] at h1
+  rw [IsUnboundedFun]
   push_neg
   assumption
 
 lemma finite_of_bounded_of_Nat (s: Set ℕ) :
-  isbounded s → s.Finite := by
+  IsBounded s → s.Finite := by
   intro h
   cases h with
   | intro k h =>
@@ -160,9 +160,9 @@ lemma monotone_bounded
   (monotone : Monotone f)
   (h : ∀ n : ℕ, ∃ i : ℕ, n ≤ f i)
   :
-  ∀ j : ℕ, isbounded (f ⁻¹' Set.singleton j) := by
+  ∀ j : ℕ, IsBounded (f ⁻¹' Set.singleton j) := by
     intro j
-    rw [isbounded]
+    rw [IsBounded]
     match h (j+1) with
     | ⟨ k, hk ⟩ =>
       exists k
@@ -179,3 +179,5 @@ lemma monotone_bounded
       have h4 := le_of_not_ge h3
       have h5 := monotone h4
       linarith
+
+def IsMinIn (m : ℕ) (s : Set ℕ) := m ∈ s ∧ ∀ x ∈ s, m ≤ x
