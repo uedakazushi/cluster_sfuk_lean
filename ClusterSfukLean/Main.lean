@@ -1,6 +1,7 @@
 import Mathlib
 import ClusterSfukLean.NatInterval
 import ClusterSfukLean.QuotRem
+import ClusterSfukLean.Slow
 import ClusterSfukLean.FunctionPhi
 import ClusterSfukLean.MainDef
 -- set_option linter.unusedVariables false
