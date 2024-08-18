@@ -180,4 +180,44 @@ lemma monotone_bounded
       have h5 := monotone h4
       linarith
 
+lemma monotone_add
+  (f g : ℕ → ℕ)
+  (monotone_f : Monotone f)
+  (monotone_g : Monotone g)
+  :
+  Monotone (f + g) := by
+    intro a b h
+    simp
+    apply Nat.add_le_add
+    apply monotone_f
+    assumption
+    apply monotone_g
+    assumption
+
+lemma monotone_unboundedFun_bounded
+  (f : ℕ → ℕ)
+  (monotone : Monotone f)
+  (isUnboundedFun : IsUnboundedFun f)
+  :
+  ∀ j : ℕ, IsBounded (f ⁻¹' Set.singleton j) := by
+    intro j
+    rw [IsBounded]
+    rw [IsUnboundedFun] at isUnboundedFun
+    match isUnboundedFun (j+1) with
+    | ⟨ k, hk ⟩ =>
+      exists k
+      intro x
+      intro h1
+      rw [Set.mem_preimage] at h1
+      rw [Set.singleton] at h1
+      rw [Set.instMembership] at h1
+      have h2 : f x = j := by
+        exact h1
+      rw [←h2] at hk
+      rw [Monotone] at monotone
+      by_contra h3
+      have h4 := le_of_not_ge h3
+      have h5 := monotone h4
+      linarith
+
 def IsMinIn (m : ℕ) (s : Set ℕ) := m ∈ s ∧ ∀ x ∈ s, m ≤ x

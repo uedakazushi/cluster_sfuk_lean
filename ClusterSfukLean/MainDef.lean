@@ -1,5 +1,4 @@
 import Mathlib
-import ClusterSfukLean.QuotRem
 import ClusterSfukLean.FunctionPhi
 
 section main_def
