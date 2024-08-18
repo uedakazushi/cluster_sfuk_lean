@@ -1,5 +1,4 @@
 import Mathlib
-import ClusterSfukLean.NatInterval
 import ClusterSfukLean.QuotRem
 import ClusterSfukLean.FunctionPhi
 

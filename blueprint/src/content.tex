@@ -309,7 +309,9 @@ e + f - q - 1 & \max \{e, f\} < q \le e + f - 1,
 $h_{e,f}^i$を計算するための
 形式的に検証されたコードを提供することである。
 
-\chapter{Preparation}
+\chapter{準備}
+
+\section{自然数の区間}
 
 \begin{definition}
 \label{df:nat_interval}
@@ -473,6 +475,52 @@ f^{-1}(j) \subset \bN
 $
 は有界である。
 \end{lemma}
+
+\section{遅い関数}
+
+\begin{definition}
+\label{df:IsSlow}
+\lean{IsSlow}
+\leanok
+$
+f \colon \bN \to \bN
+$
+が\emph{遅い}とは、
+任意の自然数$n$に対して
+$
+f(n + 1) \le f(n) + 1
+$
+が成り立つことをいう。
+\end{definition}
+
+\begin{lemma}
+\label{lm:slow_lemma}
+\lean{slow_lemma}
+\leanok
+遅い関数
+$
+f, g \colon \bN \to \bN
+$
+と自然数
+$
+n
+$
+に対して、
+$
+(f+g) (n+1) = (f+g) (n) + 2
+$
+ならば
+$
+f (n+1) = f (n) + 1
+$
+かつ
+$
+g (n+1) = g (n) + 1
+$
+が成り立つ。
+\end{lemma}
+
+\section{自然数の商と余り}
 
 自然数$n,m$に対して、
 $n / m \in \bN$は$n$を$m$で割った商を表し、

@@ -1,6 +1,6 @@
 import Mathlib
-import ClusterSfukLean.NatInterval
 import ClusterSfukLean.QuotRem
+import ClusterSfukLean.NatInterval
 import ClusterSfukLean.NatDvd
 
 def φ (e f : ℕ) : ℕ → ℕ :=

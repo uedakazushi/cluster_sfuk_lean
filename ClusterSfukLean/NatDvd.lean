@@ -1,6 +1,5 @@
 import Mathlib
-import ClusterSfukLean.NatInterval
-import ClusterSfukLean.QuotRem
+-- import ClusterSfukLean.QuotRem
 
 open Classical
 noncomputable instance (priority := low) propDecidable (a : Prop) : Decidable a :=
