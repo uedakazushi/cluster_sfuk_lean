@@ -48,7 +48,55 @@ lemma skip
     rw [f_zero]
     rw [g_zero]
     linarith
-  have fg_inv_i_bounded : IsBounded ((f+g) ⁻¹' { m : ℕ | m ≤ i } ) := by
+  have fg_inv_i_finite : Set.Finite ((f+g) ⁻¹' (Set.singleton i )) := by
     have h1 := monotone_unboundedFun_bounded (f+g) (Monotone.add f_monotone g_monotone) ubd i
+    apply finite_of_bounded_of_Nat
+    assumption
+  set ff : {m : ℕ | m ≤ i} → Set ℕ := fun n => (f+g) ⁻¹' (Set.singleton n) with def_ff
+  have inv_le_i_union :
+  (f+g) ⁻¹' {m : ℕ | m ≤ i} = Set.iUnion ff := by
+    rw [def_ff]
+    rw [Set.iUnion]
+    simp [Set.preimage]
+    apply Set.ext
+    intro x
+    apply Iff.intro
+    { intro h
+      simp
+      simp at h
+      exists f x + g x
+    }
+    { intro h
+      simp
+      simp at h
+      cases h with
+      | intro a h1 =>
+        simp at h1
+        have h2 := h1.1
+        have h3 := h1.2
+        have h4 : f x + g x = a := by
+          exact h3
+        linarith
+    }
+  have le_i_finite : Finite {m : ℕ | m ≤ i} := by
+    apply Set.finite_le_nat
+  have inv_finite : ∀ (i : ↑{m | m ≤ i}), Finite ↑(ff i) := by
+    intro n
+    apply finite_of_bounded_of_Nat
+    apply monotone_bounded
+    apply Monotone.add
+    apply f_monotone
+    apply g_monotone
+    rw [IsUnboundedFun] at ubd
+    intro n'
+    have ubd2 := ubd n'
+    match ubd2 with
+    | ⟨ k, hk ⟩ =>
+      exists k
+      linarith
+  have hh := @Finite.Set.finite_iUnion ℕ {m : ℕ | m ≤ i} le_i_finite ff inv_finite
+  set aux := Set.Finite.toFinset hh with def_m
+  have m := aux.max'
+  have fg_inv_le_i_finite : Set.Finite ((f+g) ⁻¹' {m : ℕ | m ≤ i}) := by
     sorry
   sorry
