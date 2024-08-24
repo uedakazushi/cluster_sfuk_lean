@@ -8,7 +8,7 @@ variable (i : ℕ)
 variable (e_ge_2 : (e:Nat) ≥ 2)
 variable (f_ge_2 : (f:Nat) ≥ 2)
 
-def setI : Set ℕ :=
+def setI (e f i : ℕ) : Set ℕ :=
   {b : ℕ |
   b % e ≠ e - 1
   ∧ b % f ≠ f - 1

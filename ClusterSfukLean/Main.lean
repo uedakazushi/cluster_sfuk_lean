@@ -3,7 +3,34 @@ import ClusterSfukLean.MainDef
 import ClusterSfukLean.Lipschitz
 -- set_option linter.unusedVariables false
 
-section main_lemma
+def ex (e f: ℕ) : Set ℕ :=
+  { n : ℕ | n % e = e - 1 ∨ n % f = f - 1 }
+
+lemma I_is_φinv_diff_ex (e f i : ℕ) :
+  setI e f i = φinv e f i \ ex e f := by
+  apply Set.eq_of_subset_of_subset
+  { intro x
+    intro h
+    cases h with
+    | intro h1 h2 => cases h2 with
+    | intro h2 h3 =>
+    apply And.intro
+    { apply h3 }
+    { rw [ex]
+      intro h4
+      cases h4 with
+      | inl h4 =>
+        exact h1 h4
+      | inr h4 =>
+        exact h2 h4 }
+  }
+  { rw [φinv,setI,ex]
+    intro x
+    intro h
+    have h1 := h.1
+    have h2 := h.2
+    aesop
+  }
 
 lemma φinv_i_empty_i_mod_e_add_f
   (e f i l: ℕ)
@@ -118,14 +145,15 @@ lemma φinv_i_empty_i_mod_e_add_f
 --   rw [Nat.mod_eq_of_lt]
 --   linarith
 
-section main_theorem
+section main
 
 variable (e f l: ℕ+)
 variable (i : ℕ)
 variable (e_coprime_f : Nat.Coprime e f)
 
+end main
+
 theorem main :
   h (e * l) (f * l) i = l * (h e f i) + l - 1
   := by
   sorry
-end main_theorem

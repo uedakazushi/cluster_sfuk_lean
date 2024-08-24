@@ -411,22 +411,6 @@ $
 \end{lemma}
 
 \begin{lemma}
-単調関数
-$
-f \colon \bN \to \bN
-$
-が、
-任意の自然数$n$に対して
-ある自然数$i$が存在して
-$
-f(i) \ge n
-$
-を満たせば、
-任意の自然数$j$に対して
-$f^{-1}(j)$は有界である。
-\end{lemma}
-
-\begin{lemma}
 \label{lm:nat_interval_card}
 \lean{nat_interval_card}
 \uses{df:nat_interval}
@@ -482,6 +466,7 @@ $
 \label{df:MonotoneOneLipschitz}
 \lean{MonotoneOneLipschitz}
 \leanok
+単調増加関数
 $
 f \colon \bN \to \bN
 $
@@ -495,9 +480,14 @@ $
 
 \section{自然数の商と余り}
 
-自然数$n,m$に対して、
-$n / m \in \bN$は$n$を$m$で割った商を表し、
-$n \% m \in \bN$は$n$を$m$で割った余りを表す。
+自然数\texttt{n}, \texttt{m}に対して
+\texttt{n / m}
+と
+\texttt{n \% m}
+は
+自然数の範囲で\texttt{n}を\texttt{m}で割った
+商と余り
+を表す。
 
 \begin{lemma}
 \label{lm:nat_div_pnat_le}
@@ -505,7 +495,7 @@ $n \% m \in \bN$は$n$を$m$で割った余りを表す。
 \leanok
 自然数$n,q$と
 正の自然数$d$に対して、
-$n / d \le q$ならば$n \le q \cdot d + d$が成り立つ。
+$\lfloor n / d \rfloor \le q$ならば$n \le q \cdot d + d$が成り立つ。
 \end{lemma}
 
 % \begin{remark}
@@ -617,9 +607,7 @@ $\rII_{e,f}^i$は有限集合である。
 $\rIII_{e,f}^i$は有限集合である。
 \end{lemma}
 
-\chapter{Main argument}
-
-\section{}
+\chapter{Auxiliary function}
 
 \begin{lemma}
 \label{lm:nat_succ_div_le}
@@ -937,7 +925,7 @@ $\nmin(e,f,i) \not \equiv -1 \mod e$かつ
 $\nmin(e,f,i) \not \equiv -1 \mod f$かつ
 $\lfloor \nmin(e,f,i) / e \rfloor + \lfloor \nmin(e,f,i) / f \rfloor = i$が成り立つ。
 
-\section{}
+\chapter{Main argument}
 
 $e, f$を互いに素な2以上の自然数、
 $i$を自然数、
@@ -1040,7 +1028,8 @@ $
 となる。
 \end{proof}
 
-\subsection{}
+\section{Case I}
+
 $
 i \not \equiv e + f - 1 \mod e + f
 $
