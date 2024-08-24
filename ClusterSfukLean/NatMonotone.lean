@@ -190,4 +190,28 @@ lemma monotone_add
     apply monotone_g
     assumption
 
+lemma unbounded_fun_add
+  (f g : ℕ → ℕ)
+  (ubd_f_or_g : IsUnboundedFun f ∨ IsUnboundedFun g)
+  :
+  IsUnboundedFun (f + g) := by
+    intro k
+    cases ubd_f_or_g with
+    | inl ubd_f =>
+      rw [IsUnboundedFun] at ubd_f
+      have h := ubd_f k
+      simp
+      match h with
+      | ⟨ x, h1 ⟩ =>
+        exists x
+        linarith
+    | inr ubd_g =>
+      rw [IsUnboundedFun] at ubd_g
+      have h := ubd_g k
+      simp
+      match h with
+      | ⟨ x, h1 ⟩ =>
+        exists x
+        linarith
+
 def IsMinIn (m : ℕ) (s : Set ℕ) := m ∈ s ∧ ∀ x ∈ s, m ≤ x

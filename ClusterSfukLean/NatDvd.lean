@@ -7,7 +7,9 @@ noncomputable instance (priority := low) propDecidable (a : Prop) : Decidable a 
     | Or.inl h => ⟨isTrue h⟩
     | Or.inr h => ⟨isFalse h⟩
 
-lemma Nat_div_monotone (d : ℕ) : Monotone (fun n ↦ n / d) := by
+def nat_div (d n : ℕ) : ℕ := n / d
+
+lemma nat_div_monotone (d : ℕ) : Monotone (nat_div d) := by
   intro n m h
   apply Nat.div_le_div_right
   assumption
@@ -23,7 +25,7 @@ lemma nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
     linarith
   }
 
-lemma Nat_add_div_monotone (e f : ℕ)
+lemma nat_add_div_monotone (e f : ℕ)
  : Monotone (fun n ↦ n / e + n / f) := by
   intro n m h
   apply Nat.add_le_add

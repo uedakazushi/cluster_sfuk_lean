@@ -3,8 +3,24 @@ import ClusterSfukLean.QuotRem
 import ClusterSfukLean.Lipschitz
 import ClusterSfukLean.NatDvd
 
+lemma nat_div_mol (d : ℕ) : MonotoneOneLipschitz (nat_div d) := by
+  rw [MonotoneOneLipschitz]
+  apply And.intro
+  exact nat_div_monotone d
+  intro n
+  apply nat_succ_div_le
+
+lemma nat_div_ubd (d : ℕ) (d_pos : d > 0) : IsUnboundedFun (nat_div d) := by
+  intro k
+  dsimp [nat_div]
+  exists (k+1) * d
+  rw [Nat.mul_div_cancel]
+  linarith
+  linarith
+  -- exact d_pos
+
 def φ (e f : ℕ) : ℕ → ℕ :=
-  λ n ↦ n / e + n / f
+  nat_div e + nat_div f
 
 def φinv (e f i : ℕ) : Set ℕ :=
   { n : ℕ | φ e f n = i }
@@ -26,7 +42,7 @@ lemma φinv_is_preim_φ (e f i : ℕ) : φinv e f i = (φ e f) ⁻¹' (Set.singl
 
 lemma φ_monotone (e f : ℕ) : Monotone (φ e f) := by
   intro n m h
-  apply Nat_add_div_monotone
+  apply nat_add_div_monotone
   assumption
 
 lemma φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ e f n := by
@@ -35,20 +51,41 @@ lemma φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ
     rw [Nat.mul_div_mul_right]
     exact l.2
   have h2 := Nat.mul_div_mul_right n f l.2
+  dsimp [nat_div]
   aesop
 
 lemma φ_n_add_one_le_φ_n_add_two (e f n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
   dsimp [φ]
   have h3 := nat_succ_div_le n e
   have h4 := nat_succ_div_le n f
+  dsimp [nat_div]
   linarith
+
+lemma mtl : MonotoneTwoLipschitz (φ e f) := by
+  rw [MonotoneTwoLipschitz]
+  apply And.intro
+  exact φ_monotone e f
+  intro n
+  exact φ_n_add_one_le_φ_n_add_two e f n
+
+lemma iuf (e_pos : e > 0) : IsUnboundedFun (φ e f) :=
+  unbounded_fun_add (nat_div e) (nat_div f) (Or.inl (nat_div_ubd e e_pos))
 
 lemma φinv_i_empty_implies_φinv_i_add_one_nonempty
   (e f i : ℕ)
+  (e_pos : e > 0)
   (h : φinv e f i = ∅)
   :
   φinv e f (i+1) ≠ ∅ := by
-    sorry
+    have h1 : φ e f 0 = 0 := by
+      dsimp [φ]
+      dsimp [nat_div]
+      simp
+    have h2 := skip (φ e f) mtl (iuf e_pos) h1 i
+    rw [φinv]
+    rw [φinv] at h
+    by_contra h3
+    exact h2 h h3
 
 lemma φ_n_minus_one_eq_φ_n
   (e f n : ℕ)
@@ -61,6 +98,7 @@ lemma φ_n_minus_one_eq_φ_n
   simp [φ]
   have h1 := not_dvd_mod_eq e n n_ne_zero e_not_dvd_n
   have h2 := not_dvd_mod_eq f n n_ne_zero f_not_dvd_n
+  dsimp [nat_div]
   rw [h1]
   rw [h2]
 
@@ -81,6 +119,7 @@ lemma φ_n_minus_one_ne_φ_n_e
   rw [h1] at h4
   have h5 : n - 1 + 1 = n := Nat.succ_pred n_ne_zero
   rw [h5] at h4
+  dsimp [nat_div]
   linarith
 
 lemma φ_n_minus_one_ne_φ_n_f
@@ -100,6 +139,7 @@ lemma φ_n_minus_one_ne_φ_n_f
   rw [h1] at h4
   have h5 : n - 1 + 1 = n := Nat.succ_pred n_ne_zero
   rw [h5] at h4
+  dsimp [nat_div]
   linarith
 
 lemma φ_n_minus_one_ne_φ_n
