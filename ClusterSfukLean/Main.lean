@@ -1,6 +1,6 @@
 import Mathlib
 import ClusterSfukLean.MainDef
-import ClusterSfukLean.Slow
+import ClusterSfukLean.Lipschitz
 -- set_option linter.unusedVariables false
 
 section main_lemma

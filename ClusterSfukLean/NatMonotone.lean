@@ -155,25 +155,21 @@ lemma finite_of_bounded_of_Nat (s: Set ℕ) :
       apply Set.Finite.subset (Set.finite_le_nat k)
       assumption
 
-lemma monotone_bounded
+lemma fib_monotone_ubd_fun_bdd
   (f : ℕ → ℕ)
   (monotone : Monotone f)
-  (h : ∀ n : ℕ, ∃ i : ℕ, n ≤ f i)
+  (ubd : IsUnboundedFun f)
   :
-  ∀ j : ℕ, IsBounded (f ⁻¹' Set.singleton j) := by
+  ∀ j : ℕ, IsBounded (f ⁻¹' { j }) := by
     intro j
     rw [IsBounded]
-    match h (j+1) with
-    | ⟨ k, hk ⟩ =>
+    cases ubd (j+1) with
+    | intro k hk =>
       exists k
       intro x
       intro h1
-      rw [Set.mem_preimage] at h1
-      rw [Set.singleton] at h1
-      rw [Set.instMembership] at h1
-      have h2 : f x = j := by
-        exact h1
-      rw [←h2] at hk
+      simp at h1
+      rw [←h1] at hk
       rw [Monotone] at monotone
       by_contra h3
       have h4 := le_of_not_ge h3
@@ -193,31 +189,5 @@ lemma monotone_add
     assumption
     apply monotone_g
     assumption
-
-lemma monotone_unboundedFun_bounded
-  (f : ℕ → ℕ)
-  (monotone : Monotone f)
-  (isUnboundedFun : IsUnboundedFun f)
-  :
-  ∀ j : ℕ, IsBounded (f ⁻¹' Set.singleton j) := by
-    intro j
-    rw [IsBounded]
-    rw [IsUnboundedFun] at isUnboundedFun
-    match isUnboundedFun (j+1) with
-    | ⟨ k, hk ⟩ =>
-      exists k
-      intro x
-      intro h1
-      rw [Set.mem_preimage] at h1
-      rw [Set.singleton] at h1
-      rw [Set.instMembership] at h1
-      have h2 : f x = j := by
-        exact h1
-      rw [←h2] at hk
-      rw [Monotone] at monotone
-      by_contra h3
-      have h4 := le_of_not_ge h3
-      have h5 := monotone h4
-      linarith
 
 def IsMinIn (m : ℕ) (s : Set ℕ) := m ∈ s ∧ ∀ x ∈ s, m ≤ x

@@ -455,8 +455,8 @@ A bounded set of natural numbers is finite.
 \end{lemma}
 
 \begin{lemma}
-\label{lm:monotone_bounded}
-\lean{monotone_bounded}
+\label{lm:fib_monotone_ubd_fun_bdd}
+\lean{fib_monotone_ubd_fun_bdd}
 \leanok
 任意の単調増加関数
 $
@@ -476,49 +476,22 @@ $
 は有界である。
 \end{lemma}
 
-\section{遅い関数}
+\section{Lipschitz関数}
 
 \begin{definition}
-\label{df:IsSlow}
-\lean{IsSlow}
+\label{df:MonotoneOneLipschitz}
+\lean{MonotoneOneLipschitz}
 \leanok
 $
 f \colon \bN \to \bN
 $
-が\emph{遅い}とは、
+が1-Lipschitzであるとは、
 任意の自然数$n$に対して
 $
 f(n + 1) \le f(n) + 1
 $
 が成り立つことをいう。
 \end{definition}
-
-\begin{lemma}
-\label{lm:slow_lemma}
-\lean{slow_lemma}
-\leanok
-遅い関数
-$
-f, g \colon \bN \to \bN
-$
-と自然数
-$
-n
-$
-に対して、
-$
-(f+g) (n+1) = (f+g) (n) + 2
-$
-ならば
-$
-f (n+1) = f (n) + 1
-$
-かつ
-$
-g (n+1) = g (n) + 1
-$
-が成り立つ。
-\end{lemma}
 
 \section{自然数の商と余り}
 
