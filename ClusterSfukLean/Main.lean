@@ -211,6 +211,73 @@ noncomputable def nat_min_in (s : Set ℕ) (h : s.Nonempty) : (@nat_min s) := by
 
 noncomputable def n_min_l := nat_min_in (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))
 
+noncomputable def n_min_1 := nat_min_in (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))
+
+lemma min_l_eq_l_mul_min_1 : (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_emptry).1 = l * (n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty).1 := by
+  set m_1 := n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty with def_m_1
+  set m_l := n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty with def_m_l
+  have mem_1 : ↑m_1 ∈ φinv e f i := by
+    rw [def_m_1]
+    exact (nat_min_in (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))).2.1
+  have min_1 : ∀ m ∈ φinv e f i, ↑m_1 ≤ m := by
+    rw [def_m_1]
+    exact (nat_min_in (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))).2.2
+  -- have min_l : ∀ m ∈ φinv (e*l) (f*l) i, ↑m_l ≤ m := by
+  --   rw [def_m_l]
+  --   exact (nat_min_in (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))).2.2
+  have dvd_1 := min_φinv_dvd e f i m_1.1 mem_1 min_1
+  have dvd_l : (e*l) ∣ (l * ↑ m_1) ∨ (f*l) ∣ (l * ↑ m_1) := by
+    cases dvd_1 with
+    | inl dvd_1 =>
+      left
+      rw [Nat.mul_comm]
+      exact Nat.mul_dvd_mul_left l dvd_1
+    | inr dvd_1 =>
+      right
+      rw [Nat.mul_comm]
+      exact Nat.mul_dvd_mul_left l dvd_1
+  set e' : PNat := ⟨ e, by linarith ⟩ with def_e'
+  set f' : PNat := ⟨ f, by linarith ⟩ with def_f'
+  set l' : PNat := ⟨ l, by linarith ⟩
+  have mem_l : φ (e * l) (f * l) (l * ↑m_1) = i := by
+    have h1 : l * ↑m_1 = ↑m_1 * l := by
+      ring
+    rw [h1]
+    have h2 := φ_mul e' f' (↑m_1) l'
+    have h3 : φ e f m_1 = i := by
+      rw [def_m_1]
+      exact (nat_min_in (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))).2.1
+    have h4 : φ ↑e' ↑f' ↑m_1 = i := by
+      simp [def_e', def_f']
+      exact h3
+    rw [h4] at h2
+    exact h2
+  have min_l' := dvd_min_φinv (e*l) (f*l) i (l * ↑ m_1) dvd_l mem_l
+  have inv_mem : ∀ (m:Nat), m ∈ φinv (e*l) (f*l) i ↔ φ (e*l) (f*l) m = i := by
+    intro m
+    apply Iff.intro
+    { intro h
+      rw [φinv] at h
+      exact h }
+    { intro h
+      rw [φinv]
+      exact h }
+  have min_l_rw : ∀ (m:Nat), φ (e*l) (f*l) m = i → ↑m_l ≤ m := by
+    intro m
+    intro h
+    rw [def_m_l]
+    exact (nat_min_in (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))).2.2 m h
+  have ineq1 := min_l_rw (l * ↑ m_1) mem_l
+  have ineq2 : ↑ m_l ≥ l * ↑ m_1 := by
+    by_contra h
+    rw [not_le] at h
+    have h1 := min_l' ↑ m_l h
+    have h2 := m_l.2.1
+    have h3 : φ (e * l) (f * l) ↑m_l = i := by
+      aesop
+    linarith
+  linarith
+
 -- noncomputable def n_min_l := WellFounded.min Nat.lt.isWellOrder.3.wf (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))
 
 -- lemma n_min_l_is_min : IsMinIn (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty) (φinv e f i) := by
