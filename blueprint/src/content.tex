@@ -460,6 +460,33 @@ $
 は有界である。
 \end{lemma}
 
+\begin{definition}
+\label{df:IsMinIn}
+\lean{IsMinIn}
+\leanok
+自然数$m$が
+自然数の集合$S \subset \bN$の最小元であるとは、
+$
+m \in S
+$
+かつ
+任意の$x \in S$に対して
+$
+m \le x
+$
+が成り立つことを指す。
+\end{definition}
+
+\begin{lemma}
+\label{lm:min_unique}
+\lean{min_unique}
+\uses{df:IsMinIn}
+\leanok
+自然数$m, m'$がともに
+$S \subset \bN$の最小元であれば、
+$m = m'$である。
+\end{lemma}
+
 \section{Lipschitz関数}
 
 \begin{definition}

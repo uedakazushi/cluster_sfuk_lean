@@ -215,3 +215,8 @@ lemma unbounded_fun_add
         linarith
 
 def IsMinIn (m : ℕ) (s : Set ℕ) := m ∈ s ∧ ∀ x ∈ s, m ≤ x
+
+lemma min_unique (m m' : ℕ) (s : Set ℕ) (h1 : IsMinIn m s) (h2 : IsMinIn m' s) : m = m' := by
+  have h3 := h1.2 m' h2.1
+  have h4 := h2.2 m h1.1
+  linarith

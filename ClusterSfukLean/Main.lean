@@ -147,9 +147,89 @@ lemma φinv_i_empty_i_mod_e_add_f
 
 section main
 
-variable (e f l: ℕ+)
-variable (i : ℕ)
-variable (e_coprime_f : Nat.Coprime e f)
+namespace main_lemma
+
+variable
+  (e f i l: ℕ)
+  (e_ge_2 : e ≥ 2)
+  (f_ge_2 : f ≥ 2)
+  (coprime : Nat.Coprime e f)
+  (l_pos : l > 0)
+  (non_empty : i % (e+f) ≠ e+f-1)
+
+lemma non_emp_l : φinv (e*l) (f*l) i ≠ ∅ := by
+  by_contra h
+  have h1 := φinv_i_empty_i_mod_e_add_f e f i l e_ge_2 f_ge_2 coprime l_pos h
+  contradiction
+
+lemma non_emp_1 : φinv e f i ≠ ∅ := by
+  by_contra h
+  have h1 := φinv_i_empty_i_mod_e_add_f e f i 1 e_ge_2 f_ge_2 coprime (by linarith)
+  rw [Nat.mul_one] at h1
+  rw [Nat.mul_one] at h1
+  have h2 := h1 h
+  contradiction
+
+-- noncomputable def n_min_1 := WellFounded.min Nat.lt.isWellOrder.3.wf (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))
+
+-- lemma n_min_1_is_min : IsMinIn (n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty) (φinv e f i) := by
+--   rw [IsMinIn]
+--   apply And.intro
+--   {
+--     have h1 := WellFounded.min_mem Nat.lt.isWellOrder.3.wf (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))
+--     rw [n_min_1]
+--     exact h1
+--   }
+--   {
+--     intro m
+--     intro h1
+--     have h2 := WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty)) h1
+--     rw [n_min_1]
+--     linarith
+--   }
+
+def nat_min {s : Set ℕ} := { n : ℕ | IsMinIn n s }
+
+noncomputable def nat_min_in (s : Set ℕ) (h : s.Nonempty) : (@nat_min s) := by
+  rw [nat_min]
+  set m := WellFounded.min Nat.lt.isWellOrder.3.wf s h with def_m
+  have isminin : IsMinIn m s := by
+    rw [IsMinIn]
+    apply And.intro
+    {
+      rw [def_m]
+      exact WellFounded.min_mem Nat.lt.isWellOrder.3.wf s h
+    }
+    {
+      intro n
+      intro h1
+      have h2 := WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf s h h1
+      rw [def_m]
+      linarith
+    }
+  exact ⟨ m, isminin ⟩
+
+noncomputable def n_min_l := nat_min_in (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))
+
+-- noncomputable def n_min_l := WellFounded.min Nat.lt.isWellOrder.3.wf (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))
+
+-- lemma n_min_l_is_min : IsMinIn (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty) (φinv e f i) := by
+  -- rw [IsMinIn]
+  -- apply And.intro
+  -- {
+  --   have h1 := WellFounded.min_mem Nat.lt.isWellOrder.3.wf (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))
+  --   rw [n_min_l]
+  --   exact h1
+  -- }
+  -- {
+  --   intro m
+  --   intro h1
+  --   have h2 := WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty)) h1
+  --   rw [n_min_1]
+  --   linarith
+  -- }
+
+end main_lemma
 
 end main
 
