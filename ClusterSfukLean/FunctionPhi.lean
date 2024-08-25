@@ -71,6 +71,10 @@ lemma mtl : MonotoneTwoLipschitz (φ e f) := by
 lemma iuf (e_pos : e > 0) : IsUnboundedFun (φ e f) :=
   unbounded_fun_add (nat_div e) (nat_div f) (Or.inl (nat_div_ubd e e_pos))
 
+lemma φ_zero : φ e f 0 = 0 := by
+  simp [φ]
+  simp [nat_div]
+
 lemma φinv_i_empty_implies_φinv_i_add_one_nonempty
   (e f i : ℕ)
   (e_pos : e > 0)
