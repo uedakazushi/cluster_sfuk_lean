@@ -6,7 +6,7 @@ import ClusterSfukLean.Lipschitz
 def ex (e f: ℕ) : Set ℕ :=
   { n : ℕ | n % e = e - 1 ∨ n % f = f - 1 }
 
-lemma I_is_φinv_diff_ex (e f i : ℕ) :
+lemma I_eq_φinv_diff_ex (e f i : ℕ) :
   setI e f i = φinv e f i \ ex e f := by
   apply Set.eq_of_subset_of_subset
   { intro x
@@ -170,24 +170,6 @@ lemma non_emp_1 : φinv e f i ≠ ∅ := by
   have h2 := h1 h
   contradiction
 
--- noncomputable def n_min_1 := WellFounded.min Nat.lt.isWellOrder.3.wf (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))
-
--- lemma n_min_1_is_min : IsMinIn (n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty) (φinv e f i) := by
---   rw [IsMinIn]
---   apply And.intro
---   {
---     have h1 := WellFounded.min_mem Nat.lt.isWellOrder.3.wf (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))
---     rw [n_min_1]
---     exact h1
---   }
---   {
---     intro m
---     intro h1
---     have h2 := WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty)) h1
---     rw [n_min_1]
---     linarith
---   }
-
 def nat_min {s : Set ℕ} := { n : ℕ | IsMinIn n s }
 
 noncomputable def nat_min_in (s : Set ℕ) (h : s.Nonempty) : (@nat_min s) := by
@@ -278,23 +260,136 @@ lemma min_l_eq_l_mul_min_1 : (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_em
     linarith
   linarith
 
--- noncomputable def n_min_l := WellFounded.min Nat.lt.isWellOrder.3.wf (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))
-
--- lemma n_min_l_is_min : IsMinIn (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty) (φinv e f i) := by
-  -- rw [IsMinIn]
-  -- apply And.intro
-  -- {
-  --   have h1 := WellFounded.min_mem Nat.lt.isWellOrder.3.wf (φinv (e*l) (f*l) i) (Set.nonempty_iff_ne_empty.mpr (non_emp_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty))
-  --   rw [n_min_l]
-  --   exact h1
-  -- }
-  -- {
-  --   intro m
-  --   intro h1
-  --   have h2 := WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty)) h1
-  --   rw [n_min_1]
-  --   linarith
-  -- }
+lemma case_a (h : (i+1) % (e+f) ≠ e+f-1) : (n_min_l e f (i+1) l e_ge_2 f_ge_2 coprime l_pos h).1 - 1 ∈ (φinv (e*l) (f*l) i) ∧ (n_min_l e f (i+1) l e_ge_2 f_ge_2 coprime l_pos h).1 ∉ (φinv (e*l) (f*l) i):= by
+  set nmin' := n_min_l e f (i+1) l e_ge_2 f_ge_2 coprime l_pos h with def_nmin'
+  set nmin := n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty with def_nmin
+  have h1 : φ (e*l) (f*l) (nmin'.1-1) ≤ φ (e*l) (f*l) nmin'.1 := by
+    apply φ_monotone
+    apply Nat.sub_le
+  have h2 : φ (e*l) (f*l) (nmin'.1-1) ≠ φ (e*l) (f*l) nmin'.1 := by
+    -- have h3 := nmin'.2.1
+    have h4 := nmin'.2.2
+    by_contra h5
+    have h6 : (↑nmin':Nat) - 1 ∈ φinv (e*l) (f*l) (i+1) := by
+      have h7 : φ (e * l) (f * l) (↑nmin' - 1) = i + 1 := by
+        rw [h5]
+        rw [def_nmin']
+        exact nmin'.2.1
+      exact h7
+    have h8 := h4 (nmin'.1 - 1) h6
+    have h9 (a : Nat) (ineq : a ≤ a - 1) : a = 0 := by
+      cases a with
+      | zero =>
+        linarith
+      | succ a =>
+        have h10 : a + 1 - 1 = a := Nat.pred_succ a
+        rw [h10] at ineq
+        simp
+        simp at ineq
+    have h10 := h9 (nmin'.1) h8
+    clear h8 h9
+    have h11 : nmin'.1 - 1 = 0 := by
+      rw [h10]
+    rw [h11] at h6
+    have h12 : i + 1 = 0 := by
+      rw [φinv] at h6
+      simp at h6
+      simp [φ] at h6
+      dsimp [nat_div] at h6
+      rw [Nat.zero_div] at h6
+      rw [Nat.zero_div] at h6
+      simp at h6
+    simp at h12
+  have h3 : φ (e*l) (f*l) (nmin'.1) = i + 1:=
+    nmin'.2.1
+  have h4 : φ (e*l) (f*l) (nmin) = i :=
+    nmin.2.1
+  rw [h3] at h1
+  rw [h3] at h2
+  have h5 : φ (e*l) (f*l) (nmin'.1-1) = i := by
+    by_contra h5
+    have h6 (a : Nat) (ineq1 : a ≤ i + 1) (ineq2 : a ≠ i+1) : a ≤ i := by
+      by_contra ineq3
+      have h7 : a = i + 1 := by
+        linarith
+      contradiction
+    have h7 (a : Nat) (ineq1 : a ≤ i + 1) (ineq2 : a ≠ i+1) (ineq3 : a ≠ i) : a ≤ i-1 := by
+      have h7 : a ≤ i := by
+        exact h6 a ineq1 ineq2
+      by_contra h8
+      rw [not_le] at h8
+      cases i with
+      | zero =>
+        linarith
+      | succ i =>
+        simp at h8
+        have h9 : a = i + 1 := by
+          linarith
+        contradiction
+    have h8 := h7 (φ (e * l) (f * l) (↑nmin' - 1)) h1 h2 h5
+    have h9 : nmin.1 ≤ nmin'.1 := by
+      by_contra h9
+      rw [not_le] at h9
+      have h10 : nmin'.1 ≤ nmin.1 := by
+        linarith
+      have h11 := φ_monotone (e*l) (f*l) h10
+      rw [h3,h4] at h11
+      linarith
+    have h10 : nmin.1 ≠ nmin'.1 := by
+      by_contra h10
+      have h11 : φ (e * l) (f * l) nmin.1 = i + 1 := by
+        rw [h10]
+        exact h3
+      rw [h4] at h11
+      linarith
+    have h11 : nmin.1 ≤ nmin'.1 - 1 := by
+      have h12 (a b: Nat) (ineq1 : a ≤ b) (ineq2 : a ≠ b) : a ≤ b-1 := by
+        cases b with
+        | zero =>
+          linarith
+        | succ b =>
+          simp
+          by_contra h12
+          rw [not_le] at h12
+          have h13 : b+1 ≤ a := by
+            linarith
+          have h14 := LE.le.ge_iff_eq h13
+          have h15 := h14.mp ineq1
+          exact ineq2 (Eq.symm h15)
+      exact h12 nmin.1 nmin'.1 h9 h10
+    have h12 := φ_monotone (e*l) (f*l) h11
+    rw [h4] at h12
+    have h13 := le_trans h12 h8
+    have h14 : i = 0 := by
+      cases i with
+      | zero =>
+        rfl
+      | succ i =>
+        simp at h13
+    simp [h14] at h1
+    simp [h14] at h2
+    simp [h14] at h5
+    have h15 (a : Nat) (ineq1 : a ≤ 1) (ineq2 : a ≠ 1) : a = 0 := by
+      cases a with
+      | zero =>
+        rfl
+      | succ a =>
+        cases a with
+        | zero =>
+          simp at ineq2
+        | succ a =>
+          linarith
+    have h16 := h15 _ h1 h2
+    exact h5 h16
+  apply And.intro
+  { exact h5 }
+  { by_contra h6
+    have h7 : φ (e * l) (f * l) ↑nmin' ≠ i := by
+      have h8 : i + 1 ≠ i := by
+        linarith
+      rw [← h3] at h8
+      exact h8
+    exact h7 h6 }
 
 end main_lemma
 

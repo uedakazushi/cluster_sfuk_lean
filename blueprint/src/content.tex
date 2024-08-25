@@ -1061,8 +1061,20 @@ $
 i \not \equiv e + f - 1 \mod e + f
 $
 と仮定する。
+この時
+\Cref{lm:φinv_i_empty_i_mod_e_add_f}
+から
+$
+\varphi_{e \ell, f \ell}^{-1}(i)
+\ne
+\emptyset
+$
+である。
 
 \begin{definition}
+\label{df:main_lemma.n_min_l}
+\lean{main_lemma.n_min_l}
+\leanok
 $
 \nmin(e \ell, f \ell, i)
 \coloneqq
@@ -1071,29 +1083,144 @@ $
 \end{definition}
 
 \begin{lemma}
-\label{lm:min_l_eq_l_mul_min_1}
+\label{lm:main_lemma.min_l_eq_l_mul_min_1}
 \lean{main_lemma.min_l_eq_l_mul_min_1}
+\uses{df:main_lemma.n_min_l}
 \leanok
 $
 \nmin(e \ell, f \ell, i) = \ell \nmin(e, f, i)
 $
 \end{lemma}
 
-\begin{definition}
+\begin{lemma}
+\label{lm:case_a}
+\lean{main_lemma.case_a}
+\leanok
+$i + 1 \not \equiv e + f - 1 \mod e + f$の時
 $
-i' \coloneqq
-\begin{cases}
-i + 1 & i + 1 \not \equiv e + f - 1 \mod e + f, \\
-i + 2 & i + 1 \equiv e + f - 1 \mod e + f
-\end{cases}
+\nmin (e \ell, f \ell, i+1) - 1
+\in
+\varphi_{e \ell, f \ell}^{-1}(i)
 $
-\end{definition}
+かつ
+$
+\nmin (e \ell, f \ell, i+1)
+\not \in
+\varphi_{e \ell, f \ell}^{-1}(i)
+$
+\end{lemma}
+
+\begin{proof}
+$
+i + 1 \not \equiv e + f - 1 \mod e + f
+$
+から
+$
+\varphi_{e \ell, f \ell}^{-1}(i+1) \ne \emptyset
+$
+であり、
+その最小元として
+$
+\nmin (e \ell, f \ell, i+1)
+$
+が定義される。
+$
+\nmin (e \ell, f \ell, i+1) - 1
+\le
+\nmin (e \ell, f \ell, i+1)
+$
+と
+$
+\varphi_{e \ell, f \ell}
+$
+の単調性から
+$
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i+1) - 1)
+\le
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i+1))
+$
+である。
+$
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i+1) - 1)
+=
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i+1))
+$
+は
+$
+\nmin (e \ell, f \ell, i+1)
+$
+の最小性に反するので、
+$
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i+1) - 1)
+<
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i+1))
+$
+である。
+$
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i)) = i
+$
+なので
+$
+\nmin (e \ell, f \ell, i)
+\le
+\nmin (e \ell, f \ell, i+1)
+$
+であり、
+$
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i))
+=
+i
+\ne
+i+1
+=
+\varphi_{e \ell, f \ell}(\nmin (e \ell, f \ell, i+1))
+$
+から
+$
+\nmin (e \ell, f \ell, i)
+<
+\nmin (e \ell, f \ell, i+1)
+$
+である。
+従って
+$
+\nmin (e \ell, f \ell, i)
+\le
+\nmin (e \ell, f \ell, i+1) - 1
+$
+であり、
+$\varphi_{e \ell, f \ell}$の単調性から
+$
+i
+\le
+\varphi_{e \ell, f \ell}( \nmin (e \ell, f \ell, i))
+\le
+\varphi_{e \ell, f \ell}( \nmin (e \ell, f \ell, i+1) - 1 )
+$
+となる。
+従って
+$
+\varphi_{e \ell, f \ell}( \nmin (e \ell, f \ell, i+1) - 1 )
+= i
+$
+である。
+\end{proof}
 
 \begin{lemma}
 $
-\rI_{e \ell, f \ell}^i
-=
-[ \nmin(e \ell, f \ell, i), \nmin(e \ell, f \ell, i')-2 ]
+i + 1 \equiv e + f - 1 \mod e + f
+$
+の時
+$
+\nmin (e \ell, f \ell, i+1) - 2
+\in
+\varphi_{e \ell, f \ell}^{-1}(i)
+$
+かつ
+$
+\nmin (e \ell, f \ell, i+1) - 1
+\not \in
+\varphi_{e \ell, f \ell}^{-1}(i)
 $
 \end{lemma}
 
