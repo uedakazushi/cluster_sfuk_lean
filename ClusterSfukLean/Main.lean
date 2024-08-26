@@ -45,7 +45,6 @@ lemma φinv_i_empty_i_mod_e_add_f
     apply mul_pos
     linarith
     exact l_pos
-  #check φ_zero
   have h1 := skip (φ (e*l) (f*l)) mtl (iuf el_pos) φ_zero i h
   set s := φinv (e*l) (f*l) (i+1) with def_s
   have nonemp_s : s ≠ ∅ :=
@@ -99,9 +98,9 @@ lemma φinv_i_empty_i_mod_e_add_f
       exact l_pos
     have h14 := Nat.mul_div_cancel (f * k) el_pos
     have h15 := Nat.mul_div_cancel (e * k) fl_pos
-    -- rw [h12, h14, h13, h15]
+    dsimp [nat_div]
+    rw [h12, h14, h13, h15]
     ring
-    sorry
   have h12 : φ (e*l) (f*l) n = i+1 := by
     rw [φinv] at def_s
     rw [def_s] at n_in_s
