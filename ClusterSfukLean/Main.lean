@@ -569,6 +569,14 @@ lemma mod_eq_succ_ne (n d : ℕ) (d_ge_2 : d ≥ 2) (h1 : n % d = d - 1) : (n+1)
 lemma add_ge {e f : ℕ} (e_ge_2 : e ≥ 2) (f_ge_2 : f ≥ 2) : e + f ≥ 2 := by
   linarith
 
+lemma le_of_le_succ_and_ne (a b : ℕ) (ineq1 : a ≤ b + 1) (ineq2 : a ≠ b + 1) : a ≤ b := by
+  rw [Nat.le_iff_lt_or_eq] at ineq1
+  cases ineq1 with
+  | inl ineq1 =>
+    linarith
+  | inr ineq1 =>
+    contradiction
+
 lemma case_b
   (empty' : (i+1) % (e+f) = e+f-1)
   :
@@ -614,9 +622,22 @@ lemma case_b
         rw [h5] at h3
         repeat apply Nat.le_of_succ_le_succ at h3
         exact h3
-      sorry
+      have h1 := le_of_le_succ_and_ne (φ (e*l) (f*l) (nmin''.1-1)) (i+1) φ_pred_nmin''_le_succ_succ_i φ_pred_nmin''_ne_succ_succ_i
+      have h2 := le_of_le_succ_and_ne (φ (e*l) (f*l) (nmin''.1-1)) i h1 φ_pred_nmin''_ne_succ_i
+      linarith
     exact φ_pred_nmin''_eq_i
-  sorry
+  apply And.intro
+  {
+    exact mem
+  }
+  {
+    have h1 := nmin''.2.1
+    dsimp [φinv]
+    dsimp [φinv] at h1
+    by_contra h
+    rw [h1] at h
+    linarith
+  }
 
 end main_lemma
 
