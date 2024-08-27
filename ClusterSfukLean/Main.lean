@@ -45,26 +45,124 @@ lemma φinv_i_empty_i_mod_e_add_f
     apply mul_pos
     linarith
     exact l_pos
-  have h1 := skip (φ (e*l) (f*l)) mtl (iuf el_pos) φ_zero i h
+  -- have h1 := skip (φ (e*l) (f*l)) mtl (iuf el_pos) φ_zero i h
   set s := φinv (e*l) (f*l) (i+1) with def_s
-  have nonemp_s : s ≠ ∅ :=
+  have s_ne_empty : s ≠ ∅ :=
     skip (φ (e*l) (f*l)) mtl (iuf el_pos) φ_zero i h
-  have nonempty_s := Set.nonempty_iff_ne_empty.mpr nonemp_s
-  set n := WellFounded.min Nat.lt.isWellOrder.3.wf s nonempty_s with def_n
+  have s_nonempty := Set.nonempty_iff_ne_empty.mpr s_ne_empty
+  set n := WellFounded.min Nat.lt.isWellOrder.3.wf s s_nonempty with def_n
   have minimality_n : ∀ m ∈ s, n ≤ m := by
     intro m
     intro mem
-    have wfnlm := WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf s nonempty_s mem
+    have wfnlm := WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf s s_nonempty mem
     linarith
-  have n_in_s := WellFounded.min_mem Nat.lt.isWellOrder.3.wf s nonempty_s
+  have n_in_s := WellFounded.min_mem Nat.lt.isWellOrder.3.wf s s_nonempty
   rw [←def_n] at n_in_s
   clear def_n
   have h6 :=
     min_φinv_dvd (e*l) (f*l) (i+1) n n_in_s minimality_n
-  have el_dvd_n : e*l ∣ n := by
-    sorry
-  have fl_dvd_n : f*l ∣ n := by
-    sorry
+  have i_pos : i > 0 := by
+    by_contra h1
+    have h2 : i = 0 := by
+      linarith
+    rw [h2] at h
+    have h3 : φ (e*l) (f*l) 0 = 0 := by
+      rw [φ_zero]
+    rw [φinv] at h
+    contrapose h
+    push_neg
+    exact ⟨ 0, h3 ⟩
+  have n_pos : n > 0 := by
+    by_contra h1
+    have h2 : n = 0 := by
+      linarith
+    rw [h2] at n_in_s
+    have h3 : φ (e*l) (f*l) 0 = i + 1 := by
+      rw [def_s] at n_in_s
+      exact n_in_s
+    have h4 : φ (e*l) (f*l) 0 = 0 := by
+      rw [φ_zero]
+    rw [h4] at h3
+    linarith
+  have n_ne_zero : n ≠ 0 := by
+    linarith
+  set n' := n - 1 with def_n'
+  have succ_n' : n - 1 + 1 = n := by
+    exact Nat.succ_pred n_ne_zero
+  rw [← def_n'] at succ_n'
+  have φ_n'_ne_i : φ (e*l) (f*l) n' ≠ i := by
+    by_contra h3
+    have h4 : n' ∈ φinv (e*l) (f*l) i := by
+      exact h3
+    rw [h] at h4
+    contradiction
+  have i_ne_zero : i ≠ 0 := by
+    linarith
+  set i' := i - 1 with def_i'
+  have succ_i' : i - 1 + 1 = i := by
+    exact Nat.succ_pred i_ne_zero
+  rw [← def_i'] at succ_i'
+  have φ_n' : φ (e*l) (f*l) n' = i' := by
+    have h1 := (@mtl (e*l) (f*l)).2 n'
+    have h2 : φ (e * l) (f * l) (n' + 1) = i+1 := by
+      rw [def_s] at n_in_s
+      rw [succ_n']
+      exact n_in_s
+    rw [h2] at h1
+    rw [← succ_i'] at h1
+    have h3 := Nat.le_of_succ_le_succ h1
+    have i'_le_φ_n' := Nat.le_of_succ_le_succ h3
+    clear h1 h2 h3
+    rw [← succ_i'] at φ_n'_ne_i
+    have h1 := (@mtl (e*l) (f*l)).1 (Nat.le_succ n')
+    have n_in_s2 : φ (e*l) (f*l) n = i + 1 := by
+      exact n_in_s
+    have h2 : n'.succ = n := by
+      exact succ_n'
+    rw [h2] at h1
+    rw [n_in_s2] at h1
+    rw [← succ_i'] at h1
+    have φ_n'_le_succ_succ_i' : φ (e*l) (f*l) n' ≤ i' + 2 := by
+      exact h1
+    clear h1
+    have φ_n'_ne_succ_succ_i' : φ (e * l) (f * l) n' ≠ i' + 2 := by
+      by_contra h1
+      have succ_succ_i' : i' + 2 = i + 1 := by
+        rw [← succ_i']
+      rw [succ_succ_i'] at h1
+      have h2 : n' ∈ s := by
+        rw [def_s]
+        exact h1
+      have h3 := minimality_n n' h2
+      linarith
+    have le_of_le_succ_and_ne_succ : ∀ a b : ℕ, a ≤ b + 1 → a ≠ b + 1 → a ≤ b := by
+      intro a
+      intro b
+      intro h1
+      intro h2
+      by_contra h3
+      have h4 : a = b + 1 := by
+        linarith
+      contradiction
+    have h3 (a : Nat) (ineq1 : a ≠ i' + 1) (ineq2 : i' ≤ a) (ineq3 : a ≤ i' + 2) (ineq4 : a ≠ i' + 2) : a = i' := by
+      have h7 := le_of_le_succ_and_ne_succ a (i'+1) ineq3 ineq4
+      have h5 := le_of_le_succ_and_ne_succ a i' h7 ineq1
+      linarith
+    exact h3 (φ (e*l) (f*l) n') φ_n'_ne_i i'_le_φ_n' φ_n'_le_succ_succ_i' φ_n'_ne_succ_succ_i'
+  clear φ_n'_ne_i
+  have φ_succ_n' : φ (e*l) (f*l) (n' + 1) = i + 1 := by
+    rw [def_s] at n_in_s
+    rw [succ_n']
+    exact n_in_s
+  rw [← succ_i'] at φ_succ_n'
+  have succ_succ_i' : i' + 1 + 1 = i' + 2 := by
+    ring
+  rw [succ_succ_i'] at φ_succ_n'
+  clear succ_succ_i'
+  have el_fl_dvd_n := φ_skip2 (e*l) (f*l) n' i' φ_n' φ_succ_n'
+  rw [succ_n'] at el_fl_dvd_n
+  have el_dvd_n : e*l ∣ n := el_fl_dvd_n.1
+  have fl_dvd_n : f*l ∣ n := el_fl_dvd_n.2
   have h8 := Nat.lcm_dvd el_dvd_n fl_dvd_n
   clear el_dvd_n fl_dvd_n
   have h9 := Nat.gcd_mul_right e l f
@@ -76,7 +174,7 @@ lemma φinv_i_empty_i_mod_e_add_f
     have h11 : e * l * (f * l) = (e * l * f) * l := by
       ring
     rw [h11]
-    have h12 := Nat.mul_div_cancel (e * l * f) l_pos
+    -- have h12 := Nat.mul_div_cancel (e * l * f) l_pos
     have h13 : e * l * f = e * f * l := by
       ring
     aesop
@@ -111,10 +209,10 @@ lemma φinv_i_empty_i_mod_e_add_f
     have h14 : k = 0 := by
       linarith
     rw [h14] at h12
-    have h15 : i+1 = 0 := by
-      linarith
-    have h16 : i+1 ≠ 0 := by
-      linarith
+    -- have h15 : i+1 = 0 := by
+    --   linarith
+    -- have h16 : i+1 ≠ 0 := by
+    --   linarith
     contradiction
   cases k with
   | zero =>
@@ -391,6 +489,82 @@ lemma case_a (h : (i+1) % (e+f) ≠ e+f-1) : (n_min_l e f (i+1) l e_ge_2 f_ge_2 
       rw [← h3] at h8
       exact h8
     exact h7 h6 }
+
+lemma mod_ne_succ (n d : ℕ) (d_ge_2 : d ≥ 2) : n % d ≠ (n+1) % d := by
+  by_contra h
+  have h1: n ≤ n*d := by
+    have h2 : 1 ≤ d := by
+      linarith
+    have h3 : n*1 ≤ n*d := by
+      exact Nat.mul_le_mul_left n h2
+    rw [Nat.mul_one] at h3
+    exact h3
+  have h2 : n*d - n + n = n*d := by
+    exact Nat.sub_add_cancel h1
+  have h3 : ((n*d-n) % d + n % d) % d = 0 := by
+    have h4 := Nat.add_mod (n*d-n) n d
+    rw [h2] at h4
+    have h5 : n * d % d = 0 := by
+      simp
+    rw [h5] at h4
+    exact Eq.symm h4
+  have h4 : ((n*d-n) % d + (n+1) % d) % d = 1 := by
+    have h5 := Nat.add_mod (n*d-n) (n+1) d
+    have h6 : (n * d - n + (n + 1)) % d = 1 := by
+      have h7 : n * d - n + (n + 1) = n * d - n + n + 1 := by
+        ring
+      rw [h7] at h5
+      rw [h2] at h5
+      have h8 : (n * d + 1) % d = 1 := by
+        rw [Nat.add_mod]
+        simp
+        have h9 := Nat.mod_eq 1 d
+        have d_pos : 0 < d := by
+          linarith
+        have one_lt_d : 1 < d := by
+          linarith
+        have h10 : ¬ (0 < d ∧ d ≤ 1) := by
+          push_neg
+          exact fun x => one_lt_d
+        rw [if_neg h10] at h9
+        rw [Nat.mod_eq]
+        simp
+        intro h11
+        intro h12
+        linarith
+      rw [h8] at h5
+      rw [← h] at h5
+      rw [h3] at h5
+      contradiction
+    have h7 := Nat.add_mod (n*d-n) (n+1) d
+    rw [h7] at h6
+    exact h6
+  have h5 : ((n*d-n) % d + (n+1) % d) % d = 0 := by
+    have h6 : (n * d - n) % d + (n + 1) % d = (n * d - n) % d + n % d := by
+      rw [h]
+    rw [h6]
+    exact h3
+  rw [h4] at h5
+  contradiction
+
+lemma mod_eq_succ_ne (n d : ℕ) (d_ge_2 : d ≥ 2) (h1 : n % d = d - 1) : (n+1) % d ≠ d - 1 := by
+  have h2 := mod_ne_succ n d d_ge_2
+  rw [h1] at h2
+  simp at h2
+  intro h3
+  exact h2 (Eq.symm h3)
+
+lemma add_ge {e f : ℕ} (e_ge_2 : e ≥ 2) (f_ge_2 : f ≥ 2) : e + f ≥ 2 := by
+  linarith
+
+lemma case_b
+  (h1 : (i+1) % (e+f) = e+f-1)
+  :
+  (n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos (mod_eq_succ_ne (i+1) (e+f) (add_ge e_ge_2 f_ge_2) h1)).1 - 2 ∈ (φinv (e*l) (f*l) i)
+  ∧
+  (n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos (mod_eq_succ_ne (i+1) (e+f) (add_ge e_ge_2 f_ge_2) h1)).1 ∉ (φinv (e*l) (f*l) i)
+  := by
+  sorry
 
 end main_lemma
 

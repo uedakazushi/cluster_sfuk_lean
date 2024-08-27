@@ -19,6 +19,17 @@ lemma nat_div_ubd (d : ℕ) (d_pos : d > 0) : IsUnboundedFun (nat_div d) := by
   linarith
   -- exact d_pos
 
+lemma nat_div_lt_dvd
+  (d n : ℕ)
+  (n_ne_zero : n ≠ 0)
+  (lt : nat_div d (n-1) < nat_div d n)
+  : d ∣ n
+  := by
+  by_contra ne_dvd
+  have h1 := not_dvd_mod_eq d n n_ne_zero ne_dvd
+  repeat rw [nat_div] at lt
+  linarith
+
 def φ (e f : ℕ) : ℕ → ℕ :=
   nat_div e + nat_div f
 
@@ -74,6 +85,28 @@ lemma iuf (e_pos : e > 0) : IsUnboundedFun (φ e f) :=
 lemma φ_zero : φ e f 0 = 0 := by
   simp [φ]
   simp [nat_div]
+
+lemma φ_skip2
+  (e f n i : ℕ)
+  (h1 : φ e f n = i)
+  (h2 : φ e f (n+1) = i+2)
+  : e ∣ (n+1) ∧ f ∣ (n+1) := by
+  have h3 : nat_div e (n+1) + nat_div f (n+1) = (nat_div e + nat_div f) n + 2 := by
+    rw [← h1] at h2
+    rw [φ] at h2
+    exact h2
+  have h4 := OneLipschitz_add (nat_div e) (nat_div f) (nat_div_mol e) (nat_div_mol f) n h3
+  apply And.intro
+  have ndlde := nat_div_lt_dvd e (n+1) (Nat.succ_ne_zero n)
+  have h5 : nat_div e (n + 1 - 1) < nat_div e (n + 1) := by
+    rw [Nat.add_sub_cancel]
+    linarith
+  exact ndlde h5
+  have ndldf := nat_div_lt_dvd f (n+1) (Nat.succ_ne_zero n)
+  have h6 : nat_div f (n + 1 - 1) < nat_div f (n + 1) := by
+    rw [Nat.add_sub_cancel]
+    linarith
+  exact ndldf h6
 
 lemma φinv_i_empty_implies_φinv_i_add_one_nonempty
   (e f i : ℕ)
