@@ -1,7 +1,7 @@
 import Mathlib
 import ClusterSfukLean.MainDef
 import ClusterSfukLean.Lipschitz
--- set_option linter.unusedVariables false
+set_option linter.unusedVariables false
 
 def ex (e f: ℕ) : Set ℕ :=
   { n : ℕ | n % e = e - 1 ∨ n % f = f - 1 }
@@ -570,14 +570,45 @@ lemma add_ge {e f : ℕ} (e_ge_2 : e ≥ 2) (f_ge_2 : f ≥ 2) : e + f ≥ 2 := 
   linarith
 
 lemma case_b
-  (non_empty : (i+1) % (e+f) = e+f-1)
+  (empty' : (i+1) % (e+f) = e+f-1)
   :
-  (n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos (mod_eq_succ_ne (i+1) (e+f) (add_ge e_ge_2 f_ge_2) h1)).1 - 2 ∈ (φinv (e*l) (f*l) i)
+  (n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos (mod_eq_succ_ne (i+1) (e+f) (add_ge e_ge_2 f_ge_2) empty')).1 - 1 ∈ (φinv (e*l) (f*l) i)
   ∧
-  (n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos (mod_eq_succ_ne (i+1) (e+f) (add_ge e_ge_2 f_ge_2) h1)).1 ∉ (φinv (e*l) (f*l) i)
+  (n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos (mod_eq_succ_ne (i+1) (e+f) (add_ge e_ge_2 f_ge_2) empty')).1 ∉ (φinv (e*l) (f*l) i)
   := by
-  sorry
-
+  have non_empty'' : (i+2) % (e+f) ≠ e+f-1 :=
+  mod_eq_succ_ne _ _ (add_ge e_ge_2 f_ge_2) empty'
+  set nmin := n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty with def_nmin
+  have φinv_empty' := i_mod_e_add_f_φinv_i_empty e f (i+1) l e_ge_2 f_ge_2 coprime l_pos empty'
+  set nmin'' := n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos non_empty'' with def_nmin''
+  have mem : nmin''.1-1 ∈ φinv (e*l) (f*l) i := by
+    have φ_pred_nmin''_eq_i : φ (e*l) (f*l) (nmin''.1-1) = i := by
+      have φ_pred_nmin''_le_succ_succ_i : φ (e*l) (f*l) (nmin''.1-1) ≤ i + 2 := by
+        have h1 := φ_monotone (e*l) (f*l) (Nat.pred_le nmin''.1)
+        rw [nmin''.2.1] at h1
+        exact h1
+      have φ_pred_nmin''_ne_succ_succ_i : φ (e*l) (f*l) (nmin''.1-1) ≠ i + 2 := by
+        have minimality := nmin''.2.2
+        sorry
+      have φ_pred_nmin''_ne_succ_i : φ (e*l) (f*l) (nmin''.1-1) ≠ i + 1 := by
+        have h1 := mod_ne_succ (i+1) (e+f) (add_ge e_ge_2 f_ge_2)
+        rw [empty'] at h1
+        simp at h1
+        intro h2
+        sorry
+      sorry
+    exact φ_pred_nmin''_eq_i
+  have ne_mem : nmin''.1 ∉ φinv (e*l) (f*l) i := by
+    have h1 : φ (e*l) (f*l) (nmin''.1) = i + 2 :=
+      nmin''.2.1
+    by_contra h2
+    have h2 : φ (e*l) (f*l) (nmin''.1) = i := by
+      exact h2
+    rw [h2] at h1
+    linarith
+  apply And.intro
+  { exact mem }
+  { exact ne_mem }
 end main_lemma
 
 end main
