@@ -1015,6 +1015,8 @@ i \equiv e + f - 1 \mod e + f
 \end{proof}
 
 \begin{lemma}
+\label{lm:i_mod_e_add_f_φinv_i_empty}
+\lean{i_mod_e_add_f_φinv_i_empty}
 $
 i \equiv e + f - 1 \mod e + f
 $
@@ -1093,7 +1095,7 @@ $
 \end{lemma}
 
 \begin{lemma}
-\label{lm:case_a}
+\label{lm:main_lemma.case_a}
 \lean{main_lemma.case_a}
 \leanok
 $i + 1 \not \equiv e + f - 1 \mod e + f$の時
@@ -1207,6 +1209,9 @@ $
 \end{proof}
 
 \begin{lemma}
+\label{lm:main_lemma.case_b}
+\lean{main_lemma.case_b}
+\uses{lm:i_mod_e_add_f_φinv_i_empty}
 $
 i + 1 \equiv e + f - 1 \mod e + f
 $

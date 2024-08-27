@@ -244,6 +244,18 @@ lemma φinv_i_empty_i_mod_e_add_f
   rw [Nat.mod_eq_of_lt]
   linarith
 
+lemma i_mod_e_add_f_φinv_i_empty
+  (e f i l: ℕ)
+  (e_ge_2 : e ≥ 2)
+  (f_ge_2 : f ≥ 2)
+  (coprime : Nat.Coprime e f)
+  (l_pos : l > 0)
+  (i_mod : i % (e+f) = e+f-1)
+  :
+  φinv (e*l) (f*l) i = ∅
+  := by
+  sorry
+
 section main
 
 namespace main_lemma
@@ -558,7 +570,7 @@ lemma add_ge {e f : ℕ} (e_ge_2 : e ≥ 2) (f_ge_2 : f ≥ 2) : e + f ≥ 2 := 
   linarith
 
 lemma case_b
-  (h1 : (i+1) % (e+f) = e+f-1)
+  (non_empty : (i+1) % (e+f) = e+f-1)
   :
   (n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos (mod_eq_succ_ne (i+1) (e+f) (add_ge e_ge_2 f_ge_2) h1)).1 - 2 ∈ (φinv (e*l) (f*l) i)
   ∧
