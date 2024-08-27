@@ -596,19 +596,28 @@ lemma case_b
         simp at h1
         intro h2
         sorry
+      have i_le_φ_pred_nmin'' : i ≤ φ (e*l) (f*l) (nmin''.1-1) := by
+        have h1 := nmin''.2.2
+        have h2 := nmin''.2.1
+        have h3 := (@mtl (e*l) (f*l)).2 (nmin''.1-1)
+        have nmin''_ne_zero : nmin''.1 ≠ 0 := by
+          by_contra nmin''_eq_zero
+          have h5 : φ (e*l) (f*l) (nmin''.1) = i+2 := by
+            exact h2
+          rw [nmin''_eq_zero] at h5
+          rw [φ_zero] at h5
+          linarith
+        have h4 : nmin''.1 - 1 + 1 = nmin''.1 := Nat.succ_pred nmin''_ne_zero
+        rw [h4] at h3
+        have h5 : φ (e*l) (f*l) (nmin''.1) = i + 2 := by
+          exact h2
+        rw [h5] at h3
+        repeat apply Nat.le_of_succ_le_succ at h3
+        exact h3
       sorry
     exact φ_pred_nmin''_eq_i
-  have ne_mem : nmin''.1 ∉ φinv (e*l) (f*l) i := by
-    have h1 : φ (e*l) (f*l) (nmin''.1) = i + 2 :=
-      nmin''.2.1
-    by_contra h2
-    have h2 : φ (e*l) (f*l) (nmin''.1) = i := by
-      exact h2
-    rw [h2] at h1
-    linarith
-  apply And.intro
-  { exact mem }
-  { exact ne_mem }
+  sorry
+
 end main_lemma
 
 end main
