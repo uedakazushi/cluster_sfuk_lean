@@ -56,6 +56,16 @@ lemma φ_monotone (e f : ℕ) : Monotone (φ e f) := by
   apply nat_add_div_monotone
   assumption
 
+lemma φ_ubd (e f : ℕ+) : IsUnboundedFun (φ e f) :=
+  unbounded_fun_add (nat_div e) (nat_div f) (Or.inl (nat_div_ubd e e.2) : IsUnboundedFun (nat_div e) ∨ IsUnboundedFun (nat_div f))
+
+lemma φinv_bdd (e f : ℕ+) (i : ℕ) : IsBounded (φinv e f i) :=
+  fib_monotone_ubd_fun_bdd (φ e f) (φ_monotone e f) (φ_ubd e f) i
+
+lemma φinv_finite (e f : ℕ+) (i : ℕ) : (φinv e f i).Finite := by
+  apply finite_of_bounded_of_Nat
+  apply φinv_bdd
+
 lemma φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ e f n := by
   simp [φ]
   have h1 : (n * l) / (e * l) = n / e := by

@@ -47,8 +47,8 @@ def setII : Set ℕ :=
   ∧ n % f = f - 1
   ∧ n / e + n / f + 1 = i }
 
-def setIII : Set ℂ :=
-  {ξ : ℂ |
+def setIII : Set ℂˣ :=
+  {ξ : ℂˣ |
   ξ ≠ 1
   ∧ ξ^(e:ℕ) = 1
   ∧ ξ^(f:ℕ) = 1 }
@@ -95,9 +95,39 @@ lemma setII_sub_φinv : setII e f (i+1) ⊆ φinv e f i := by
   exact h.2.2
 
 lemma setII_finite : (setII e f i).Finite := by
-  sorry
+  cases i with
+  |zero =>
+    rw [setII_zero]
+    aesop
+  |succ i =>
+    have h1 := φinv_finite e f i
+    apply Set.Finite.subset h1
+    apply setII_sub_φinv
 
 lemma setIII_finite : (setIII e f).Finite := by
+  have setIII_sub_rootsOfUnity
+  : setIII e f ⊆ {ξ : ℂˣ | ξ^(e:ℕ) = 1}
+  := by
+    intro ξ
+    intro h
+    simp [setIII] at h
+    exact h.2.1
+  have rootsOfUnity_finite : {ξ : ℂˣ | ξ^(e:ℕ) = 1}.Finite := by
+    have h1 := rootsOfUnity.fintype ℂ e
+    have h2 : (rootsOfUnity e ℂ) = {ξ : ℂˣ | ξ^(e:ℕ) = 1} := by
+      apply Set.eq_of_subset_of_subset
+      { intro x
+        intro h3
+        have h4 := mem_rootsOfUnity e x
+        have h5 := h4.mp h3
+        exact h5
+      }
+      { intro x
+        intro h3
+        simp [rootsOfUnity] at h3
+        exact h3
+      }
+    sorry
   sorry
 
 noncomputable def finsetI : Finset ℕ :=
