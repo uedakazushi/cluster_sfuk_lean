@@ -74,6 +74,26 @@ lemma setI_finite : (setI e f i).Finite := by
   apply finite_of_bounded_of_Nat
   assumption
 
+lemma setII_zero : setII e f 0 = ∅ := by
+  dsimp [setII]
+  by_contra h
+  push_neg at h
+  match h with
+  | ⟨ n, _, _, h3 ⟩ =>
+    have h4 (a : Nat) : a + 1 = 0 → False := by
+      intro h5
+      linarith
+    have h5 := h4 (n/e+n/f)
+    exact h5 h3
+
+lemma setII_sub_φinv : setII e f (i+1) ⊆ φinv e f i := by
+  intro n
+  intro h
+  simp [φinv]
+  simp [setII] at h
+  simp [φ]
+  exact h.2.2
+
 lemma setII_finite : (setII e f i).Finite := by
   sorry
 
