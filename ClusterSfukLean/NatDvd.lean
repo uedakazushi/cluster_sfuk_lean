@@ -1,5 +1,6 @@
 import Mathlib
 -- import ClusterSfukLean.QuotRem
+set_option linter.unusedVariables false
 
 open Classical
 noncomputable instance (priority := low) propDecidable (a : Prop) : Decidable a :=
@@ -61,3 +62,46 @@ lemma dvd_mod_ne
   rw [h4] at h5
   rw [if_pos h] at h5
   exact Eq.symm h5
+
+lemma mul_pred_div (k d: ℕ) (d_pos : d > 0) : (k * d - 1) / d = k - 1 := by
+  induction k with
+  | zero =>
+    simp
+  | succ k ih =>
+    induction k with
+    | zero =>
+      simp
+      induction d with
+      | zero =>
+        simp
+      | succ d ih =>
+        simp
+        rw [Nat.div_eq]
+        simp
+    | succ k ih' =>
+      simp
+      have h1 : (k+1+1) * d - 1 = (k+1) * d - 1 + d := by
+        have h2 := Nat.add_mul (k+1) 1 d
+        rw [h2]
+        simp
+        have h2 (a b : Nat)  (pos_a : a > 0) : a + b - 1= a - 1 + b := by
+          induction b with
+          | zero =>
+            simp
+          | succ b ih =>
+            simp
+            have h3 : a - 1 + (b+1) = a - 1 + 1 + b := by
+              ring
+            rw [h3]
+            have h4 : 1 ≤ a := by
+              linarith
+            rw [Nat.sub_add_cancel h4]
+        rw [h2]
+        have h3 : k+1 > 0 := by
+          linarith
+        aesop
+      rw [h1]
+      have h2 := Nat.add_div_right ((k + 1) * d - 1) d_pos
+      rw [h2]
+      rw [ih]
+      simp
