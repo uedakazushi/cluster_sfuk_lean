@@ -129,6 +129,7 @@ lemma setIII_finite : (setIII e f).Finite := by
       }
     sorry
   apply Set.Finite.subset rootsOfUnity_finite
+  assumption
 
 noncomputable def finsetI : Finset ℕ :=
   (setI_finite e f i).toFinset
