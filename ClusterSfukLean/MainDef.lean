@@ -114,7 +114,7 @@ lemma setIII_finite : (setIII e f).Finite := by
     exact h.2.1
   have rootsOfUnity_finite : {ξ : ℂˣ | ξ^(e:ℕ) = 1}.Finite := by
     have h1 := rootsOfUnity.fintype ℂ e
-    have h2 : (rootsOfUnity e ℂ) = {ξ : ℂˣ | ξ^(e:ℕ) = 1} := by
+    have : (rootsOfUnity e ℂ) = {ξ : ℂˣ | ξ^(e:ℕ) = 1} := by
       apply Set.eq_of_subset_of_subset
       { intro x
         intro h3
@@ -127,7 +127,28 @@ lemma setIII_finite : (setIII e f).Finite := by
         simp [rootsOfUnity] at h3
         exact h3
       }
-    sorry
+    set f : (rootsOfUnity e ℂ) → {ξ : ℂˣ | ξ^(e:ℕ) = 1} :=
+      fun x => x
+    set g : {ξ : ℂˣ | ξ^(e:ℕ) = 1} → (rootsOfUnity e ℂ) :=
+      fun x => x with def_g
+    -- have f_inj : Function.Injective f := by
+    --   intro x y h3
+    --   rw [def_f] at h3
+    --   simp at h3
+    --   exact h3
+    have left_inv : Function.LeftInverse g f := by
+      intro x
+      simp [def_g]
+    have right_inv : Function.RightInverse g f := by
+      intro x
+      simp [def_g]
+    have f_equiv : Equiv (rootsOfUnity e ℂ) {ξ : ℂˣ | ξ^(e:ℕ) = 1} := by
+      constructor
+      { exact left_inv }
+      { exact right_inv }
+    have h3 := Fintype.ofEquiv (rootsOfUnity e ℂ) f_equiv
+    have h4 := @Finite.of_fintype (@Set.Elem ℂˣ {ξ | ξ ^ e.1 = 1}) h3
+    exact h4
   apply Set.Finite.subset rootsOfUnity_finite
   assumption
 
