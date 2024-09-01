@@ -10,6 +10,17 @@ noncomputable instance (priority := low) propDecidable (a : Prop) : Decidable a 
 
 def nat_div (d n : ℕ) : ℕ := n / d
 
+lemma nat_ne_zero_iff_pos (n:Nat) : n ≠ 0 ↔ n > 0 := by
+  apply Iff.intro
+  { intro h
+    have h1 := Nat.pos_of_ne_zero h
+    exact h1
+  }
+  { intro h
+    have h1 := Nat.ne_of_gt h
+    exact h1
+  }
+
 lemma nat_div_monotone (d : ℕ) : Monotone (nat_div d) := by
   intro n m h
   apply Nat.div_le_div_right
