@@ -1233,6 +1233,31 @@ $
 \section{Case II}
 
 \begin{lemma}
+\label{lm:setII_empty_if_not_dvd}
+\lean{setII_empty_if_not_dvd}
+$
+i \not \equiv -1 \mod e + f
+$
+の時、
+$
+\rII_{e,f}^i
+$
+は
+空集合である。
+\end{lemma}
+
+\begin{proof}
+$\rII_{e,f}^i$が空でないと仮定して、
+$
+i \equiv -1 \mod e + f
+$
+を示す。
+\end{proof}
+
+\begin{lemma}
+\label{lm:setII_dichotomy}
+\lean{setII_dichotomy}
+\uses{df:setII}
 $
 \rII_{e,f}^i
 $
@@ -1247,5 +1272,108 @@ i \not \equiv -1 \mod e + f
 $
 の時空集合である。
 \end{lemma}
+
+\begin{proof}
+$
+n \in \rII_{e \ell,f \ell}^i
+$
+の時、
+$
+n \equiv -1 \mod e \ell
+$
+かつ
+$
+n \equiv -1 \mod f \ell
+$
+なので、
+$
+n = e f \ell k - 1
+$
+と置くと、
+\begin{align}
+\varphi_{e \ell, f \ell}(n) + 1
+&= \lfloor n / e \ell \rfloor + \lfloor n / f \ell \rfloor + 1 \\
+&= (f k - 1) + (e k - 1) + 1 \\
+&= (e + f) k - 1
+\end{align}
+より、
+\begin{align}
+i \equiv -1 \mod e + f
+\end{align}
+が成り立つ。
+
+$
+i \equiv -1 \mod e + f
+$
+の時、
+$
+k = (i+1) / (e + f)
+$,
+$
+n = e f \ell k - 1
+$
+と置くと、
+$
+n \equiv -1 \mod e
+$
+かつ
+$
+n \equiv -1 \mod f
+$
+で、しかも
+\begin{align}
+\varphi_{e \ell, f \ell}(n) + 1
+&= \lfloor n / e \ell \rfloor + \lfloor n / f \ell \rfloor + 1\\
+&= (f k - 1) + (e k - 1) + 1\\
+&= (e + f) k - 2 + 1\\
+&= i
+\end{align}
+が成り立つので、
+$
+i \in \rII_{e \ell, f\ell}^i
+$
+である。
+
+$
+n' \ne n
+$
+の時、
+$
+n' < n
+$
+または
+$
+n < n'
+$
+が成り立つ。
+$
+n' < n
+$
+が
+$
+n' \in \rII_{e \ell,f \ell}^i
+$
+を満たすなら、
+$
+n' \le n - e
+$
+でなくてはならないが、
+この時
+$
+\lfloor n'/e \rfloor < \lfloor n/e \rfloor
+$
+かつ
+$
+\lfloor n'/f \rfloor \le \lfloor n/f \rfloor
+$
+なので、
+\begin{align}
+\varphi_{e \ell, f \ell}(n')
+ < \varphi_{e \ell, f \ell}(n)
+\end{align}
+を満たし、$n' \in \rII_{e \ell,f \ell}^i$に矛盾する。
+同様に、
+$n < n'$でも$n' \not \in \rII_{e \ell,f \ell}^i$である。
+\end{proof}
 
 \input{bibliography.tex}

@@ -158,14 +158,11 @@ noncomputable def finsetI : Finset ℕ :=
 noncomputable def finsetII : Finset ℕ :=
   (setII_finite e f i).toFinset
 
-noncomputable def finsetIII : Finset ℂ :=
-  (setIII_finite e f).toFinset
-
 noncomputable def cardI : ℕ := (finsetI e f i).card
 
 noncomputable def cardII : ℕ := (finsetII e f i).card
 
-noncomputable def cardIII : ℕ := (finsetIII e f).card
+noncomputable def cardIII : ℕ := (setIII_finite e f).toFinset.card
 
 noncomputable def h : ℕ := (cardI e f i + (cardII e f i) * (cardIII e f))
 

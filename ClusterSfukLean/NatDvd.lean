@@ -116,3 +116,43 @@ lemma mul_pred_div (k d: ℕ) (d_pos : d > 0) : (k * d - 1) / d = k - 1 := by
       rw [h2]
       rw [ih]
       simp
+
+lemma mul_pred_mod
+  (k d: ℕ) (k_pos : k > 0) (d_pos : d > 0)
+  :
+  (k * d - 1) % d = d - 1 := by
+  have h1 := mul_pred_div k d d_pos
+  have h2 := Nat.div_add_mod (k * d - 1) d
+  rw [h1] at h2
+  rw [Nat.add_comm] at h2
+  have h3 := Nat.add_sub_cancel ((k * d - 1) % d) (d * (k - 1))
+  rw [h2] at h3
+  have h4 : k * d - 1 - d * (k - 1) = d - 1 := by
+    have h5 : k * d - 1 - d * (k - 1) = k * d - d * (k-1) - 1 := by
+      rw [Nat.sub_sub]
+      rw [Nat.add_comm]
+      rw [Nat.sub_sub]
+    rw [h5]
+    have h6 : k * d - d * (k-1) = d := by
+      have h7 : k * d = d * k := by
+        ring
+      rw [h7]
+      have h8 := Nat.mul_sub d k (k-1)
+      have h9 : k - (k-1) = 1 := by
+        set k' := k - 1 with def_k'
+        have succ_k' : k = k' + 1 := by
+          rw [def_k']
+          have k_ne_zero : k ≠ 0 := by linarith
+          exact (Nat.sub_one_add_one k_ne_zero).symm
+        rw [succ_k']
+        have h10 : k' ≤ k' := by
+          linarith
+        have h11 := Nat.succ_sub h10
+        rw [h11]
+        simp
+      rw [h9] at h8
+      rw [← h8]
+      simp
+    rw [h6]
+  rw [h4] at h3
+  exact h3.symm
