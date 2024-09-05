@@ -156,3 +156,61 @@ lemma mul_pred_mod
     rw [h6]
   rw [h4] at h3
   exact h3.symm
+
+lemma div_lt_of_lt_and_mod_eq
+  (a b d: ℕ)
+  (mod_eq : a % d = b % d)
+  (a_lt_b : a < b)
+  :
+  a / d < b / d := by
+  have ha := Nat.div_add_mod a d
+  set r := a % d with r1
+  have hb := Nat.div_add_mod b d
+  have r2 : r = b % d := by
+    rw [r1] at mod_eq
+    exact mod_eq
+  rw [← r2] at hb
+  by_contra h
+  push_neg at h
+  have h1 := Nat.mul_le_mul_left d h
+  have h2 := Nat.add_le_add_right h1 r
+  rw [ha, hb] at h2
+  linarith
+
+lemma mod_of_dvd_succ
+  (n d : ℕ)
+  (d_pos : d > 0)
+  (dvd : d ∣ n + 1)
+  :
+  n % d = d - 1
+  := by
+  match dvd with
+  | ⟨ c, hc ⟩ =>
+  have h := Nat.add_one_sub_one n
+  rw [hc] at h
+  have hd := Nat.sub_add_cancel d_pos
+  simp at hd
+  set d' := d - 1 with def_d'
+  have c_pos : c > 0 := by
+    by_contra c_zero
+    push_neg at c_zero
+    simp at c_zero
+    rw [c_zero] at hc
+    simp at hc
+  set c' := c - 1 with def_c'
+  have hc' : c = c' + 1 := by
+    have h1 := Nat.sub_add_cancel c_pos
+    rw [def_c']
+    rw [h1]
+  rw [hc'] at h
+  rw [Nat.mul_add] at h
+  rw [Nat.add_sub_assoc] at h
+  simp at h
+  rw [← def_d'] at h
+  rw [← h]
+  rw [Nat.add_mod]
+  simp
+  rw [← hd]
+  simp
+  simp
+  linarith
