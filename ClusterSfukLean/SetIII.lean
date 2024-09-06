@@ -242,7 +242,7 @@ theorem III_gcd :
 
 def setIII' (e : ℕ+) : Set ℂˣ := {ξ : ℂˣ | ξ ≠ 1 ∧ ξ^e.1 = 1}
 
-lemma setIII_eq_setIII' (e f : ℕ+) : setIII e f = setIII' (PNat.gcd e f) := by
+theorem setIII_eq_setIII' (e f : ℕ+) : setIII e f = setIII' (PNat.gcd e f) := by
   simp [setIII]
   simp [setIII']
   have h1 := III_gcd (e,f)
@@ -387,7 +387,7 @@ def finsetOfComplexRootsOfUnity_card (e : ℕ+) : (finsetOfComplexRootsOfUnity e
   rw [← h2] at card1
   exact card1
 
-lemma cardIII'_card (e : ℕ+): Nat.card (setIII' e) = e - 1 := by
+theorem cardIII'_card (e : ℕ+): Nat.card (setIII' e) = e - 1 := by
   have := setIII'_compl e
   have h2 := setIII'_finite e
   have h3 := Nat.card_eq_card_finite_toFinset h2
