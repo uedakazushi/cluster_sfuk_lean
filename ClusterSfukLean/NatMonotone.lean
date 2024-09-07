@@ -9,6 +9,13 @@ noncomputable def nat_min'
   :=
   WellFounded.min Nat.lt.isWellOrder.3.wf s h
 
+noncomputable def nat_min'_mem
+  (s : Set ℕ)
+  (h : s.Nonempty)
+  :
+  nat_min' s h ∈ s :=
+  WellFounded.min_mem Nat.lt.isWellOrder.3.wf s h
+
 def nat_interval (a b : ℕ) : Finset ℕ :=
   Finset.range (b + 1) \ Finset.range a
 
@@ -220,3 +227,38 @@ lemma min_unique (m m' : ℕ) (s : Set ℕ) (h1 : IsMinIn m s) (h2 : IsMinIn m' 
   have h3 := h1.2 m' h2.1
   have h4 := h2.2 m h1.1
   linarith
+
+def exists_max
+  (s : Set ℕ)
+  (bdd : IsBounded s)
+  (nonempty : s.Nonempty)
+  :
+  ∃ m ∈ s, ∀ x ∈ s, x ≤ m := by
+    cases bdd with
+    | intro k h =>
+      set upper_bounds := { n : ℕ | ∀ x ∈ s, x ≤ n } with def_ub
+      have ub_nonempty : upper_bounds.Nonempty := by
+        exists k
+      set m := nat_min' upper_bounds ub_nonempty with def_m
+      exists m
+      apply And.intro
+      {
+        by_contra h1
+        by_cases h2 : m = 0
+        {
+          have s_empty : s = ∅ := by
+            by_contra s_nonempty
+            push_neg at s_nonempty
+            cases s_nonempty
+            case intro x h3 =>
+              sorry
+          rw [s_empty] at nonempty
+          simp at nonempty
+        }
+        {
+          sorry
+        }
+      }
+      {
+        exact nat_min'_mem upper_bounds ub_nonempty
+      }
