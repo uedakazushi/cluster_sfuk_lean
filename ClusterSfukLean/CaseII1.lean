@@ -2,7 +2,7 @@ import ClusterSfukLean.MainLemma
 import Mathlib.Tactic.ClearExcept
 set_option maxHeartbeats 500000
 
-lemma setII_empty_if_not_dvd
+theorem setII_empty_if_not_dvd
   (e f l: ℕ+)
   (i: ℕ)
   (e_ge_2 : e ≥ 2)
@@ -135,7 +135,7 @@ lemma setII_empty_if_not_dvd
   dsimp [Nat.instDvd]
   exists k
 
-lemma setII_singleton
+theorem setII_singleton
   (e f l: ℕ+)
   (i: ℕ)
   (e_ge_2 : e ≥ 2)

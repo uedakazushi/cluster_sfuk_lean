@@ -14,7 +14,7 @@ def setI (e f i : ℕ) : Set ℕ :=
   ∧ b % f ≠ f - 1
   ∧ b / e + b / f = i }
 
-lemma I_as_a_subset_of_preimage_φ : setI e f i = { n ∈ (φ e f) ⁻¹' { m : ℕ | m = i } | n % e ≠ e - 1 ∧ n % f ≠ f - 1} := by
+theorem I_as_a_subset_of_preimage_φ : setI e f i = { n ∈ (φ e f) ⁻¹' { m : ℕ | m = i } | n % e ≠ e - 1 ∧ n % f ≠ f - 1} := by
   apply Set.eq_of_subset_of_subset
   { intro x
     intro h
@@ -53,10 +53,10 @@ def setIII : Set ℂˣ :=
   ∧ ξ^(e:ℕ) = 1
   ∧ ξ^(f:ℕ) = 1 }
 
-lemma Nat_le_add_right (a b : ℕ) : a ≤ a + b := by
+theorem Nat_le_add_right (a b : ℕ) : a ≤ a + b := by
   linarith
 
-lemma setI_finite : (setI e f i).Finite := by
+theorem setI_finite : (setI e f i).Finite := by
   have setI_bdd : ∃ k : ℕ, ∀ n ∈ setI e f i, n ≤ k := by
     exists e*i+e
     intro n
@@ -74,7 +74,7 @@ lemma setI_finite : (setI e f i).Finite := by
   apply finite_of_bounded_of_Nat
   assumption
 
-lemma setII_zero : setII e f 0 = ∅ := by
+theorem setII_zero : setII e f 0 = ∅ := by
   dsimp [setII]
   by_contra h
   push_neg at h
@@ -86,7 +86,7 @@ lemma setII_zero : setII e f 0 = ∅ := by
     have h5 := h4 (n/e+n/f)
     exact h5 h3
 
-lemma setII_sub_φinv : setII e f (i+1) ⊆ φinv e f i := by
+theorem setII_sub_φinv : setII e f (i+1) ⊆ φinv e f i := by
   intro n
   intro h
   simp [φinv]
@@ -94,7 +94,7 @@ lemma setII_sub_φinv : setII e f (i+1) ⊆ φinv e f i := by
   simp [φ]
   exact h.2.2
 
-lemma setII_finite : (setII e f i).Finite := by
+theorem setII_finite : (setII e f i).Finite := by
   cases i with
   |zero =>
     rw [setII_zero]
@@ -104,7 +104,7 @@ lemma setII_finite : (setII e f i).Finite := by
     apply Set.Finite.subset h1
     apply setII_sub_φinv
 
-lemma setIII_finite : (setIII e f).Finite := by
+theorem setIII_finite : (setIII e f).Finite := by
   have setIII_sub_rootsOfUnity
   : setIII e f ⊆ {ξ : ℂˣ | ξ^(e:ℕ) = 1}
   := by

@@ -3,14 +3,14 @@ import ClusterSfukLean.QuotRem
 import ClusterSfukLean.Lipschitz
 import ClusterSfukLean.NatDvd
 
-lemma nat_div_mol (d : ℕ) : MonotoneOneLipschitz (nat_div d) := by
+theorem nat_div_mol (d : ℕ) : MonotoneOneLipschitz (nat_div d) := by
   rw [MonotoneOneLipschitz]
   apply And.intro
   exact nat_div_monotone d
   intro n
   apply nat_succ_div_le
 
-lemma nat_div_ubd (d : ℕ) (d_pos : d > 0) : IsUnboundedFun (nat_div d) := by
+theorem nat_div_ubd (d : ℕ) (d_pos : d > 0) : IsUnboundedFun (nat_div d) := by
   intro k
   dsimp [nat_div]
   exists (k+1) * d
@@ -19,7 +19,7 @@ lemma nat_div_ubd (d : ℕ) (d_pos : d > 0) : IsUnboundedFun (nat_div d) := by
   linarith
   -- exact d_pos
 
-lemma nat_div_lt_dvd
+theorem nat_div_lt_dvd
   (d n : ℕ)
   (n_ne_zero : n ≠ 0)
   (lt : nat_div d (n-1) < nat_div d n)
@@ -36,7 +36,7 @@ def φ (e f : ℕ) : ℕ → ℕ :=
 def φinv (e f i : ℕ) : Set ℕ :=
   { n : ℕ | φ e f n = i }
 
-lemma φinv_is_preim_φ (e f i : ℕ) : φinv e f i = (φ e f) ⁻¹' (Set.singleton i) := by
+theorem φinv_is_preim_φ (e f i : ℕ) : φinv e f i = (φ e f) ⁻¹' (Set.singleton i) := by
   apply Set.eq_of_subset_of_subset
   { intro x
     intro h
@@ -51,22 +51,22 @@ lemma φinv_is_preim_φ (e f i : ℕ) : φinv e f i = (φ e f) ⁻¹' (Set.singl
     apply h
   }
 
-lemma φ_monotone (e f : ℕ) : Monotone (φ e f) := by
+theorem φ_monotone (e f : ℕ) : Monotone (φ e f) := by
   intro n m h
   apply nat_add_div_monotone
   assumption
 
-lemma φ_ubd (e f : ℕ+) : IsUnboundedFun (φ e f) :=
+theorem φ_ubd (e f : ℕ+) : IsUnboundedFun (φ e f) :=
   unbounded_fun_add (nat_div e) (nat_div f) (Or.inl (nat_div_ubd e e.2) : IsUnboundedFun (nat_div e) ∨ IsUnboundedFun (nat_div f))
 
-lemma φinv_bdd (e f : ℕ+) (i : ℕ) : IsBounded (φinv e f i) :=
+theorem φinv_bdd (e f : ℕ+) (i : ℕ) : IsBounded (φinv e f i) :=
   fib_monotone_ubd_fun_bdd (φ e f) (φ_monotone e f) (φ_ubd e f) i
 
-lemma φinv_finite (e f : ℕ+) (i : ℕ) : (φinv e f i).Finite := by
+theorem φinv_finite (e f : ℕ+) (i : ℕ) : (φinv e f i).Finite := by
   apply finite_of_bounded_of_Nat
   apply φinv_bdd
 
-lemma φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ e f n := by
+theorem φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ e f n := by
   simp [φ]
   have h1 : (n * l) / (e * l) = n / e := by
     rw [Nat.mul_div_mul_right]
@@ -75,28 +75,28 @@ lemma φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ
   dsimp [nat_div]
   aesop
 
-lemma φ_n_add_one_le_φ_n_add_two (e f n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
+theorem φ_n_add_one_le_φ_n_add_two (e f n : ℕ) : φ e f (n+1) ≤ (φ e f n) + 2 := by
   dsimp [φ]
   have h3 := nat_succ_div_le n e
   have h4 := nat_succ_div_le n f
   dsimp [nat_div]
   linarith
 
-lemma mtl : MonotoneTwoLipschitz (φ e f) := by
+theorem mtl : MonotoneTwoLipschitz (φ e f) := by
   rw [MonotoneTwoLipschitz]
   apply And.intro
   exact φ_monotone e f
   intro n
   exact φ_n_add_one_le_φ_n_add_two e f n
 
-lemma iuf (e_pos : e > 0) : IsUnboundedFun (φ e f) :=
+theorem iuf (e_pos : e > 0) : IsUnboundedFun (φ e f) :=
   unbounded_fun_add (nat_div e) (nat_div f) (Or.inl (nat_div_ubd e e_pos))
 
-lemma φ_zero : φ e f 0 = 0 := by
+theorem φ_zero : φ e f 0 = 0 := by
   simp [φ]
   simp [nat_div]
 
-lemma φ_skip2
+theorem φ_skip2
   (e f n i : ℕ)
   (h1 : φ e f n = i)
   (h2 : φ e f (n+1) = i+2)
@@ -118,7 +118,7 @@ lemma φ_skip2
     linarith
   exact ndldf h6
 
-lemma φinv_i_empty_implies_φinv_i_add_one_nonempty
+theorem φinv_i_empty_implies_φinv_i_add_one_nonempty
   (e f i : ℕ)
   (e_pos : e > 0)
   (h : φinv e f i = ∅)
@@ -134,7 +134,7 @@ lemma φinv_i_empty_implies_φinv_i_add_one_nonempty
     by_contra h3
     exact h2 h h3
 
-lemma φ_n_minus_one_eq_φ_n
+theorem φ_n_minus_one_eq_φ_n
   (e f n : ℕ)
   (n_ne_zero : n ≠ 0)
   (e_not_dvd_n : ¬ e ∣ n)
@@ -149,7 +149,7 @@ lemma φ_n_minus_one_eq_φ_n
   rw [h1]
   rw [h2]
 
-lemma φ_n_minus_one_ne_φ_n_e
+theorem φ_n_minus_one_ne_φ_n_e
   (e f n : ℕ)
   (n_ne_zero : n ≠ 0)
   (e_dvd_n : e ∣ n)
@@ -169,7 +169,7 @@ lemma φ_n_minus_one_ne_φ_n_e
   dsimp [nat_div]
   linarith
 
-lemma φ_n_minus_one_ne_φ_n_f
+theorem φ_n_minus_one_ne_φ_n_f
   (e f n : ℕ)
   (n_ne_zero : n ≠ 0)
   (f_dvd_n : f ∣ n)
@@ -189,7 +189,7 @@ lemma φ_n_minus_one_ne_φ_n_f
   dsimp [nat_div]
   linarith
 
-lemma φ_n_minus_one_ne_φ_n
+theorem φ_n_minus_one_ne_φ_n
   (e f n : ℕ)
   (n_ne_zero : n ≠ 0)
   (ef_dvd_n : e ∣ n ∨ f ∣ n)
@@ -202,7 +202,7 @@ lemma φ_n_minus_one_ne_φ_n
   | inr f_dvd_n =>
     exact φ_n_minus_one_ne_φ_n_f e f n n_ne_zero f_dvd_n
 
-lemma min_φinv_dvd
+theorem min_φinv_dvd
   (e f i n: ℕ)
   (mem : n ∈ φinv e f i)
   (min : ∀ m ∈ φinv e f i, n ≤ m)
@@ -242,7 +242,7 @@ lemma min_φinv_dvd
   case neg =>
     aesop
 
-lemma dvd_min_φinv
+theorem dvd_min_φinv
   (e f i n : ℕ)
   (dvd : e ∣ n ∨ f ∣ n)
   (mem : φ e f n = i)
@@ -265,7 +265,7 @@ lemma dvd_min_φinv
     linarith
   linarith
 
-lemma nat_mul_dvd {a b c : ℕ} : a * b ∣ c → b ∣ c := by
+theorem nat_mul_dvd {a b c : ℕ} : a * b ∣ c → b ∣ c := by
   intro h
   dsimp [Nat.instDvd] at h
   match h with
@@ -275,7 +275,7 @@ lemma nat_mul_dvd {a b c : ℕ} : a * b ∣ c → b ∣ c := by
     rw [←h2]
     exact h1
 
-lemma gcd_div_min_φinv
+theorem gcd_div_min_φinv
   (e f i l n : ℕ)
   (mem : n ∈ φinv (e*l) (f*l) i)
   (min : ∀ m ∈ φinv (e*l) (f*l) i, n ≤ m)
@@ -286,17 +286,17 @@ lemma gcd_div_min_φinv
   | inl h2 => apply nat_mul_dvd h2
   | inr h3 => apply nat_mul_dvd h3
 
-lemma pnat_ne_zero (n : ℕ+) : n.1 ≠ 0 := by
+theorem pnat_ne_zero (n : ℕ+) : n.1 ≠ 0 := by
   intro h
   have h1 := n.2
   rw [h] at h1
   linarith
 
-lemma preimage_φ_isInterval (e f : ℕ+) (i : ℕ) : IsInterval ((φ e f) ⁻¹' { n : ℕ | n = i }) := by
+theorem preimage_φ_isInterval (e f : ℕ+) (i : ℕ) : IsInterval ((φ e f) ⁻¹' { n : ℕ | n = i }) := by
   apply preimage_of_monotone_isInterval
   apply φ_monotone
 
-lemma nat_div_pnat_le (n q : ℕ) (d : ℕ+) : n / d ≤ q → n ≤ d * q + d := by
+theorem nat_div_pnat_le (n q : ℕ) (d : ℕ+) : n / d ≤ q → n ≤ d * q + d := by
   intro h1
   have h2 : n = d * (n / d) + n % d := Eq.symm (Nat.div_add_mod n d)
   have h3 := Nat.mod_lt n d.2
@@ -309,7 +309,7 @@ lemma nat_div_pnat_le (n q : ℕ) (d : ℕ+) : n / d ≤ q → n ≤ d * q + d :
     apply Nat.zero_le
   linarith
 
-lemma finset_min_eq (s : Finset ℕ) (m : ℕ) (m_in_s : m ∈ s) (minimality : ∀ x ∈ s, x ≥ m) : s.min = m := by
+theorem finset_min_eq (s : Finset ℕ) (m : ℕ) (m_in_s : m ∈ s) (minimality : ∀ x ∈ s, x ≥ m) : s.min = m := by
   have h1 := s.min_eq_inf_withTop
   simp [Finset.inf] at h1
   have h2 : s.min ≤ m := by
@@ -320,7 +320,7 @@ lemma finset_min_eq (s : Finset ℕ) (m : ℕ) (m_in_s : m ∈ s) (minimality : 
     apply minimality
   exact le_antisymm h2 h3
 
-lemma finset_min_min' (s : Finset ℕ) (h : s.Nonempty) : s.min = s.min' h := by
+theorem finset_min_min' (s : Finset ℕ) (h : s.Nonempty) : s.min = s.min' h := by
   apply finset_min_eq
   apply Finset.min'_mem
   intro x

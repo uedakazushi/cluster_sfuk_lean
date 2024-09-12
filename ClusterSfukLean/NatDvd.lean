@@ -10,7 +10,7 @@ noncomputable instance (priority := low) propDecidable (a : Prop) : Decidable a 
 
 def nat_div (d n : ℕ) : ℕ := n / d
 
-lemma nat_ne_zero_iff_pos (n:Nat) : n ≠ 0 ↔ n > 0 := by
+theorem nat_ne_zero_iff_pos (n:Nat) : n ≠ 0 ↔ n > 0 := by
   apply Iff.intro
   { intro h
     have h1 := Nat.pos_of_ne_zero h
@@ -21,12 +21,12 @@ lemma nat_ne_zero_iff_pos (n:Nat) : n ≠ 0 ↔ n > 0 := by
     exact h1
   }
 
-lemma nat_div_monotone (d : ℕ) : Monotone (nat_div d) := by
+theorem nat_div_monotone (d : ℕ) : Monotone (nat_div d) := by
   intro n m h
   apply Nat.div_le_div_right
   assumption
 
-lemma nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
+theorem nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
   rw [Nat.succ_div]
   -- aesop
   by_cases h : d ∣ n + 1
@@ -37,7 +37,7 @@ lemma nat_succ_div_le (n d : ℕ) : (n+1) / d ≤ (n / d)+1 := by
     linarith
   }
 
-lemma nat_add_div_monotone (e f : ℕ)
+theorem nat_add_div_monotone (e f : ℕ)
  : Monotone (fun n ↦ n / e + n / f) := by
   intro n m h
   apply Nat.add_le_add
@@ -46,7 +46,7 @@ lemma nat_add_div_monotone (e f : ℕ)
   apply Nat.div_le_div_right
   assumption
 
-lemma not_dvd_mod_eq
+theorem not_dvd_mod_eq
   (e n: ℕ)
   (n_ne_zero : n ≠ 0)
   (h : ¬ e ∣ n)
@@ -60,7 +60,7 @@ lemma not_dvd_mod_eq
   rw [if_neg h] at h5
   exact h5
 
-lemma dvd_mod_ne
+theorem dvd_mod_ne
   (e n: ℕ)
   (n_ne_zero : n ≠ 0)
   (h : e ∣ n)
@@ -74,7 +74,7 @@ lemma dvd_mod_ne
   rw [if_pos h] at h5
   exact Eq.symm h5
 
-lemma mul_pred_div (k d: ℕ) (d_pos : d > 0) : (k * d - 1) / d = k - 1 := by
+theorem mul_pred_div (k d: ℕ) (d_pos : d > 0) : (k * d - 1) / d = k - 1 := by
   induction k with
   | zero =>
     simp
@@ -117,7 +117,7 @@ lemma mul_pred_div (k d: ℕ) (d_pos : d > 0) : (k * d - 1) / d = k - 1 := by
       rw [ih]
       simp
 
-lemma mul_pred_mod
+theorem mul_pred_mod
   (k d: ℕ) (k_pos : k > 0) (d_pos : d > 0)
   :
   (k * d - 1) % d = d - 1 := by
@@ -157,7 +157,7 @@ lemma mul_pred_mod
   rw [h4] at h3
   exact h3.symm
 
-lemma div_lt_of_lt_and_mod_eq
+theorem div_lt_of_lt_and_mod_eq
   (a b d: ℕ)
   (mod_eq : a % d = b % d)
   (a_lt_b : a < b)
@@ -177,7 +177,7 @@ lemma div_lt_of_lt_and_mod_eq
   rw [ha, hb] at h2
   linarith
 
-lemma mod_of_dvd_succ
+theorem mod_of_dvd_succ
   (n d : ℕ)
   (d_pos : d > 0)
   (dvd : d ∣ n + 1)

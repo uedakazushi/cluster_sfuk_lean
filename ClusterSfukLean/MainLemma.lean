@@ -6,7 +6,7 @@ set_option linter.unusedVariables false
 def ex (e f: ℕ) : Set ℕ :=
   { n : ℕ | n % e = e - 1 ∨ n % f = f - 1 }
 
-lemma I_eq_φinv_diff_ex (e f i : ℕ) :
+theorem I_eq_φinv_diff_ex (e f i : ℕ) :
   setI e f i = φinv e f i \ ex e f := by
   apply Set.eq_of_subset_of_subset
   { intro x
@@ -32,7 +32,7 @@ lemma I_eq_φinv_diff_ex (e f i : ℕ) :
     aesop
   }
 
-lemma φinv_i_empty_i_mod_e_add_f
+theorem φinv_i_empty_i_mod_e_add_f
   (e f i l: ℕ)
   (e_ge_2 : e ≥ 2)
   (f_ge_2 : f ≥ 2)
@@ -244,7 +244,7 @@ lemma φinv_i_empty_i_mod_e_add_f
   rw [Nat.mod_eq_of_lt]
   linarith
 
-lemma i_mod_e_add_f_φinv_i_empty
+theorem i_mod_e_add_f_φinv_i_empty
   (e f i l: ℕ)
   (e_ge_2 : e ≥ 2)
   (f_ge_2 : f ≥ 2)
@@ -434,12 +434,12 @@ variable
   (l_pos : l > 0)
   (non_empty : i % (e+f) ≠ e+f-1)
 
-lemma non_emp_l : φinv (e*l) (f*l) i ≠ ∅ := by
+theorem non_emp_l : φinv (e*l) (f*l) i ≠ ∅ := by
   by_contra h
   have h1 := φinv_i_empty_i_mod_e_add_f e f i l e_ge_2 f_ge_2 coprime l_pos h
   contradiction
 
-lemma non_emp_1 : φinv e f i ≠ ∅ := by
+theorem non_emp_1 : φinv e f i ≠ ∅ := by
   by_contra h
   have h1 := φinv_i_empty_i_mod_e_add_f e f i 1 e_ge_2 f_ge_2 coprime (by linarith)
   rw [Nat.mul_one] at h1
@@ -472,7 +472,7 @@ noncomputable def n_min_l := nat_min_in (φinv (e*l) (f*l) i) (Set.nonempty_iff_
 
 noncomputable def n_min_1 := nat_min_in (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))
 
-lemma min_l_eq_l_mul_min_1 : (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_emptry).1 = l * (n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty).1 := by
+theorem min_l_eq_l_mul_min_1 : (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_emptry).1 = l * (n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty).1 := by
   set m_1 := n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty with def_m_1
   set m_l := n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty with def_m_l
   have mem_1 : ↑m_1 ∈ φinv e f i := by
@@ -537,7 +537,7 @@ lemma min_l_eq_l_mul_min_1 : (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_em
     linarith
   linarith
 
-lemma case_a (h : (i+1) % (e+f) ≠ e+f-1) : (n_min_l e f (i+1) l e_ge_2 f_ge_2 coprime l_pos h).1 - 1 ∈ (φinv (e*l) (f*l) i) ∧ (n_min_l e f (i+1) l e_ge_2 f_ge_2 coprime l_pos h).1 ∉ (φinv (e*l) (f*l) i):= by
+theorem case_a (h : (i+1) % (e+f) ≠ e+f-1) : (n_min_l e f (i+1) l e_ge_2 f_ge_2 coprime l_pos h).1 - 1 ∈ (φinv (e*l) (f*l) i) ∧ (n_min_l e f (i+1) l e_ge_2 f_ge_2 coprime l_pos h).1 ∉ (φinv (e*l) (f*l) i):= by
   set nmin' := n_min_l e f (i+1) l e_ge_2 f_ge_2 coprime l_pos h with def_nmin'
   set nmin := n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty with def_nmin
   have h1 : φ (e*l) (f*l) (nmin'.1-1) ≤ φ (e*l) (f*l) nmin'.1 := by
@@ -668,7 +668,7 @@ lemma case_a (h : (i+1) % (e+f) ≠ e+f-1) : (n_min_l e f (i+1) l e_ge_2 f_ge_2 
       exact h8
     exact h7 h6 }
 
-lemma mod_ne_succ (n d : ℕ) (d_ge_2 : d ≥ 2) : n % d ≠ (n+1) % d := by
+theorem mod_ne_succ (n d : ℕ) (d_ge_2 : d ≥ 2) : n % d ≠ (n+1) % d := by
   by_contra h
   have h1: n ≤ n*d := by
     have h2 : 1 ≤ d := by
@@ -725,17 +725,17 @@ lemma mod_ne_succ (n d : ℕ) (d_ge_2 : d ≥ 2) : n % d ≠ (n+1) % d := by
   rw [h4] at h5
   contradiction
 
-lemma mod_eq_succ_ne (n d : ℕ) (d_ge_2 : d ≥ 2) (h1 : n % d = d - 1) : (n+1) % d ≠ d - 1 := by
+theorem mod_eq_succ_ne (n d : ℕ) (d_ge_2 : d ≥ 2) (h1 : n % d = d - 1) : (n+1) % d ≠ d - 1 := by
   have h2 := mod_ne_succ n d d_ge_2
   rw [h1] at h2
   simp at h2
   intro h3
   exact h2 (Eq.symm h3)
 
-lemma add_ge {e f : ℕ} (e_ge_2 : e ≥ 2) (f_ge_2 : f ≥ 2) : e + f ≥ 2 := by
+theorem add_ge {e f : ℕ} (e_ge_2 : e ≥ 2) (f_ge_2 : f ≥ 2) : e + f ≥ 2 := by
   linarith
 
-lemma le_of_le_succ_and_ne (a b : ℕ) (ineq1 : a ≤ b + 1) (ineq2 : a ≠ b + 1) : a ≤ b := by
+theorem le_of_le_succ_and_ne (a b : ℕ) (ineq1 : a ≤ b + 1) (ineq2 : a ≠ b + 1) : a ≤ b := by
   rw [Nat.le_iff_lt_or_eq] at ineq1
   cases ineq1 with
   | inl ineq1 =>
@@ -743,7 +743,7 @@ lemma le_of_le_succ_and_ne (a b : ℕ) (ineq1 : a ≤ b + 1) (ineq2 : a ≠ b + 
   | inr ineq1 =>
     contradiction
 
-lemma zero_of_le_pred_self {a : ℕ} (ineq : a ≤ a - 1) : a = 0 := by
+theorem zero_of_le_pred_self {a : ℕ} (ineq : a ≤ a - 1) : a = 0 := by
   cases a with
   | zero =>
     rfl
@@ -753,7 +753,7 @@ lemma zero_of_le_pred_self {a : ℕ} (ineq : a ≤ a - 1) : a = 0 := by
     rw [pred_suc] at ineq
     linarith
 
-lemma case_b
+theorem case_b
   (empty' : (i+1) % (e+f) = e+f-1)
   :
   (n_min_l e f (i+2) l e_ge_2 f_ge_2 coprime l_pos (mod_eq_succ_ne (i+1) (e+f) (add_ge e_ge_2 f_ge_2) empty')).1 - 1 ∈ (φinv (e*l) (f*l) i)

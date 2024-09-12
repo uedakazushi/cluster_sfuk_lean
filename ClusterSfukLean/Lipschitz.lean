@@ -5,7 +5,7 @@ def MonotoneOneLipschitz (f : ℕ → ℕ) := Monotone f ∧ ∀ n : ℕ, f (n +
 
 def MonotoneTwoLipschitz (f : ℕ → ℕ) := Monotone f ∧ ∀ n : ℕ, f (n + 1) ≤ (f n) + 2
 
-lemma skip
+theorem skip
   (f : ℕ → ℕ)
   (mtl : MonotoneTwoLipschitz f)
   (ubd : IsUnboundedFun f)
@@ -106,12 +106,12 @@ lemma skip
         exists s_max' + 1
       contradiction
 
-lemma le_add_one_le_add_one_le_add_two (a b c d : ℕ) (b_le_succ_a : b ≤ a + 1) (d_le_succ_c : d ≤ c + 1) (eq : b + d = a + c + 2) : b = a + 1 ∧ d = c + 1 := by
+theorem le_add_one_le_add_one_le_add_two (a b c d : ℕ) (b_le_succ_a : b ≤ a + 1) (d_le_succ_c : d ≤ c + 1) (eq : b + d = a + c + 2) : b = a + 1 ∧ d = c + 1 := by
   apply And.intro
   { linarith }
   { linarith }
 
-lemma OneLipschitz_add
+theorem OneLipschitz_add
   (f g : ℕ → ℕ)
   (f_lip : MonotoneOneLipschitz f)
   (g_lip : MonotoneOneLipschitz g)

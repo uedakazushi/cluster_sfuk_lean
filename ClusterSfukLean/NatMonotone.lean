@@ -16,6 +16,14 @@ noncomputable def nat_min'_mem
   nat_min' s h ∈ s :=
   WellFounded.min_mem Nat.lt.isWellOrder.3.wf s h
 
+noncomputable def nat_min'_not_lt
+  (s : Set ℕ)
+  (h : s.Nonempty)
+  (hx : x ∈ s)
+  :
+  ¬ x < nat_min' s h :=
+  WellFounded.not_lt_min Nat.lt.isWellOrder.3.wf s h hx
+
 def nat_interval (a b : ℕ) : Finset ℕ :=
   Finset.range (b + 1) \ Finset.range a
 
@@ -45,7 +53,7 @@ theorem nat_interval_card : (nat_interval a b).card =
     --   exact h2
     aesop
 
-lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b ≤ c := by
+theorem nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b ≤ c := by
   rw [nat_interval]
   by_cases h : a ≤ c
   {
@@ -89,7 +97,7 @@ lemma nat_interval_mem (a b c : ℕ) : b ∈ nat_interval a c ↔ a ≤ b ∧ b 
 
 def IsInterval (S : Set ℕ) : Prop := ∀ a b c : ℕ, a ∈ S → c ∈ S → a ≤ b → b ≤ c → b ∈ S
 
-lemma nonempty_interval_range (S : Finset ℕ) (nonempty : S.Nonempty) (h : IsInterval S) : S = nat_interval (S.min' nonempty) (S.max' nonempty) := by
+theorem nonempty_interval_range (S : Finset ℕ) (nonempty : S.Nonempty) (h : IsInterval S) : S = nat_interval (S.min' nonempty) (S.max' nonempty) := by
   apply Finset.ext
   intro a
   apply Iff.intro
@@ -118,7 +126,7 @@ lemma nonempty_interval_range (S : Finset ℕ) (nonempty : S.Nonempty) (h : IsIn
     exact h3
   }
 
-lemma preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : ℕ) : IsInterval ((f : ℕ → ℕ) ⁻¹' (Set.singleton i)) := by
+theorem preimage_of_monotone_isInterval (f : ℕ → ℕ) (h : Monotone f) (i : ℕ) : IsInterval ((f : ℕ → ℕ) ⁻¹' (Set.singleton i)) := by
   intro a b c a_in_f_inv c_in_f_inv a_le_b b_le_c
   have f_a_i : f a = i := by
     exact a_in_f_inv
@@ -142,14 +150,14 @@ def IsBoundedFun (f : ℕ → ℕ) := ∃ k : ℕ, ∀ x : ℕ, f x ≤ k
 
 def IsUnboundedFun (f : ℕ → ℕ) := ∀ k : ℕ, ∃ x : ℕ, k < f x
 
-lemma not_bounded_unbounded (f : ℕ → ℕ) : IsBoundedFun f → ¬ IsUnboundedFun f := by
+theorem not_bounded_unbounded (f : ℕ → ℕ) : IsBoundedFun f → ¬ IsUnboundedFun f := by
   intro h1
   rw [IsBoundedFun] at h1
   rw [IsUnboundedFun]
   push_neg
   assumption
 
-lemma finite_of_bounded_of_Nat (s: Set ℕ) :
+theorem finite_of_bounded_of_Nat (s: Set ℕ) :
   IsBounded s → s.Finite := by
   intro h
   cases h with
@@ -162,7 +170,7 @@ lemma finite_of_bounded_of_Nat (s: Set ℕ) :
       apply Set.Finite.subset (Set.finite_le_nat k)
       assumption
 
-lemma fib_monotone_ubd_fun_bdd
+theorem fib_monotone_ubd_fun_bdd
   (f : ℕ → ℕ)
   (monotone : Monotone f)
   (ubd : IsUnboundedFun f)
@@ -183,7 +191,7 @@ lemma fib_monotone_ubd_fun_bdd
       have h5 := monotone h4
       linarith
 
-lemma monotone_add
+theorem monotone_add
   (f g : ℕ → ℕ)
   (monotone_f : Monotone f)
   (monotone_g : Monotone g)
@@ -197,7 +205,7 @@ lemma monotone_add
     apply monotone_g
     assumption
 
-lemma unbounded_fun_add
+theorem unbounded_fun_add
   (f g : ℕ → ℕ)
   (ubd_f_or_g : IsUnboundedFun f ∨ IsUnboundedFun g)
   :
@@ -223,12 +231,12 @@ lemma unbounded_fun_add
 
 def IsMinIn (m : ℕ) (s : Set ℕ) := m ∈ s ∧ ∀ x ∈ s, m ≤ x
 
-lemma min_unique (m m' : ℕ) (s : Set ℕ) (h1 : IsMinIn m s) (h2 : IsMinIn m' s) : m = m' := by
+theorem min_unique (m m' : ℕ) (s : Set ℕ) (h1 : IsMinIn m s) (h2 : IsMinIn m' s) : m = m' := by
   have h3 := h1.2 m' h2.1
   have h4 := h2.2 m h1.1
   linarith
 
-def exists_max
+theorem exists_max
   (s : Set ℕ)
   (bdd : IsBounded s)
   (nonempty : s.Nonempty)
@@ -240,7 +248,11 @@ def exists_max
       have ub_nonempty : upper_bounds.Nonempty := by
         exists k
       set m := nat_min' upper_bounds ub_nonempty with def_m
+      have m_mem := nat_min'_mem upper_bounds ub_nonempty
+      rw [← def_m] at m_mem
+      rw [def_ub] at m_mem
       exists m
+      simp at m_mem
       apply And.intro
       {
         by_contra h1
@@ -251,12 +263,42 @@ def exists_max
             push_neg at s_nonempty
             cases s_nonempty
             case intro x h3 =>
-              sorry
+            by_cases h4 : x = 0
+            {
+              rw [h2] at h1
+              rw [h4] at h3
+              exact h1 h3
+            }
+            {
+              rw [h2] at h1
+              rw [h2] at m_mem
+              simp at m_mem
+              have h5 := m_mem x h3
+              exact h4 h5
+            }
           rw [s_empty] at nonempty
           simp at nonempty
         }
         {
-          sorry
+          set m' := m.pred with def_m'
+          have := Nat.pos_of_ne_zero h2
+          have m'_lt_m := Nat.pred_lt h2
+          rw [← def_m'] at m'_lt_m
+          have m'_in_ub : m' ∈ upper_bounds := by
+            simp [upper_bounds]
+            intro x
+            intro h3
+            have h4 := m_mem x h3
+            have h5 : x ≠ m := by
+              by_contra h6
+              rw [h6] at h3
+              exact h1 h3
+            have h6 := Nat.lt_of_le_of_ne h4 h5
+            have h7 := Nat.le_pred_of_lt h6
+            exact h7
+          have h3 := nat_min'_not_lt upper_bounds ub_nonempty m'_in_ub
+          rw [← def_m] at h3
+          exact h3 m'_lt_m
         }
       }
       {

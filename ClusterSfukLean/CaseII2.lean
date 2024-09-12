@@ -1,6 +1,6 @@
 import ClusterSfukLean.CaseII1
 
-lemma setII_dichotomy
+theorem setII_dichotomy
   (e f l: ℕ+)
   (i: ℕ)
   (e_ge_2 : e ≥ 2)
@@ -36,12 +36,12 @@ lemma setII_dichotomy
 example : Nat.card (Set.singleton 1) = 1 := by
   simp
 
-lemma singleton_card (n : ℕ) : (Set.singleton n).toFinset.card = 1 := by
+theorem singleton_card (n : ℕ) : (Set.singleton n).toFinset.card = 1 := by
   have := Set.card_singleton n
   have := Set.toFinset_card (Set.singleton n)
   aesop
 
-lemma cardII_dichotomy
+theorem cardII_dichotomy
   (e f l: ℕ+)
   (i: ℕ)
   (e_ge_2 : e ≥ 2)

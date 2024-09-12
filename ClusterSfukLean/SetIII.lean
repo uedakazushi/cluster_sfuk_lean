@@ -51,7 +51,7 @@ def equiv_rootsOfUnity (n : PNat) :
 
 def lexNat := Prod.Lex Nat.lt Nat.lt
 
-lemma lexNat_wf : WellFounded (lexNat) :=
+theorem lexNat_wf : WellFounded (lexNat) :=
   WellFoundedRelation.wf
 
 def mygcd_ind_step (x : ℕ × ℕ) (ih : (y : ℕ × ℕ) → (lexNat y x) → ℕ) : ℕ := by
@@ -138,7 +138,7 @@ theorem mygcd_eq_gcd : ∀ x : ℕ × ℕ, mygcd x = Nat.gcd x.1 x.2 :=
 def condIII_gcd (e : ℕ × ℕ) : Prop :=
   ∀ (x : ℂˣ), (x ^ e.1 = 1 ∧ x ^ e.2 = 1 ↔ x ^ (Nat.gcd e.1 e.2) = 1)
 
-lemma III_gcd_ind
+theorem III_gcd_ind
   (e : ℕ × ℕ)
   (ih : (f : ℕ × ℕ) → (lexNat f e) → condIII_gcd f)
   :
@@ -272,19 +272,19 @@ theorem setIII_eq_setIII' (e f : ℕ+) : setIII e f = setIII' (PNat.gcd e f) := 
     }
   }
 
-lemma PNat_gcd_self (e : ℕ+) : PNat.gcd e e = e := by
+theorem PNat_gcd_self (e : ℕ+) : PNat.gcd e e = e := by
   rw [← PNat.coe_inj]
   rw [PNat.gcd_coe]
   simp
 
-lemma setIII'_finite (e : ℕ+) : (setIII' e).Finite := by
+theorem setIII'_finite (e : ℕ+) : (setIII' e).Finite := by
   have h1 := setIII_finite e e
   have h2 := setIII_eq_setIII' e e
   rw [PNat_gcd_self] at h2
   rw [h2] at h1
   exact h1
 
-lemma finite_eq (e f : ℕ+): cardIII e f = Nat.card (setIII' (PNat.gcd e f)) := by
+theorem finite_eq (e f : ℕ+): cardIII e f = Nat.card (setIII' (PNat.gcd e f)) := by
   have h1 := setIII_eq_setIII' e f
   have h2 : Nat.card (setIII e f) = Nat.card (setIII' (PNat.gcd e f)) := by
     rw [h1]
@@ -315,7 +315,7 @@ def setOfComplexRootsOfUnity_finite (e : ℕ+) : (setOfComplexRootsOfUnity e).Fi
 
 noncomputable def finsetOfComplexRootsOfUnity (e : ℕ+) : Finset ℂˣ := (setOfComplexRootsOfUnity_finite e).toFinset
 
-lemma finsetIII'_sub_rootsOfUnity (e : ℕ+) : finsetIII' e ⊆ finsetOfComplexRootsOfUnity e := by
+theorem finsetIII'_sub_rootsOfUnity (e : ℕ+) : finsetIII' e ⊆ finsetOfComplexRootsOfUnity e := by
   intro x
   intro h
   simp [finsetIII'] at h
@@ -324,7 +324,7 @@ lemma finsetIII'_sub_rootsOfUnity (e : ℕ+) : finsetIII' e ⊆ finsetOfComplexR
   simp [setOfComplexRootsOfUnity]
   exact h.2
 
-lemma setIII'_compl (e : ℕ+) : (finsetOfComplexRootsOfUnity e) \ (finsetIII' e) = {1} := by
+theorem setIII'_compl (e : ℕ+) : (finsetOfComplexRootsOfUnity e) \ (finsetIII' e) = {1} := by
   simp [finsetOfComplexRootsOfUnity]
   simp [setOfComplexRootsOfUnity]
   simp [finsetIII']
@@ -408,20 +408,26 @@ theorem cardIII'_card (e : ℕ+): Nat.card (setIII' e) = e - 1 := by
   rw [Nat.add_one_sub_one] at h9
   exact h9
 
--- lemma pow_and_pow
---   (e f : ℕ)
---   (e_le_f : e ≤ f)
---   (x : ℂˣ)
---   : x^e = 1 ∧ x^f = 1 → x^(f-e) = 1
---   := by
---   intro h
---   have h1 : f = e + (f - e) := by
---     rw [add_comm]
---     rw [Nat.sub_add_cancel]
---     exact e_le_f
---   set h3 := pow_add x e (f-e)
---   rw [h.1] at h3
---   simp at h3
---   rw [← h1] at h3
---   rw [h.2] at h3
---   exact h3.symm
+theorem pow_and_pow
+  (e f : ℕ)
+  (e_le_f : e ≤ f)
+  (x : ℂˣ)
+  : x^e = 1 ∧ x^f = 1 → x^(f-e) = 1
+  := by
+  intro h
+  have h1 : f = e + (f - e) := by
+    rw [add_comm]
+    rw [Nat.sub_add_cancel]
+    exact e_le_f
+  set h3 := pow_add x e (f-e)
+  rw [h.1] at h3
+  simp at h3
+  rw [← h1] at h3
+  rw [h.2] at h3
+  exact h3.symm
+
+theorem cardIII_gcd (e f : ℕ+) : cardIII e f = e.1.gcd f.1 - 1 := by
+  have h1 := finite_eq e f
+  have h2 := cardIII'_card (PNat.gcd e f)
+  rw [h2] at h1
+  exact h1
