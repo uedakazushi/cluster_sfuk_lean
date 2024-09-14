@@ -494,7 +494,7 @@ noncomputable def n_min_l := nat_min_in (φinv (e*l) (f*l) i) (Set.nonempty_iff_
 
 noncomputable def n_min_1 := nat_min_in (φinv e f i) (Set.nonempty_iff_ne_empty.mpr (non_emp_1 e f i e_ge_2 f_ge_2 coprime non_empty))
 
-theorem min_l_eq_l_mul_min_1 : (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_emptry).1 = l * (n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty).1 := by
+theorem min_l_eq_l_mul_min_1 : (n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty).1 = l * (n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty).1 := by
   set m_1 := n_min_1 e f i e_ge_2 f_ge_2 coprime non_empty with def_m_1
   set m_l := n_min_l e f i l e_ge_2 f_ge_2 coprime l_pos non_empty with def_m_l
   have mem_1 : ↑m_1 ∈ φinv e f i := by
