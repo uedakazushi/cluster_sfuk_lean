@@ -66,6 +66,10 @@ theorem φinv_finite (e f : ℕ+) (i : ℕ) : (φinv e f i).Finite := by
   apply finite_of_bounded_of_Nat
   apply φinv_bdd
 
+theorem φinv_isinterval (e f : ℕ+) (i : ℕ) : IsInterval (φinv e f i) := by
+  apply preimage_of_monotone_isInterval
+  apply φ_monotone
+
 theorem φ_mul (e f : ℕ+) (n : ℕ) (l : ℕ+) : φ (e * l) (f * l) (n * l) = φ e f n := by
   simp [φ]
   have h1 : (n * l) / (e * l) = n / e := by

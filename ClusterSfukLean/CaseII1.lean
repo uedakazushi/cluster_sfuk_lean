@@ -1,4 +1,4 @@
-import ClusterSfukLean.MainLemma
+import ClusterSfukLean.caseI
 import Mathlib.Tactic.ClearExcept
 set_option maxHeartbeats 500000
 

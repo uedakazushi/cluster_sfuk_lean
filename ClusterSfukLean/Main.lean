@@ -127,4 +127,4 @@ theorem main
     rw [cardII1,cardIIl]
     simp
     clear cardII1 cardIIl
-    sorry
+    exact caseI_main e f l i e_ge_2 f_ge_2 coprime h1

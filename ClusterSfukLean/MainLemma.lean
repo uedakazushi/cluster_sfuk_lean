@@ -3,11 +3,11 @@ import ClusterSfukLean.MainDef
 import ClusterSfukLean.Lipschitz
 set_option linter.unusedVariables false
 
-def ex (e f: ℕ) : Set ℕ :=
-  { n : ℕ | n % e = e - 1 ∨ n % f = f - 1 }
+def ex (e f i: ℕ) : Set ℕ :=
+  { n : ℕ | φ e f n = i ∧ (n % e = e - 1 ∨ n % f = f - 1) }
 
 theorem I_eq_φinv_diff_ex (e f i : ℕ) :
-  setI e f i = φinv e f i \ ex e f := by
+  setI e f i = φinv e f i \ ex e f i := by
   apply Set.eq_of_subset_of_subset
   { intro x
     intro h
@@ -18,7 +18,7 @@ theorem I_eq_φinv_diff_ex (e f i : ℕ) :
     { apply h3 }
     { rw [ex]
       intro h4
-      cases h4 with
+      cases h4.2 with
       | inl h4 =>
         exact h1 h4
       | inr h4 =>
@@ -29,7 +29,31 @@ theorem I_eq_φinv_diff_ex (e f i : ℕ) :
     intro h
     have h1 := h.1
     have h2 := h.2
-    aesop
+    apply And.intro
+    { contrapose h2
+      push_neg
+      push_neg at h2
+      apply And.intro
+      { exact h1 }
+      { apply Or.inl h2 }
+    }
+    {
+      apply And.intro
+      {
+        contrapose h2
+        push_neg at h2
+        push_neg
+        apply And.intro
+        { exact h1 }
+        { apply Or.inr h2 }
+      }
+      {
+        contrapose h2
+        rw [φ] at h1
+        dsimp [nat_div] at h1
+        contradiction
+      }
+    }
   }
 
 theorem φinv_i_empty_i_mod_e_add_f
@@ -421,8 +445,6 @@ theorem i_mod_e_add_f_φinv_i_empty
     rw [h4] at h6
     rw [h1] at h6
     linarith
-
-section main
 
 namespace main_lemma
 
@@ -828,5 +850,3 @@ theorem case_b
   }
 
 end main_lemma
-
-end main
