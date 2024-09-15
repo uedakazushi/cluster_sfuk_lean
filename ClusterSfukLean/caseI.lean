@@ -535,7 +535,7 @@ theorem succ_ex
     have h9 := Nat.lt_of_succ_le h6
     exact h9
 
-theorem suc_div_eq_div
+theorem div_succ_eq_div
   (n : ℕ)
   (d : ℕ)
   (d_ge_2 : d ≥ 2)
@@ -616,7 +616,7 @@ theorem cardex
     rw [max_φinv] at def_m
     rw [← def_m] at le_max
     exact le_max
-  have m_in_ex : m ∈ finsetex (e * l) (f * l) i := by
+  have m_in_finsetex : m ∈ finsetex (e * l) (f * l) i := by
     by_contra nin
     rw [finsetex] at nin
     simp at nin
@@ -628,13 +628,201 @@ theorem cardex
       exact m_mem
     have nin1 := (nin m_mem'').1
     have nin2 := (nin m_mem'').2
-    sorry
-  have m_in_finsetex : m ∈ finsetex e f i := by
-    rw [finsetex]
-    simp
-    simp [finsetφinv] at m_mem
-    sorry
-  sorry
+    have el_ge_2 : e.1 * l.1 ≥ 2 := by
+      have h1 := Nat.mul_le_mul l.2 e_ge_2
+      simp at h1
+      simp
+      rw [mul_comm] at h1
+      exact h1
+    have fl_ge_2 : f.1 * l.1 ≥ 2 := by
+      have h1 := Nat.mul_le_mul l.2 f_ge_2
+      simp at h1
+      simp
+      rw [mul_comm] at h1
+      exact h1
+    have dsed1 := div_succ_eq_div m (e.1 * l.1) el_ge_2 nin1
+    have dsed2 := div_succ_eq_div m (f.1 * l.1) fl_ge_2 nin2
+    have succ_m_in_φinv : (m+1) ∈ finsetφinv (e * l) (f * l) i := by
+      rw [finsetφinv]
+      simp
+      rw [φinv]
+      rw [φ]
+      simp [nat_div]
+      simp at dsed1
+      have dsed1' : (m + 1) / (↑ e * ↑ l) = m / (e.1 * l.1) := by
+        exact dsed1
+      rw [dsed1']
+      have dsed2' : (m + 1) / (↑ f * ↑ l) = m / (f.1 * l.1) := by
+        exact dsed2
+      rw [dsed2']
+      exact m_mem''
+    have contr := m_max (m+1) succ_m_in_φinv
+    linarith
+  have ex_implies_max : ∀ x ∈ finsetex (e*l) (f*l) i, ∀ y ∈ finsetφinv (e*l) (f*l) i, y ≤ x := by
+    clear m_mem'
+    intro x
+    intro x_mem
+    intro y
+    intro y_mem
+    rw [finsetex] at x_mem
+    simp at x_mem
+    rw [ex] at x_mem
+    simp at x_mem
+    simp [finsetφinv] at y_mem
+    rw [φinv] at y_mem
+    simp at y_mem
+    cases x_mem.2
+    case inl mod_el =>
+      have el_ge_2 : e.1 * l.1 ≥ 2 := by
+        have h1 := Nat.mul_le_mul l.2 e_ge_2
+        simp at h1
+        simp
+        rw [mul_comm] at h1
+        exact h1
+      have dvd_el : e.1 * l.1 ∣ x + 1 := by
+        have mod_el' : x % (e.1 * l.1) = e.1 * l.1 - 1 := by
+          exact mod_el
+        have mod_el'' := Nat.add_mod x 1 (e.1 * l.1)
+        rw [mod_el'] at mod_el''
+        simp at mod_el''
+        have el_ge_1 : e.1 * l.1 ≥ 1 := by
+          linarith
+        have h1 := Nat.sub_add_cancel el_ge_1
+        rw [h1] at mod_el''
+        simp at mod_el''
+        exact Nat.dvd_of_mod_eq_zero mod_el''
+      have h1 := dvd_mod_ne (e.1 * l.1) (x+1) (by linarith) dvd_el
+      simp at h1
+      have h1' : 1 + x / (e.1 * l.1) = (x + 1) / (e.1 * l.1) := by
+        rw [add_comm]
+        exact h1
+      have h2 : x / (f.1 * l.1) ≤ (x+1) / (f.1 * l.1) := by
+        have ineq : x ≤ x + 1 := by linarith
+        have h2 := nat_div_monotone (f.1 * l.1) ineq
+        exact h2
+      have h3 := Nat.add_le_add_left h2 ((x + 1) / (e.1 * l.1))
+      have h4 : φ (e * l) (f * l) x + 1 ≤ φ (e * l) (f * l) (x + 1) := by
+        rw [φ]
+        simp [nat_div]
+        rw [add_assoc]
+        rw [add_comm]
+        rw [add_assoc]
+        have h1'' : x / (f.1 * l.1) + (1 + x / (e.1 * l.1)) = x / (f.1 * l.1) + (x + 1) / (e.1 * l.1)
+          := by
+          rw [← h1']
+        have h2 : x / (f.1 * l.1) + (1 + x / (e.1 * l.1)) ≤ (x + 1) / (e.1 * l.1) + (x + 1) / (f.1 * l.1) := by
+          rw [h1'']
+          rw [add_comm]
+          apply Nat.add_le_add
+          apply le_refl
+          have ineq : x ≤ x + 1 := by linarith
+          have h4 := nat_div_monotone (f.1 * l.1) ineq
+          exact h4
+        exact h2
+      have succ_x_nin : x + 1 ∉ finsetφinv (e * l) (f * l) i := by
+        intro h5
+        rw [finsetφinv] at h5
+        simp at h5
+        rw [φinv] at h5
+        simp at h5
+        have x_mem1 := x_mem.1
+        rw [x_mem1] at h4
+        rw [h5] at h4
+        linarith
+      clear h1 h1' h2 h3
+      by_contra x_lt_y
+      push_neg at x_lt_y
+      have succ_x_le_y := Nat.succ_le_of_lt x_lt_y
+      clear x_lt_y
+      have ineq := φ_monotone (e * l) (f * l) succ_x_le_y
+      rw [y_mem] at ineq
+      rw [x_mem.1] at h4
+      linarith
+    case inr mod_fl =>
+      have fl_ge_2 : f.1 * l.1 ≥ 2 := by
+        have h1 := Nat.mul_le_mul l.2 f_ge_2
+        simp at h1
+        simp
+        rw [mul_comm] at h1
+        exact h1
+      have dvd_fl : f.1 * l.1 ∣ x + 1 := by
+        have mod_fl' : x % (f.1 * l.1) = f.1 * l.1 - 1 := by
+          exact mod_fl
+        have mod_fl'' := Nat.add_mod x 1 (f.1 * l.1)
+        rw [mod_fl'] at mod_fl''
+        simp at mod_fl''
+        have fl_ge_1 : f.1 * l.1 ≥ 1 := by
+          linarith
+        have h1 := Nat.sub_add_cancel fl_ge_1
+        rw [h1] at mod_fl''
+        simp at mod_fl''
+        exact Nat.dvd_of_mod_eq_zero mod_fl''
+      have h1 := dvd_mod_ne (f.1 * l.1) (x+1) (by linarith) dvd_fl
+      simp at h1
+      -- have h1' : 1 + x / (f.1 * l.1) = (x + 1) / (f.1 * l.1) := by
+      --   rw [add_comm]
+      --   exact h1
+      have h2 : x / (e.1 * l.1) ≤ (x+1) / (e.1 * l.1) := by
+        have ineq : x ≤ x + 1 := by linarith
+        have h2 := nat_div_monotone (e.1 * l.1) ineq
+        exact h2
+      have h3 := Nat.add_le_add_left h2 ((x + 1) / (f.1 * l.1))
+      have h4 : φ (e * l) (f * l) x + 1 ≤ φ (e * l) (f * l) (x + 1) := by
+        rw [φ]
+        simp [nat_div]
+        rw [add_assoc]
+        have h4 : x / (e.1 * l.1) + (x / (f.1 * l.1) + 1) ≤ (x + 1) / (e.1 * l.1) + (x + 1) / (f.1 * l.1) := by
+          have h1'' : x / (f.1 * l.1) + 1 = (x + 1) / (f.1 * l.1)
+          := by
+            exact h1
+          rw [h1'']
+          have x_le_succ_x : x ≤ x + 1 := by linarith
+          have h5 := nat_div_monotone (e.1 * l.1) x_le_succ_x
+          rw [nat_div] at h5
+          rw [nat_div] at h5
+          have h6 := Nat.add_le_add_right h5 ((x+1) / (f.1 * l.1))
+          exact h6
+        exact h4
+      have succ_x_nin : x + 1 ∉ finsetφinv (e * l) (f * l) i := by
+        intro h5
+        rw [finsetφinv] at h5
+        simp at h5
+        rw [φinv] at h5
+        simp at h5
+        have x_mem1 := x_mem.1
+        rw [x_mem1] at h4
+        rw [h5] at h4
+        linarith
+      clear h1 h2 h3
+      by_contra x_lt_y
+      push_neg at x_lt_y
+      have succ_x_le_y := Nat.succ_le_of_lt x_lt_y
+      clear x_lt_y
+      have ineq := φ_monotone (e * l) (f * l) succ_x_le_y
+      rw [y_mem] at ineq
+      rw [x_mem.1] at h4
+      linarith
+  have ex_singleton : finsetex (e*l) (f*l) i = {m} := by
+    apply Finset.eq_of_subset_of_card_le
+    {
+      intro x
+      intro h
+      have h1 := ex_implies_max x h m m_mem
+      have x_mem : x ∈ finsetφinv (e*l) (f*l) i := by
+        have h2 := finsetφinv_sub_finsetex (e*l) (f*l) i
+        exact h2 h
+      have h2 := m_max x x_mem
+      have x_eq_m : x = m := by
+        linarith
+      rw [x_eq_m]
+      simp
+    }
+    {
+      simp
+      exists m
+    }
+  rw [ex_singleton]
+  simp
 
 theorem cardI1
   (e f l : ℕ+)
