@@ -165,6 +165,18 @@ noncomputable def max_φinv
   : ℕ :=
   (finsetφinv (e * l) (f * l) i).max' (finsetφinv_nonempty e f l i e_ge_2 f_ge_2 coprime non_empty)
 
+noncomputable def max_φinv_mem
+  (e f l : ℕ+)
+  (i : ℕ)
+  (e_ge_2 : e ≥ 2)
+  (f_ge_2 : f ≥ 2)
+  (coprime : (e.1).Coprime f.1)
+  (non_empty : ¬e.1 + f.1 ∣ i + 1)
+  :
+  max_φinv e f l i e_ge_2 f_ge_2 coprime non_empty ∈ finsetφinv (e * l) (f * l) i
+  :=
+  Finset.max'_mem (finsetφinv (e * l) (f * l) i) (finsetφinv_nonempty e f l i e_ge_2 f_ge_2 coprime non_empty)
+
 theorem finsetφinv_is_interval
   (e f l : ℕ+)
   (i : ℕ)
@@ -824,6 +836,340 @@ theorem cardex
   rw [ex_singleton]
   simp
 
+theorem maxφinv1
+  (e f l : ℕ+)
+  (i : ℕ)
+  (e_ge_2 : e ≥ 2)
+  (f_ge_2 : f ≥ 2)
+  (coprime : (e.1).Coprime f.1)
+  (non_empty : ¬e.1 + f.1 ∣ i + 1)
+  (succ_non_empty : ¬e.1 + f.1 ∣ i + 2)
+  :
+  max_φinv e f l i e_ge_2 f_ge_2 coprime non_empty = min_φinv e f l (i+1) e_ge_2 f_ge_2 coprime succ_non_empty - 1 := by
+  have := finsetφinv_nonempty e f l i e_ge_2 f_ge_2 coprime non_empty
+  set max := max_φinv e f l i e_ge_2 f_ge_2 coprime non_empty with def_max
+  set min := min_φinv e f l (i+1) e_ge_2 f_ge_2 coprime succ_non_empty with def_min
+  have maximality : ∀ x ∈ finsetφinv (e * l) (f * l) i, x ≤ max := by
+    intro x h
+    have h1 := Finset.le_max' (finsetφinv (e * l) (f * l) i) x h
+    simp at h1
+    rw [max_φinv] at def_max
+    rw [← def_max] at h1
+    exact h1
+  have minimality : ∀ x ∈ finsetφinv (e * l) (f * l) (i+1), min ≤ x := by
+    intro x h
+    have h1 := Finset.min'_le (finsetφinv (e * l) (f * l) (i+1)) x h
+    simp at h1
+    rw [min_φinv] at def_min
+    rw [← def_min] at h1
+    exact h1
+  have max_mem : max ∈ finsetφinv (e * l) (f * l) i := by
+    have h1 := max_φinv_mem e f l i e_ge_2 f_ge_2 coprime non_empty
+    rw [← def_max] at h1
+    exact h1
+  have max_mem' : φ (e * l) (f * l) max = i := by
+    rw [finsetφinv] at max_mem
+    simp at max_mem
+    exact max_mem
+  have min_mem : min ∈ finsetφinv (e * l) (f * l) (i+1) := by
+    have h1 := min_φinv_mem e f l (i+1) e_ge_2 f_ge_2 coprime succ_non_empty
+    rw [← def_min] at h1
+    exact h1
+  have min_mem' : φ (e * l) (f * l) min = i + 1 := by
+    rw [finsetφinv] at min_mem
+    simp at min_mem
+    exact min_mem
+  have succ_max_mem : max + 1 ∈ finsetφinv (e * l) (f * l) (i+1) := by
+    have max_le_succ : max ≤ max + 1 := by
+      linarith
+    have ineq := φ_monotone (e * l) (f * l) max_le_succ
+    clear max_le_succ
+    have ne : φ (e * l) (f * l) max ≠ φ (e * l) (f * l) (max + 1) := by
+      by_contra h
+      rw [max_mem'] at h
+      have succ_max_mem : max + 1 ∈ finsetφinv (e * l) (f * l) i := by
+        rw [finsetφinv]
+        simp
+        rw [φinv]
+        simp
+        exact h.symm
+      have h1 := maximality (max + 1) succ_max_mem
+      linarith
+    rw [max_mem'] at ne
+    rw [max_mem'] at ineq
+    have i_lt_φ_succ_max := Nat.lt_of_le_of_ne ineq ne
+    clear ineq ne
+    have succ_i_le_φ_succ_max := Nat.succ_le_of_lt i_lt_φ_succ_max
+    clear i_lt_φ_succ_max
+    have ineq : ¬ i + 2 ≤ φ (e * l) (f * l) (max + 1) := by
+      intro h
+      have max_lt_min : max < min := by
+        by_contra min_le_max
+        push_neg at min_le_max
+        have h1 := φ_monotone (e * l) (f * l) min_le_max
+        rw [min_mem',max_mem'] at h1
+        linarith
+      have min_lt_succ_max : min < max + 1 := by
+        by_contra succ_max_le_min
+        push_neg at succ_max_le_min
+        have h1 := φ_monotone (e * l) (f * l) succ_max_le_min
+        rw [min_mem'] at h1
+        have := Nat.le_trans h h1
+        linarith
+      linarith
+    have eq : i + 1 = φ (e * l) (f * l) (max + 1) := by
+      linarith
+    rw [finsetφinv]
+    simp
+    rw [φinv]
+    simp
+    exact eq.symm
+  have min_le_succ_max := minimality (max + 1) succ_max_mem
+  have max_lt_min : max < min := by
+    by_contra min_le_max
+    push_neg at min_le_max
+    have ineq := φ_monotone (e * l) (f * l) min_le_max
+    have min_mem' : φ (e * l) (f * l) min = i + 1 := by
+      have h1 := min_φinv_mem e f l (i+1) e_ge_2 f_ge_2 coprime succ_non_empty
+      rw [finsetφinv] at h1
+      simp at h1
+      exact h1
+    have max_mem' : φ (e * l) (f * l) max = i := by
+      have h1 := max_φinv_mem e f l i e_ge_2 f_ge_2 coprime non_empty
+      rw [finsetφinv] at h1
+      simp at h1
+      exact h1
+    rw [min_mem',max_mem'] at ineq
+    linarith
+  have min_eq_succ_max : min = max + 1 := by
+    linarith
+  rw [min_eq_succ_max]
+  simp
+
+lemma succ_emp_conv
+  (n : ℕ)
+  (d : ℕ+)
+  -- (d_ge_2 : d ≥ 2)
+  (h : d.1 ∣ n+1)
+  :
+  n % d.1 = d - 1
+  := by
+  by_contra h1
+  have d_ge_2 : d.1 ≥ 2 := by
+    by_contra h2
+    push_neg at h2
+    have d_eq_one : d.1 = 1 := by
+      have d_pos := d.2
+      linarith
+    rw [d_eq_one] at h1
+    have h1' : n % 1 ≠ d.1 - 1 := by
+      exact h1
+    rw [d_eq_one] at h1'
+    simp at h1'
+    have h1'' : n % 1 = 0 := by
+      rw [Nat.mod_one]
+    exact h1' h1''
+  have h2 := Nat.mod_eq_zero_of_dvd h
+  have h3 := Nat.add_mod n 1 d.1
+  set m := n % d with def_m
+  have h4 := Nat.mod_lt n d.2
+  have h5 : m < d.1 := by
+    rw [def_m]
+    exact h4
+  have h6 : m ≤ d.1 - 1 := Nat.le_pred_of_lt h5
+  have h7 : m ≠ d.1 - 1 := by
+    exact h1
+  have h8 : m < d.1 - 1 := Nat.lt_of_le_of_ne h6 h7
+  have h9 := Nat.le_pred_of_lt h8
+  simp at h9
+  rw [def_m] at h9
+  have h10 : 1 % d.1 = 1 := by
+    rw [Nat.mod_eq]
+    split
+    case isTrue h10 =>
+      linarith
+    case isFalse h10 =>
+      rfl
+  have h11 : n % d.1 + 1 % d.1 ≤ d.1 - 1 := by
+    rw [h10]
+    have h12 := Nat.add_le_add_right h9 1
+    have h13 : d.1 - 1 - 1 + 1 = d.1 - 1 := by
+      have h14 : 1 ≤ (d.1 - 1) := by
+        linarith
+      have h15 := Nat.sub_add_cancel h14
+      simp at h15
+      exact h15
+    rw [h13] at h12
+    exact h12
+  have h14 : (n % d.1 + 1 % d.1) % d.1 = n % d.1 + 1 % d.1 := by
+    rw [Nat.mod_eq]
+    split
+    case isTrue h14 =>
+      have h15 := h14.2
+      have := Nat.le_trans h15 h11
+      have h17 : d.1 ≠ 0 := by
+        have := d.2
+        linarith
+      have h17 : d.1 - 1 < d.1 := Nat.pred_lt h17
+      linarith
+    case isFalse h14 =>
+      rfl
+  rw [h14] at h3
+  rw [h2] at h3
+  rw [h10] at h3
+  contradiction
+
+theorem maxφinv2
+  (e f l : ℕ+)
+  (i : ℕ)
+  (e_ge_2 : e ≥ 2)
+  (f_ge_2 : f ≥ 2)
+  (coprime : (e.1).Coprime f.1)
+  (non_empty : ¬e.1 + f.1 ∣ i + 1)
+  (succ_empty : e.1 + f.1 ∣ i + 2)
+  :
+  max_φinv e f l i e_ge_2 f_ge_2 coprime non_empty = min_φinv e f l (i+2) e_ge_2 f_ge_2 coprime (dvd_succ_not_dvd (i+2) (e+f) (ge_2_ge_2_add e_ge_2 f_ge_2) succ_empty) - 1 := by
+  have succ_emp := i_mod_e_add_f_φinv_i_empty e f (i+1) l e_ge_2 f_ge_2 coprime l.2 (succ_emp_conv (i+1) (e+f) succ_empty)
+  have := finsetφinv_nonempty e f l i e_ge_2 f_ge_2 coprime non_empty
+  set max := max_φinv e f l i e_ge_2 f_ge_2 coprime non_empty with def_max
+  set min := min_φinv e f l (i+2) e_ge_2 f_ge_2 coprime (dvd_succ_not_dvd (i+2) (e+f) (ge_2_ge_2_add e_ge_2 f_ge_2) succ_empty) with def_min
+  have maximality : ∀ x ∈ finsetφinv (e * l) (f * l) i, x ≤ max := by
+    intro x h
+    have h1 := Finset.le_max' (finsetφinv (e * l) (f * l) i) x h
+    simp at h1
+    rw [max_φinv] at def_max
+    rw [← def_max] at h1
+    exact h1
+  have minimality : ∀ x ∈ finsetφinv (e * l) (f * l) (i+2), min ≤ x := by
+    intro x h
+    have h1 := Finset.min'_le (finsetφinv (e * l) (f * l) (i+2)) x h
+    simp at h1
+    rw [min_φinv] at def_min
+    rw [← def_min] at h1
+    exact h1
+  have max_mem : max ∈ finsetφinv (e * l) (f * l) i := by
+    have h1 := max_φinv_mem e f l i e_ge_2 f_ge_2 coprime non_empty
+    rw [← def_max] at h1
+    exact h1
+  have max_mem' : φ (e * l) (f * l) max = i := by
+    rw [finsetφinv] at max_mem
+    simp at max_mem
+    exact max_mem
+  have min_mem : min ∈ finsetφinv (e * l) (f * l) (i+2) := by
+    have h1 := min_φinv_mem e f l (i+2) e_ge_2 f_ge_2 coprime (dvd_succ_not_dvd (i+2) (e+f) (ge_2_ge_2_add e_ge_2 f_ge_2) succ_empty)
+    rw [← def_min] at h1
+    exact h1
+  have min_mem' : φ (e * l) (f * l) min = i + 2 := by
+    rw [finsetφinv] at min_mem
+    simp at min_mem
+    exact min_mem
+  have succ_max_mem : max + 1 ∈ finsetφinv (e * l) (f * l) (i+2) := by
+    have max_le_succ : max ≤ max + 1 := by
+      linarith
+    have ineq := φ_monotone (e * l) (f * l) max_le_succ
+    clear max_le_succ
+    have ne : φ (e * l) (f * l) max ≠ φ (e * l) (f * l) (max + 1) := by
+      by_contra h
+      rw [max_mem'] at h
+      have succ_max_mem : max + 1 ∈ finsetφinv (e * l) (f * l) i := by
+        rw [finsetφinv]
+        simp
+        rw [φinv]
+        simp
+        exact h.symm
+      have h1 := maximality (max + 1) succ_max_mem
+      linarith
+    rw [max_mem'] at ne
+    rw [max_mem'] at ineq
+    have i_lt_φ_succ_max := Nat.lt_of_le_of_ne ineq ne
+    clear ineq ne
+    have succ_i_le_φ_succ_max := Nat.succ_le_of_lt i_lt_φ_succ_max
+    clear i_lt_φ_succ_max
+    have ineq : ¬ i + 3 ≤ φ (e * l) (f * l) (max + 1) := by
+      intro h
+      have max_lt_min : max < min := by
+        by_contra min_le_max
+        push_neg at min_le_max
+        have h1 := φ_monotone (e * l) (f * l) min_le_max
+        rw [min_mem',max_mem'] at h1
+        linarith
+      have min_lt_succ_max : min < max + 1 := by
+        by_contra succ_max_le_min
+        push_neg at succ_max_le_min
+        have h1 := φ_monotone (e * l) (f * l) succ_max_le_min
+        rw [min_mem'] at h1
+        have := Nat.le_trans h h1
+        linarith
+      linarith
+    have ne_i_succ : i + 1 ≠ φ (e * l) (f * l) (max + 1) := by
+      by_contra h
+      have h1 : max + 1 ∈ φinv (e * l) (f * l) (i + 1) := by
+        rw [φinv]
+        simp
+        exact h.symm
+      rw [succ_emp] at h1
+      simp at h1
+    have eq : i + 2 = φ (e * l) (f * l) (max + 1) := by
+      push_neg at ineq
+      have : φ (e * l) (f * l) (max + 1) ≠ i := by
+        intro h
+        have succ_max_mem : max + 1 ∈ finsetφinv (e * l) (f * l) i := by
+          rw [finsetφinv]
+          simp
+          rw [φinv]
+          simp
+          exact h
+        have := maximality (max + 1) succ_max_mem
+        linarith
+      have : i ≤ φ (e * l) (f * l) (max + 1) := by
+        linarith
+      have ge_succ_i : i + 1 ≤ φ (e * l) (f * l) (max + 1) := by
+        linarith
+      have : φ (e * l) (f * l) (max + 1) ≠ i + 1 := by
+        intro h
+        have succ_max_mem : max + 1 ∈ φinv (e * l) (f * l) (i + 1) := by
+          rw [φinv]
+          simp
+          exact h
+        rw [succ_emp] at succ_max_mem
+        simp at succ_max_mem
+      -- have ge_succ_i' : i + 2 ≤ φ (e * l) (f * l) (max + 1) + 1 := by
+      --   linarith
+      have ge_succ_succ : i + 2 ≤ φ (e * l) (f * l) (max + 1) := by
+        have h1 := Nat.lt_of_le_of_ne ge_succ_i ne_i_succ
+        exact Nat.succ_le_of_lt h1
+      have : φ (e * l) (f * l) (max + 1) ≤ i + 2 := by
+        have h1 := φ_n_add_one_le_φ_n_add_two (e * l) (f * l) max
+        rw [max_mem'] at h1
+        exact h1
+      linarith
+    rw [finsetφinv]
+    simp
+    rw [φinv]
+    simp
+    exact eq.symm
+  have min_le_succ_max := minimality (max + 1) succ_max_mem
+  have max_lt_min : max < min := by
+    by_contra min_le_max
+    push_neg at min_le_max
+    have ineq := φ_monotone (e * l) (f * l) min_le_max
+    have min_mem' : φ (e * l) (f * l) min = i + 2 := by
+      have h1 := min_φinv_mem e f l (i+2) e_ge_2 f_ge_2 coprime (dvd_succ_not_dvd (i+2) (e+f) (ge_2_ge_2_add e_ge_2 f_ge_2) succ_empty)
+      rw [finsetφinv] at h1
+      simp at h1
+      exact h1
+    have max_mem' : φ (e * l) (f * l) max = i := by
+      have h1 := max_φinv_mem e f l i e_ge_2 f_ge_2 coprime non_empty
+      rw [finsetφinv] at h1
+      simp at h1
+      exact h1
+    rw [min_mem',max_mem'] at ineq
+    linarith
+  have min_eq_succ_max : min = max + 1 := by
+    linarith
+  rw [min_eq_succ_max]
+  simp
+
 theorem cardI1
   (e f l : ℕ+)
   (i : ℕ)
@@ -834,7 +1180,24 @@ theorem cardI1
   (succ_non_empty : ¬e.1 + f.1 ∣ i + 2)
   :
   cardI (e * l) (f * l) i = (min_φinv e f l (i+1) e_ge_2 f_ge_2 coprime succ_non_empty) - 1 - (min_φinv e f l i e_ge_2 f_ge_2 coprime non_empty) := by
-  sorry
+  rw [cardI_eq_cardφinv_sub_cardex (e * l) (f * l) i]
+  rw [cardex e f l i e_ge_2 f_ge_2 coprime non_empty]
+  rw [cardφinv_eq_max_sub_min e f l i e_ge_2 f_ge_2 coprime non_empty]
+  rw [maxφinv1 e f l i e_ge_2 f_ge_2 coprime non_empty succ_non_empty]
+  have pos : min_φinv e f l (i+1) e_ge_2 f_ge_2 coprime succ_non_empty > 0 := by
+    have h1 := min_φinv_mem e f l (i+1) e_ge_2 f_ge_2 coprime succ_non_empty
+    rw [finsetφinv] at h1
+    simp at h1
+    rw [φinv] at h1
+    by_contra h2
+    push_neg at h2
+    simp at h2
+    rw [h2] at h1
+    simp at h1
+    rw [φ] at h1
+    simp [nat_div] at h1
+  rw [Nat.sub_add_cancel pos]
+  rw [Nat.sub_right_comm]
 
 theorem cardI2
   (e f l : ℕ+)
@@ -846,7 +1209,24 @@ theorem cardI2
   (succ_empty : e.1 + f.1 ∣ i + 2)
   :
   cardI (e * l) (f * l) i = (min_φinv e f l (i+2) e_ge_2 f_ge_2 coprime (dvd_succ_not_dvd (i+2) (e+f) (ge_2_ge_2_add e_ge_2 f_ge_2) succ_empty)) - 1 - (min_φinv e f l i e_ge_2 f_ge_2 coprime non_empty) := by
-  sorry
+  rw [cardI_eq_cardφinv_sub_cardex (e * l) (f * l) i]
+  rw [cardex e f l i e_ge_2 f_ge_2 coprime non_empty]
+  rw [cardφinv_eq_max_sub_min e f l i e_ge_2 f_ge_2 coprime non_empty]
+  rw [maxφinv2 e f l i e_ge_2 f_ge_2 coprime non_empty succ_empty]
+  have pos : min_φinv e f l (i+2) e_ge_2 f_ge_2 coprime (dvd_succ_not_dvd (i+2) (e+f) (ge_2_ge_2_add e_ge_2 f_ge_2) succ_empty) > 0 := by
+    have h1 := min_φinv_mem e f l (i+2) e_ge_2 f_ge_2 coprime (dvd_succ_not_dvd (i+2) (e+f) (ge_2_ge_2_add e_ge_2 f_ge_2) succ_empty)
+    rw [finsetφinv] at h1
+    simp at h1
+    rw [φinv] at h1
+    by_contra h2
+    push_neg at h2
+    simp at h2
+    rw [h2] at h1
+    simp at h1
+    rw [φ] at h1
+    simp [nat_div] at h1
+  rw [Nat.sub_add_cancel pos]
+  rw [Nat.sub_right_comm]
 
 lemma one_le_of_succ_le
   {a b : ℕ}
