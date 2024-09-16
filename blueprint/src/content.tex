@@ -231,6 +231,7 @@ h_{e,f}^i
 \label{pr:main}
 \lean{main}
 \uses{df:h,lm:nat_interval_card}
+\leanok
 \en{
 For integers $e$ and $f$ greater than two
 and a non-positive integer $i$,
@@ -624,6 +625,7 @@ $
 \label{lm:setII_finite}
 \lean{setII_finite}
 \uses{df:setII}
+\leanok
 $\rII_{e,f}^i$は有限集合である。
 \end{lemma}
 
@@ -631,6 +633,7 @@ $\rII_{e,f}^i$は有限集合である。
 \label{lm:setIII_finite}
 \lean{setIII_finite}
 \uses{df:setIII}
+\leanok
 $\rIII_{e,f}^i$は有限集合である。
 \end{lemma}
 
@@ -671,6 +674,7 @@ $\varphi_{e,f}(n+1) \le \varphi_{e,f}(n) + 2$.
 \label{lm:φinv_i_empty_implies_φinv_i_add_one_nonempty}
 \lean{φinv_i_empty_implies_φinv_i_add_one_nonempty}
 \uses{lm:φ_n_add_one_le_φ_n_add_two}
+\leanok
 任意の自然数$i$に対し、
 $\varphi_{e,f}^{-1}(i) = \emptyset$
 ならば
@@ -753,6 +757,7 @@ $\lfloor (n-1) / e \rfloor + 1 = \lfloor n / e \rfloor$.
 \label{eq:φ_n_minus_one_eq_φ_n}
 \lean{φ_n_minus_one_eq_φ_n}
 \uses{lm:not_dvd_mod_eq,df:φ}
+\leanok
 自然数
 $
 e, f, n
@@ -779,6 +784,7 @@ $.
 \label{lm:φ_n_minus_one_ne_φ_n_e}
 \lean{φ_n_minus_one_ne_φ_n_e}
 \uses{lm:not_dvd_mod_eq,df:φ}
+\leanok
 自然数
 $
 e, f, n
@@ -801,6 +807,7 @@ $.
 \label{lm:φ_n_minus_one_ne_φ_n_f}
 \lean{φ_n_minus_one_ne_φ_n_f}
 \uses{lm:not_dvd_mod_eq,df:φ}
+\leanok
 自然数
 $
 e, f, n
@@ -824,6 +831,7 @@ $.
 \lean{φ_n_minus_one_ne_φ_n}
 \uses{lm:φ_n_minus_one_ne_φ_n_e,
 lm:φ_n_minus_one_ne_φ_n_f}
+\leanok
 自然数
 $
 e, f, n
@@ -890,6 +898,7 @@ $n$が最小値であることに矛盾する。
 \label{lm:dvd_min_φinv}
 \lean{dvd_min_φinv}
 \uses{df:φ}
+\leanok
 $n \in \varphi_{e,f}^{-1}(i)$
 が
 $n | e$または$n | f$を満たせば、
@@ -961,6 +970,7 @@ $\ell$を自然数とする。
 \begin{lemma}
 \label{lm:φinv_i_empty_i_mod_e_add_f}
 \lean{φinv_i_empty_i_mod_e_add_f}
+\leanok
 $
 \varphi_{e \ell, f \ell}^{-1}(i) = \emptyset
 $
@@ -1017,6 +1027,7 @@ i \equiv e + f - 1 \mod e + f
 \begin{lemma}
 \label{lm:i_mod_e_add_f_φinv_i_empty}
 \lean{i_mod_e_add_f_φinv_i_empty}
+\leanok
 $
 i \equiv e + f - 1 \mod e + f
 $
@@ -1235,6 +1246,7 @@ $
 \begin{lemma}
 \label{lm:setII_empty_if_not_dvd}
 \lean{setII_empty_if_not_dvd}
+\leanok
 $
 i \not \equiv -1 \mod e + f
 $
@@ -1258,6 +1270,7 @@ $
 \label{lm:setII_dichotomy}
 \lean{setII_dichotomy}
 \uses{df:setII}
+\leanok
 $
 \rII_{e,f}^i
 $
